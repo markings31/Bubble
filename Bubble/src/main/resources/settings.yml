@@ -1,0 +1,23 @@
+#
+# Welcome to the main settings file.
+#
+# For help, visit the official Spigot resource page.
+#
+
+Notifications:
+
+  Broadcast:
+    Enable: true
+    Delay: 90 seconds
+    Random_Message: false
+    Messages:
+      - "Test Message #1"
+      - "Test Message #2"
+      - "Test Message #3"
+
+
+Prefix: "&8[&b&lBubble&8]&7 "
+Command_Aliases: [ bubble, bu ]
+Log_Lag_Over_Milis: 100
+Debug: [ ]
+Version: 1
