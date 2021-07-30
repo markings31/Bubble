@@ -1,0 +1,6 @@
+name: Bubble
+version: ${project.version}
+main: me.markings.bubble.Bubble
+api-version: 1.16
+authors: [ Markings ]
+description: An easy, powerful, and customizable notifications and chat tool for Minecraft servers.
