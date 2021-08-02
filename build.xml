@@ -9,7 +9,7 @@
      -->
 
     <!-- Your MC test server location for Windows -->
-    <condition property="serverPath" value="C:\Users\Brandon Winecki\Desktop\Test-Server">
+    <condition property="serverPath" value="C:\Users\winec\Desktop\Test-Server">
         <os family="windows"/>
     </condition>
 
@@ -25,7 +25,7 @@
 
     <!-- Ninja: Read your pom.xml file to find the Foundation version we will be using -->
     <xmlproperty file="pom.xml" prefix="pom" keeproot="false"/>
-    <property name="foundation.version" value="5.9.9"/>
+    <property name="foundation.version" value="5.10.0"/>
 
     <!-- Finally, compile the plugin -->
     <target name="Build">
@@ -43,6 +43,7 @@
 
             <zipgroupfileset dir="${user.home}/.m2/repository/com/github/kangarko/Foundation/${foundation.version}/"
                              includes="**/*${foundation.version}.jar"/>
+            <!-- <fileset dir="../Foundation/target/classes" /> -->
         </jar>
     </target>
 

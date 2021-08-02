@@ -1,8 +1,9 @@
 package me.markings.bubble;
 
 import me.markings.bubble.commands.bubble.BubbleGroup;
-import me.markings.bubble.commands.tasks.BroadcastTask;
+import me.markings.bubble.listeners.PlayerJoinListener;
 import me.markings.bubble.settings.Settings;
+import me.markings.bubble.tasks.BroadcastTask;
 import org.bukkit.scheduler.BukkitRunnable;
 import org.mineacademy.fo.Common;
 import org.mineacademy.fo.command.SimpleCommandGroup;
@@ -28,6 +29,8 @@ public final class Bubble extends SimplePlugin {
 
 		Common.log("[" + SimplePlugin.getNamed() + "] Bubble has been successfully enabled.");
 
+		registerEvents(new PlayerJoinListener());
+
 		startBroadcastTask();
 	}
 
@@ -38,6 +41,7 @@ public final class Bubble extends SimplePlugin {
 
 	@Override
 	protected void onPluginReload() {
+		registerEvents(new PlayerJoinListener());
 		startBroadcastTask();
 	}
 
@@ -45,11 +49,9 @@ public final class Bubble extends SimplePlugin {
 		stopTaskIfRunning(broadcastTask);
 	}
 
-	private void stopTaskIfRunning(BukkitRunnable task) {
-		if (task != null) try {
+	private void stopTaskIfRunning(final BukkitRunnable task) {
+		if (task != null)
 			task.cancel();
-		} catch (IllegalStateException ignored) {
-		}
 	}
 
 	private void startBroadcastTask() {
