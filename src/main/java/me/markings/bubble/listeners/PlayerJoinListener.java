@@ -18,14 +18,12 @@ public class PlayerJoinListener implements Listener {
 		final List<String> messages = Settings.WelcomeSettings.JOIN_MOTD;
 		final List<String> broadcastMessages = Settings.WelcomeSettings.JOIN_BROADCAST;
 		if (Settings.WelcomeSettings.ENABLE_JOIN_MOTD)
-			for (int i = 0; i < messages.toArray().length; i++)
-				Common.tellLater(Settings.WelcomeSettings.MOTD_DELAY.getTimeTicks(), player, Variables.replace(messages.get(i)
-						.replace("%player%", player.getName()), player));
+			for (final String message : messages)
+				Common.tellLater(Settings.WelcomeSettings.MOTD_DELAY.getTimeTicks(), player, Variables.replace(message, player));
 
 		if (Settings.WelcomeSettings.ENABLE_JOIN_BROADCASTS && !player.hasPlayedBefore())
 			for (int i = 0; i < broadcastMessages.toArray().length; i++)
-				Common.broadcast(Variables.replace(broadcastMessages.get(i)
-						.replace("%player%", player.getName()), player));
+				Common.broadcast(Variables.replace(broadcastMessages.get(i), player));
 	}
 
 }
