@@ -215,20 +215,20 @@
                     </execution>
                 </executions>
             </plugin>
-            <plugin>
+           <!--<plugin>
                 <groupId>com.github.wvengen</groupId>
                 <artifactId>proguard-maven-plugin</artifactId>
-                <!--
+                
                     https://mvnrepository.com/artifact/com.github.wvengen/proguard-maven-plugin
-                 -->
+                 
                 <version>2.4.0</version>
                 <dependencies>
                     <dependency>
                         <groupId>net.sf.proguard</groupId>
                         <artifactId>proguard-base</artifactId>
-                        <!--
+                        
                             https://mvnrepository.com/artifact/net.sf.proguard/proguard-base
-                         -->
+                         
                         <version>6.2.2</version>
                     </dependency>
                 </dependencies>
@@ -246,7 +246,7 @@
                         <lib>${java.home}/lib/jce.jar</lib>
                     </libs>
                 </configuration>
-            </plugin>
+            </plugin>-->
         </plugins>
 
         <!--
