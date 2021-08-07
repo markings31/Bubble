@@ -8,34 +8,32 @@ import org.mineacademy.fo.RandomUtil;
 import org.mineacademy.fo.model.Variables;
 import org.mineacademy.fo.remain.CompSound;
 import org.mineacademy.fo.remain.Remain;
-import org.mineacademy.fo.settings.SimpleSettings;
 
 import java.util.List;
 
 public class BroadcastTask extends BukkitRunnable {
 
-	private static final List<String> messages = Settings.BroadcastSettings.BROADCAST_MESSAGES;
-
 	private static int index;
 
 	@Override
 	public void run() {
+		final List<String> messages = Settings.BroadcastSettings.BROADCAST_MESSAGES;
 		if (Settings.BroadcastSettings.ENABLE_BROADCASTS) {
-			final String prefix = SimpleSettings.PLUGIN_PREFIX;
 			final String message = Settings.BroadcastSettings.RANDOM_MESSAGE ? RandomUtil.nextItem(messages) : messages.get(index);
 
+			// TODO: Add support for '<center>' and '<smooth_line>' placeholders.
 			for (final Player player : Remain.getOnlinePlayers()) {
 				Variables.replace(message, player);
 
-				Common.tellNoPrefix(player, "&f", message.replace("%prefix%", prefix), "&f");
+				Common.tellNoPrefix(player, "&f", Variables.replace(message, player), "&f");
 				CompSound.NOTE_PLING.play(player);
 			}
 
-			updateIndex();
+			updateIndex(messages);
 		}
 	}
 
-	private static void updateIndex() {
+	private static void updateIndex(final List<String> messages) {
 		index++;
 		index = index == messages.size() ? 0 : index;
 	}
