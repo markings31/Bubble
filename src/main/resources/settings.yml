@@ -10,6 +10,7 @@ Notifications:
     Enable: true
     Delay: 90 seconds
     Random_Message: false
+    Sound: "NOTE_PLING"
     Messages:
       Example_Message:
         - "&6This is an example message!"
