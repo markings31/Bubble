@@ -11,6 +11,8 @@ import java.util.Objects;
 
 public final class Settings extends SimpleSettings {
 
+	private static final String messagePath = "Notifications.Broadcast.Messages";
+
 	@Override
 	protected int getConfigVersion() {
 		return 1;
@@ -19,21 +21,25 @@ public final class Settings extends SimpleSettings {
 	@NoArgsConstructor(access = AccessLevel.PRIVATE)
 	public static class BroadcastSettings {
 
-		public static List<String> BROADCAST_MESSAGES = new ArrayList<>();
-
 		public static Boolean ENABLE_BROADCASTS;
 		public static Boolean RANDOM_MESSAGE;
 
+		public static List<List<String>> MESSAGE_LIST = new ArrayList<>();
+
 		public static SimpleTime BROADCAST_DELAY;
 
+		public static String BROADCAST_SOUND;
+
 		private static void init() {
-			for (final String path : Objects.requireNonNull(getConfig().getConfigurationSection("Notifications.Broadcast.Messages")).getKeys(false))
-				BROADCAST_MESSAGES.addAll(Objects.requireNonNull(getConfig().getStringList("Notifications.Broadcast.Messages." + path)));
+			for (final String path : Objects.requireNonNull(getConfig().
+					getConfigurationSection(messagePath)).getKeys(false))
+				MESSAGE_LIST.add(getConfig().getStringList(messagePath + "." + path));
 
 			pathPrefix("Notifications.Broadcast");
 			ENABLE_BROADCASTS = getBoolean("Enable");
 			BROADCAST_DELAY = getTime("Delay");
 			RANDOM_MESSAGE = getBoolean("Random_Message");
+			BROADCAST_SOUND = getString("Sound");
 		}
 	}
 
