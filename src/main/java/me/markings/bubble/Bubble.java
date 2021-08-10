@@ -7,10 +7,7 @@ import me.markings.bubble.tasks.BroadcastTask;
 import org.mineacademy.fo.Common;
 import org.mineacademy.fo.command.SimpleCommandGroup;
 import org.mineacademy.fo.plugin.SimplePlugin;
-import org.mineacademy.fo.settings.YamlStaticConfig;
-
-import java.util.Collections;
-import java.util.List;
+import org.mineacademy.fo.settings.SimpleSettings;
 
 public final class Bubble extends SimplePlugin {
 
@@ -25,19 +22,16 @@ public final class Bubble extends SimplePlugin {
 
 	@Override
 	protected void onPluginPreReload() {
-		Settings.BroadcastSettings.BROADCAST_MESSAGES.clear();
+		Settings.BroadcastSettings.MESSAGE_LIST.clear();
 	}
 
 	@Override
 	protected void onReloadablesStart() {
 		registerEvents(new PlayerJoinListener());
 
-		new BroadcastTask().runTaskTimerAsynchronously(this, 0, Settings.BroadcastSettings.BROADCAST_DELAY.getTimeTicks());
-	}
+		Common.setTellPrefix(SimpleSettings.PLUGIN_PREFIX);
 
-	@Override
-	public List<Class<? extends YamlStaticConfig>> getSettings() {
-		return Collections.singletonList(Settings.class);
+		new BroadcastTask().runTaskTimerAsynchronously(this, 0, Settings.BroadcastSettings.BROADCAST_DELAY.getTimeTicks());
 	}
 
 	@Override
