@@ -20,7 +20,7 @@ public class NotificationCommand extends SimpleSubCommand {
 		setMinArguments(3);
 
 		// TODO: Add argument to specify material for toast messages.
-		setUsage("<all|playername> <message|title|bossbar|actionbar|toast> <input|...>");
+		setUsage("<all|playerName> <message|title|bossbar|actionbar|toast> <input|...>");
 		setPermission("bubble.command.notify");
 	}
 
@@ -44,28 +44,33 @@ public class NotificationCommand extends SimpleSubCommand {
 	private void sendNotification(final String param, final String primaryPart, final String secondaryPart, final Player target) {
 		switch (param) {
 			case "message":
-				checkBoolean(getPlayer().hasPermission(getPermission() + ".message"), noPermissionMsg);
+				if (getPlayer() != null)
+					checkBoolean(getPlayer().hasPermission(getPermission() + ".message"), noPermissionMsg);
 
 				Common.tell(target, Common.colorize(primaryPart));
 				break;
 			case "title":
-				checkBoolean(getPlayer().hasPermission(getPermission() + ".title"), noPermissionMsg);
+				if (getPlayer() != null)
+					checkBoolean(getPlayer().hasPermission(getPermission() + ".title"), noPermissionMsg);
 
 				Remain.sendTitle(target, primaryPart, secondaryPart);
 				break;
 			case "actionbar":
 			case "action":
-				checkBoolean(getPlayer().hasPermission(getPermission() + ".actionbar"), noPermissionMsg);
+				if (getPlayer() != null)
+					checkBoolean(getPlayer().hasPermission(getPermission() + ".actionbar"), noPermissionMsg);
 
 				Remain.sendActionBar(target, primaryPart);
 				break;
 			case "bossbar":
-				checkBoolean(getPlayer().hasPermission(getPermission() + ".bossbar"), noPermissionMsg);
+				if (getPlayer() != null)
+					checkBoolean(getPlayer().hasPermission(getPermission() + ".bossbar"), noPermissionMsg);
 
 				Remain.sendBossbarPercent(target, primaryPart, 100);
 				break;
 			case "toast":
-				checkBoolean(getPlayer().hasPermission(getPermission() + ".toast"), noPermissionMsg);
+				if (getPlayer() != null)
+					checkBoolean(getPlayer().hasPermission(getPermission() + ".toast"), noPermissionMsg);
 
 				Remain.sendToast(target, primaryPart, CompMaterial.CAKE);
 				break;
