@@ -10,7 +10,11 @@ Notifications:
     Enable: true
     Delay: 90 seconds
     Random_Message: false
+    Worlds:
+      - 'world'
     Sound: "NOTE_PLING"
+    Header: "<smooth_line>"
+    Footer: "<smooth_line>"
     Messages:
       Example_Message:
         - "&6This is an example message!"
@@ -33,6 +37,8 @@ Notifications:
         &8-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
 
     Enable_First_Join_Broadcast: true
+    Worlds:
+      - 'world'
     Join_Broadcasts:
       - "&8[&3&l{server_name}&8]&7 Player &b{player}&7 has joined for the first time!"
 
