@@ -1,23 +1,33 @@
 package me.markings.bubble;
 
+import lombok.Getter;
 import me.markings.bubble.command.bubble.BubbleGroup;
 import me.markings.bubble.listeners.PlayerJoinListener;
 import me.markings.bubble.settings.Settings;
 import me.markings.bubble.tasks.BroadcastTask;
 import org.mineacademy.fo.Common;
+import org.mineacademy.fo.Messenger;
 import org.mineacademy.fo.command.SimpleCommandGroup;
 import org.mineacademy.fo.plugin.SimplePlugin;
 import org.mineacademy.fo.settings.SimpleSettings;
+import org.mineacademy.fo.settings.YamlStaticConfig;
+
+import java.util.Collections;
+import java.util.List;
 
 public final class Bubble extends SimplePlugin {
 
-	private final SimpleCommandGroup commandGroup = new BubbleGroup();
+	@Getter
+	private final SimpleCommandGroup mainCommand = new BubbleGroup();
+
+	@Getter
+	private final List<Class<? extends YamlStaticConfig>> settings = Collections.singletonList(Settings.class);
 
 	@Override
 	protected void onPluginStart() {
-		Common.setTellPrefix("&8[&b&lBubble&8]&7 ");
+		Common.setTellPrefix(SimpleSettings.PLUGIN_PREFIX);
 
-		Common.log("[" + SimplePlugin.getNamed() + "] Bubble has been successfully enabled.");
+		Common.log(Common.getTellPrefix() + " Bubble has been successfully enabled.");
 	}
 
 	@Override
@@ -29,13 +39,10 @@ public final class Bubble extends SimplePlugin {
 	protected void onReloadablesStart() {
 		registerEvents(new PlayerJoinListener());
 
-		Common.setTellPrefix(SimpleSettings.PLUGIN_PREFIX);
+		Messenger.setInfoPrefix(SimpleSettings.PLUGIN_PREFIX);
 
-		new BroadcastTask().runTaskTimerAsynchronously(this, 0, Settings.BroadcastSettings.BROADCAST_DELAY.getTimeTicks());
+		new BroadcastTask().runTaskTimerAsynchronously(this, 0,
+				Settings.BroadcastSettings.BROADCAST_DELAY.getTimeTicks());
 	}
 
-	@Override
-	public SimpleCommandGroup getMainCommand() {
-		return commandGroup;
-	}
 }
