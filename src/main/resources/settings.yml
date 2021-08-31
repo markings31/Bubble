@@ -1,50 +1,108 @@
+# !-----------------------------------------------------------------------------------------------!
+#                       Welcome to the main configuration of ${project.name}
+# !-----------------------------------------------------------------------------------------------!
 #
-# Welcome to the main settings file.
+#    For support and documentation, please visit:
+#    - https://github.com/markings31/${project.name}/wiki
 #
-# For help, visit the official Spigot resource page.
+# !-----------------------------------------------------------------------------------------------!
+#    1) COLOR CODES are supported with the '&' character.
+#       - For usage, see http://minecraftwiki.net/wiki/Formatting_codes
+#       - When you use them, place quotes around the message like this: "Hello &cworld."
+#       - To use HEX colors, use #123456 syntax: "Hello #123456world."
 #
+#    2) TO HIDE any message, set it to 'none'.
+#
+#    3) For UNICODE CHARACTERS (smileys, symbols, ..), save the file in UTF-8 encoding. See
+#       - https://github.com/markings31/${project.name}/wiki/Use-Right-Encoding
+#
+#    4) JSON is supported.
+#       - For usage, see https://github.com/markings31/${project.name}/wiki/JSON
+# !-----------------------------------------------------------------------------------------------!
 
+# -------------------------------------------------------------------------------------------------
+# Notifications Section
+# -------------------------------------------------------------------------------------------------
 Notifications:
 
+  # Broadcast Messages
   Broadcast:
+
+    # Enable broadcast messages?
     Enable: true
+
+    # The delay between each broadcast message.
     Delay: 90 seconds
+
+    # Should the broadcast messages be outputted randomly?
+    # Setting this to false will broadcast them in order.
     Random_Message: false
+
+    # Which worlds should the broadcast messages be sent to?
     Worlds:
       - 'world'
-    Sound: "NOTE_PLING"
-    Header: "<smooth_line>"
-    Footer: "<smooth_line>"
-    Messages:
-      Example_Message:
-        - "&6This is an example message!"
-      Multi_Line_Message:
-        - |
-          &eThis is an example of a
-          multi-line message!
 
+    # What sound should be played when a message is broadcast?
+    # A list of the compatible values can be found here:
+    # https://gist.github.com/NiklasEi/7bd0ffd136f8459df0940e4501d47a8a
+    Sound: NOTE_PLING, 1F, 1.5F
+
+  # Welcome Messages
   Welcome:
-    Enable_MOTD: true
-    MOTD_Delay: 1 second
-    Join_MOTD:
-      - |
-        &8-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
-        &7Welcome to the server, &b{player}&7!
-        &f
-        &bWebsite: &fyourserver.com
-        &bDiscord: &fdiscord.com/yourserver
-        &bTwitter: &ftwitter.com/yourserver
-        &8-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
 
+    # Should the message of the day be displayed to users on-join?
+    Enable_MOTD: true
+
+    # The delay between when the player joins and when the message is
+    # sent. Used to separate the MOTD message from other server messages
+    # that could backup the chat.
+    MOTD_Delay: 1 second
+
+    # Should a message be broadcasted to the entire server when a player
+    # joins for the first time?
     Enable_First_Join_Broadcast: true
+
+    # What sound should be played when the player joins?
+    # A list of the compatible values can be found here:
+    # https://gist.github.com/NiklasEi/7bd0ffd136f8459df0940e4501d47a8a
+    Sound: LEVEL_UP, 1F, 1.5F
+
+    # If the above option is enabled, the message will only be broadcast to these worlds.
     Worlds:
       - 'world'
-    Join_Broadcasts:
-      - "&8[&3&l{server_name}&8]&7 Player &b{player}&7 has joined for the first time!"
 
+# -------------------------------------------------------------------------------------------------
+# The plugin's main prefix. You can manually add this prefix to other messages using the
+# {plugin_prefix} placeholder.
+# -------------------------------------------------------------------------------------------------
+Prefix: "&8[&b&l${project.name}&8]&7 "
 
-Prefix: "&8[&b&lBubble&8]&7 "
+# -------------------------------------------------------------------------------------------------
+# The language used for plugin messages. If the given language is available, the plugin will
+# create the appropriate messages_<locale>.yml file in the localization directory.
+# -------------------------------------------------------------------------------------------------
+Locale: "en"
+
+# -------------------------------------------------------------------------------------------------
+# The commands that are used for the plugin. You may edit them here.
+# -------------------------------------------------------------------------------------------------
 Command_Aliases: [ bubble, bu ]
+
+# -------------------------------------------------------------------------------------------------
+# The time (in milliseconds) used to measure plugin operations.
+#
+# WARNING: DO NOT EDIT THIS!
+# -------------------------------------------------------------------------------------------------
 Log_Lag_Over_Milis: 100
+
+# -------------------------------------------------------------------------------------------------
+# Used to debug plugin features. Only change this if instructed to by the plugin author.
+# -------------------------------------------------------------------------------------------------
 Debug: [ ]
+
+# -------------------------------------------------------------------------------------------------
+# The config file version.
+#
+# WARNING: DO NOT EDIT THIS!
+# -------------------------------------------------------------------------------------------------
 Version: 1
