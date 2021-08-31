@@ -3,6 +3,7 @@ package me.markings.bubble;
 import lombok.Getter;
 import me.markings.bubble.command.bubble.BubbleGroup;
 import me.markings.bubble.listeners.PlayerJoinListener;
+import me.markings.bubble.settings.Localization;
 import me.markings.bubble.settings.Settings;
 import me.markings.bubble.tasks.BroadcastTask;
 import org.mineacademy.fo.Common;
@@ -12,7 +13,7 @@ import org.mineacademy.fo.plugin.SimplePlugin;
 import org.mineacademy.fo.settings.SimpleSettings;
 import org.mineacademy.fo.settings.YamlStaticConfig;
 
-import java.util.Collections;
+import java.util.Arrays;
 import java.util.List;
 
 public final class Bubble extends SimplePlugin {
@@ -21,7 +22,7 @@ public final class Bubble extends SimplePlugin {
 	private final SimpleCommandGroup mainCommand = new BubbleGroup();
 
 	@Getter
-	private final List<Class<? extends YamlStaticConfig>> settings = Collections.singletonList(Settings.class);
+	private final List<Class<? extends YamlStaticConfig>> settings = Arrays.asList(Settings.class, Localization.class);
 
 	@Override
 	protected void onPluginStart() {
@@ -32,7 +33,8 @@ public final class Bubble extends SimplePlugin {
 
 	@Override
 	protected void onPluginPreReload() {
-		Settings.BroadcastSettings.MESSAGE_LIST.clear();
+		Localization.BroadcastMessages.MESSAGE_LIST.clear();
+		Localization.WelcomeMessages.JOIN_MOTD.clear();
 	}
 
 	@Override
