@@ -1,12 +1,14 @@
 package me.markings.bubble.tasks;
 
+import lombok.val;
+import me.markings.bubble.settings.Localization;
 import me.markings.bubble.settings.Settings;
-import me.markings.bubble.util.MessageUtils;
+import me.markings.bubble.util.MessageUtil;
 import org.bukkit.scheduler.BukkitRunnable;
-import org.mineacademy.fo.ChatUtil;
 import org.mineacademy.fo.Common;
 import org.mineacademy.fo.RandomUtil;
-import org.mineacademy.fo.remain.CompSound;
+import org.mineacademy.fo.model.SimpleSound;
+import org.mineacademy.fo.model.Variables;
 import org.mineacademy.fo.remain.Remain;
 
 import java.util.List;
@@ -17,28 +19,27 @@ public class BroadcastTask extends BukkitRunnable {
 
 	@Override
 	public void run() {
-		if (Settings.BroadcastSettings.ENABLE_BROADCASTS && !Remain.getOnlinePlayers().isEmpty()) {
-			final List<String> worlds = Settings.BroadcastSettings.BROADCAST_WORLDS;
+		if (Settings.BroadcastSettings.ENABLE_BROADCASTS.equals(Boolean.TRUE) && !Remain.getOnlinePlayers().isEmpty()) {
+			val worlds = Settings.BroadcastSettings.BROADCAST_WORLDS;
+			val broadcastSound = Settings.BroadcastSettings.BROADCAST_SOUND;
 
-			final List<List<String>> orderedMsgList = Settings.BroadcastSettings.MESSAGE_LIST;
-			final List<String> messages = Settings.BroadcastSettings.RANDOM_MESSAGE ?
+			val orderedMsgList = Localization.BroadcastMessages.MESSAGE_LIST;
+			val messages = Settings.BroadcastSettings.RANDOM_MESSAGE.equals(Boolean.TRUE) ?
 					RandomUtil.nextItem(orderedMsgList) : orderedMsgList.get(index);
 
-			messages.forEach(message -> {
-				MessageUtils.executePlaceholders(message);
-				worlds.forEach(world -> Remain.getOnlinePlayers().forEach(player -> {
-					if (player.getWorld().getName().equals(world)) {
-						if (!ChatUtil.isInteractive(message))
-							Common.tellNoPrefix(player,
-									MessageUtils.format(Settings.BroadcastSettings.HEADER), "&f",
-									message, "&f", MessageUtils.format(Settings.BroadcastSettings.FOOTER));
+			worlds.forEach(world -> Remain.getOnlinePlayers().forEach(player -> {
+				if (player.getWorld().getName().equals(world)) {
+					Common.tellNoPrefix(player, MessageUtil.format(Localization.BroadcastMessages.HEADER), "&f");
+					messages.forEach(message -> {
+						if (MessageUtil.isCommand(message))
+							MessageUtil.executePlaceholders(message, player);
 						else
-							Common.tellNoPrefix(player, message);
-
-						CompSound.valueOf(Settings.BroadcastSettings.BROADCAST_SOUND).play(player);
-					}
-				}));
-			});
+							Common.tellNoPrefix(player, Variables.replace(MessageUtil.format(message), player));
+					});
+					Common.tellNoPrefix(player, "&f", MessageUtil.format(Localization.BroadcastMessages.FOOTER));
+					new SimpleSound(broadcastSound.getSound(), broadcastSound.getVolume(), broadcastSound.getPitch()).play(player);
+				}
+			}));
 
 			updateIndex(orderedMsgList);
 		}
