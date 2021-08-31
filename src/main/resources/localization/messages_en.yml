@@ -1,0 +1,31 @@
+Broadcast:
+  Header: "&8<smooth_line>"
+  Footer: "&8<smooth_line>"
+  Messages:
+    Example_Message:
+      - '&6This is an example message!'
+    Multi_Line_Message:
+      - '&eThis is an example of a'
+      - '&emulti-line message!'
+    HEX_Example_Message:
+      - '#ff3393This is an example of a HEX message!'
+
+Welcome:
+  Join_MOTD:
+    Example_MOTD_1:
+      - "&8<chat_line>"
+      - "&7Welcome to the server, &b{player}&7!"
+      - "&f"
+      - "&bWebsite: &fyourserver.com"
+      - "&bDiscord: &fdiscord.com/yourserver"
+      - "&bTwitter: &ftwitter.com/yourserver"
+      - "&8<chat_line>"
+  Join_Broadcasts:
+    - "&8[&3&lServerName&8]&7 Player &b{player}&7 has joined for the first time!"
+
+Commands:
+  Reload_Success: "{plugin_name} {plugin_version} has been reloaded!"
+  Reload_Fail: "&cReloading failed! Check the console for more information. Error: {error}"
+  Error: "&cThe command failed. Check the console and report the error."
+
+Version: 1
