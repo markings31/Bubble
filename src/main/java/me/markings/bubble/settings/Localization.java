@@ -58,4 +58,17 @@ public class Localization extends SimpleLocalization {
 			JOIN_BROADCAST = getStringList("Join_Broadcasts");
 		}
 	}
+
+	@NoArgsConstructor(access = AccessLevel.PRIVATE)
+	public static class JoinQuitMessages {
+
+		public static String JOIN_MESSAGE;
+		public static String QUIT_MESSAGE;
+
+		private static void init() {
+			pathPrefix("Join");
+			JOIN_MESSAGE = getString("Join_Message");
+			QUIT_MESSAGE = getString("Quit_Message");
+		}
+	}
 }

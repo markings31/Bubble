@@ -1,6 +1,6 @@
 package me.markings.bubble.command.bubble;
 
-import me.markings.bubble.command.NotificationCommand;
+import org.jetbrains.annotations.NotNull;
 import org.mineacademy.fo.command.SimpleCommandGroup;
 
 public class BubbleGroup extends SimpleCommandGroup {
@@ -12,12 +12,12 @@ public class BubbleGroup extends SimpleCommandGroup {
 	}
 
 	@Override
-	protected String getCredits() {
+	protected @NotNull String getCredits() {
 		return "&7Visit &f&nhttps://markings.me/ &r&7 for more information.";
 	}
 
 	@Override
-	protected String getHeaderPrefix() {
+	protected @NotNull String getHeaderPrefix() {
 		return "&b&l";
 	}
 }

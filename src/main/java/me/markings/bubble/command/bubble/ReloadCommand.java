@@ -1,5 +1,6 @@
 package me.markings.bubble.command.bubble;
 
+import org.jetbrains.annotations.NotNull;
 import org.mineacademy.fo.command.SimpleSubCommand;
 import org.mineacademy.fo.plugin.SimplePlugin;
 import org.mineacademy.fo.settings.SimpleLocalization;
@@ -15,7 +16,7 @@ public class ReloadCommand extends SimpleSubCommand {
 		try {
 			SimplePlugin.getInstance().reload();
 			tell(SimpleLocalization.Commands.RELOAD_SUCCESS);
-		} catch (final Throwable t) {
+		} catch (final @NotNull Throwable t) {
 			t.printStackTrace();
 			tell(SimpleLocalization.Commands.RELOAD_FAIL.replace("{error}", t.toString()));
 		}

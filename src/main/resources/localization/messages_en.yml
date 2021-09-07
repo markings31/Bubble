@@ -23,6 +23,10 @@ Welcome:
   Join_Broadcasts:
     - "&8[&3&lServerName&8]&7 Player &b{player}&7 has joined for the first time!"
 
+Join:
+  Join_Message: "&8[&a+&8] &a{player}"
+  Quit_Message: "&8[&c-&8] &c{player}"
+
 Commands:
   Reload_Success: "{plugin_name} {plugin_version} has been reloaded!"
   Reload_Fail: "&cReloading failed! Check the console for more information. Error: {error}"

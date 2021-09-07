@@ -53,7 +53,7 @@
         <main.class>me.markings.bubble.Bubble</main.class>
 
         <!-- The Foundation version - change to latest version from https://github.com/kangarko/Foundation/releases -->
-        <foundation.version>5.10.5</foundation.version>
+        <foundation.version>5.11.0</foundation.version>
 
         <!-- The Java version your plugin uses, see bstats.org for what most servers have and use that -->
         <java.version>1.8</java.version>
@@ -120,13 +120,46 @@
             <scope>provided</scope>
         </dependency>
 
+        <dependency>
+            <groupId>net.md-5</groupId>
+            <artifactId>bungeecord-api</artifactId>
+            <!-- Change this to the latest version to stay up to date -->
+            <version>1.17-R0.1-SNAPSHOT</version>
+            <!--
+                The scope indicates if this library should be packaged together with our plugin
+                when we want to publish it.
+
+                Set this to "compile" if you want all classes from this library to be copied
+                to your plugin's jar, otherwise set this to "provided".
+            -->
+            <scope>provided</scope>
+        </dependency>
+
         <!--
             Import the Foundation library to kickstart our plugin development
         -->
+        <!--<dependency>
+            <groupId>me.markings.bedrock</groupId>
+            <artifactId>Bedrock</artifactId>
+            <version>1.0.0</version>
+            <scope>system</scope>
+            <systemPath>/home/brandon/Documents/GitHub/Bedrock/target/Bedrock-1.0.0.jar</systemPath>
+        </dependency>-->
+
         <dependency>
+            <!-- I use this since I have Foundation source on my computer. Change it to com.github.kangarko to make it function -->
             <groupId>com.github.kangarko</groupId>
             <artifactId>Foundation</artifactId>
             <version>${foundation.version}</version>
+            <!-- Include Foundation and its dependencies. There are exceptions, see shade plugin below -->
+            <scope>compile</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>org.projectlombok</groupId>
+            <artifactId>lombok</artifactId>
+            <version>1.18.20</version>
+            <scope>provided</scope>
         </dependency>
     </dependencies>
 
@@ -192,22 +225,22 @@
                             <finalName>${project.name}-${project.version}</finalName>
                             <artifactSet>
                                 <includes>
-                                    <include>org.mineacademy:Game*</include>
-                                    <include>org.mineacademy:Foundation*</include>
+                                    <include>com.github.kangarko:Game*</include>
+                                    <include>com.github.kangarko:Foundation*</include>
                                 </includes>
                                 <excludes>
-                                    <exclude>org.mineacademy:GameAPI*</exclude>
+                                    <exclude>com.github.kangarko:GameAPI*</exclude>
                                 </excludes>
                             </artifactSet>
                             <relocations>
                                 <relocation>
-                                    <pattern>org.mineacademy</pattern>
+                                    <pattern>com.github.kangarko</pattern>
                                     <shadedPattern>${project.groupId}.${project.artifactId}.lib</shadedPattern>
                                     <excludes>
-                                        <exclude>org.mineacademy.${project.artifactId}.*</exclude>
-                                        <exclude>org.mineacademy.gameapi.*</exclude>
-                                        <exclude>org.mineacademy.boss.*</exclude>
-                                        <exclude>org.mineacademy.worldeditbridge.*</exclude>
+                                        <exclude>com.github.kangarko.${project.artifactId}.*</exclude>
+                                        <exclude>com.github.kangarko.gameapi.*</exclude>
+                                        <exclude>com.github.kangarko.boss.*</exclude>
+                                        <exclude>com.github.kangarko.worldeditbridge.*</exclude>
                                     </excludes>
                                 </relocation>
                             </relocations>
@@ -215,38 +248,38 @@
                     </execution>
                 </executions>
             </plugin>
-           <!--<plugin>
-                <groupId>com.github.wvengen</groupId>
-                <artifactId>proguard-maven-plugin</artifactId>
-                
-                    https://mvnrepository.com/artifact/com.github.wvengen/proguard-maven-plugin
-                 
-                <version>2.4.0</version>
-                <dependencies>
-                    <dependency>
-                        <groupId>net.sf.proguard</groupId>
-                        <artifactId>proguard-base</artifactId>
-                        
-                            https://mvnrepository.com/artifact/net.sf.proguard/proguard-base
-                         
-                        <version>6.2.2</version>
-                    </dependency>
-                </dependencies>
-                <executions>
-                    <execution>
-                        <phase>package</phase>
-                        <goals>
-                            <goal>proguard</goal>
-                        </goals>
-                    </execution>
-                </executions>
-                <configuration>
-                    <libs>
-                        <lib>${java.home}/lib/rt.jar</lib>
-                        <lib>${java.home}/lib/jce.jar</lib>
-                    </libs>
-                </configuration>
-            </plugin>-->
+            <!--<plugin>
+                 <groupId>com.github.wvengen</groupId>
+                 <artifactId>proguard-maven-plugin</artifactId>
+
+                     https://mvnrepository.com/artifact/com.github.wvengen/proguard-maven-plugin
+
+                 <version>2.4.0</version>
+                 <dependencies>
+                     <dependency>
+                         <groupId>net.sf.proguard</groupId>
+                         <artifactId>proguard-base</artifactId>
+
+                             https://mvnrepository.com/artifact/net.sf.proguard/proguard-base
+
+                         <version>6.2.2</version>
+                     </dependency>
+                 </dependencies>
+                 <executions>
+                     <execution>
+                         <phase>package</phase>
+                         <goals>
+                             <goal>proguard</goal>
+                         </goals>
+                     </execution>
+                 </executions>
+                 <configuration>
+                     <libs>
+                         <lib>${java.home}/lib/rt.jar</lib>
+                         <lib>${java.home}/lib/jce.jar</lib>
+                     </libs>
+                 </configuration>
+             </plugin>-->
         </plugins>
 
         <!--

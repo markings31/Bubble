@@ -31,12 +31,22 @@ Notifications:
     # Enable broadcast messages?
     Enable: true
 
+    # Should players only receive broadcast messages when they have
+    # a specific permission (configured below)?
+    Enable_Permission: false
+
+    # Should all broadcast messages be forwarded to connected Bungeecord servers?
+    Bungeecord: false
+
     # The delay between each broadcast message.
     Delay: 90 seconds
 
     # Should the broadcast messages be outputted randomly?
     # Setting this to false will broadcast them in order.
     Random_Message: false
+
+    # The permission players are required to have to receive broadcast messages.
+    Broadcast_Permission: "bubble.broadcast"
 
     # Which worlds should the broadcast messages be sent to?
     Worlds:
@@ -58,18 +68,46 @@ Notifications:
     # that could backup the chat.
     MOTD_Delay: 1 second
 
-    # Should a message be broadcasted to the entire server when a player
-    # joins for the first time?
-    Enable_First_Join_Broadcast: true
-
     # What sound should be played when the player joins?
     # A list of the compatible values can be found here:
     # https://gist.github.com/NiklasEi/7bd0ffd136f8459df0940e4501d47a8a
     Sound: LEVEL_UP, 1F, 1.5F
 
+  # Join Messages
+  Join:
+
+    # Should join messages be broadcast to the server when a player joins?
+    Enable_Join_Message: false
+
+    # Should join messages be broadcast to the server when a player quits?
+    Enable_Quit_Message: false
+
+    # Should a message be broadcasted to the entire server when a player
+    # joins for the first time?
+    Enable_First_Join_Broadcast: true
+
     # If the above option is enabled, the message will only be broadcast to these worlds.
     Worlds:
       - 'world'
+
+# -------------------------------------------------------------------------------------------------
+# Chat Section
+# -------------------------------------------------------------------------------------------------
+Chat:
+
+  # Mentions System
+  Mentions:
+
+    # Should players be notified when they are mentioned in the chat (prepended by the @ symbol)?
+    Enable: true
+
+    # What color should the player name be highlighted with when mentioned in the chat?
+    Color: '&e'
+
+    # What sound should be played when the is mentioned in the chat?
+    # A list of the compatible values can be found here:
+    # https://gist.github.com/NiklasEi/7bd0ffd136f8459df0940e4501d47a8a
+    Sound: ORB_PICKUP
 
 # -------------------------------------------------------------------------------------------------
 # The plugin's main prefix. You can manually add this prefix to other messages using the

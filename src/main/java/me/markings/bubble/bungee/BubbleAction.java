@@ -5,7 +5,7 @@ import org.mineacademy.fo.bungee.BungeeAction;
 
 public enum BubbleAction implements BungeeAction {
 
-	CHAT_MESSAGE(String.class, String.class);
+	NOTIFICATION(String.class, String.class);
 
 	@Getter
 	private final Class<?>[] content;
