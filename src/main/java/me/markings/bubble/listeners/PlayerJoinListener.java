@@ -1,6 +1,7 @@
 package me.markings.bubble.listeners;
 
 import lombok.val;
+import me.markings.bubble.bungee.BubbleAction;
 import me.markings.bubble.settings.Localization;
 import me.markings.bubble.settings.Settings;
 import me.markings.bubble.util.MessageUtil;
@@ -8,6 +9,7 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.jetbrains.annotations.NotNull;
+import org.mineacademy.fo.BungeeUtil;
 import org.mineacademy.fo.Common;
 import org.mineacademy.fo.model.SimpleSound;
 import org.mineacademy.fo.model.Variables;
@@ -22,7 +24,7 @@ public class PlayerJoinListener implements Listener {
 		event.setJoinMessage(Settings.JoinSettings.ENABLE_JOIN_MESSAGE.equals(Boolean.TRUE) ?
 				Common.colorize(Variables.replace(Localization.JoinQuitMessages.JOIN_MESSAGE, player)) : null);
 
-		val messages = Localization.WelcomeMessages.JOIN_MOTD;
+		val messages = Settings.WelcomeSettings.JOIN_MOTD;
 		val broadcastMessages = Localization.WelcomeMessages.JOIN_BROADCAST;
 
 		val motdSound = Settings.WelcomeSettings.MOTD_SOUND;
@@ -31,11 +33,12 @@ public class PlayerJoinListener implements Listener {
 		if (Settings.WelcomeSettings.ENABLE_JOIN_MOTD.equals(Boolean.TRUE)) {
 			messages.forEach(messageGroup ->
 					IntStream.range(0, messageGroup.toArray().length).forEach(i -> {
-						if (MessageUtil.isCommand(messageGroup.get(i)))
-							MessageUtil.executePlaceholders(messageGroup.get(i), player);
-						else Common.tellLater(Settings.WelcomeSettings
-								.MOTD_DELAY.getTimeTicks(), player, MessageUtil.replaceVarsAndGradient(messageGroup.get(i), player));
-
+						MessageUtil.executePlaceholders(messageGroup.get(i), player);
+						if (!Settings.WelcomeSettings.BUNGEECORD)
+							Common.tellLater(Settings.WelcomeSettings
+									.MOTD_DELAY.getTimeTicks(), player, MessageUtil.replaceVarsAndGradient(messageGroup.get(i), player));
+						else
+							BungeeUtil.tellBungee(BubbleAction.NOTIFICATION, "message", MessageUtil.replaceVarsAndGradient(messageGroup.get(i), player));
 					}));
 			Common.runLaterAsync(motdDelay.getTimeTicks(), () ->
 					new SimpleSound(motdSound.getSound(), motdSound.getVolume(), motdSound.getPitch()).play(player));

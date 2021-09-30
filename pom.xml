@@ -53,10 +53,10 @@
         <main.class>me.markings.bubble.Bubble</main.class>
 
         <!-- The Foundation version - change to latest version from https://github.com/kangarko/Foundation/releases -->
-        <foundation.version>5.11.0</foundation.version>
+        <foundation.version>5.11.1</foundation.version>
 
         <!-- The Java version your plugin uses, see bstats.org for what most servers have and use that -->
-        <java.version>1.8</java.version>
+        <java.version>16</java.version>
 
         <!-- How letters in your code should be saved on your disk, leave to UTF-8 to support all languages -->
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -163,6 +163,13 @@
         </dependency>
     </dependencies>
 
+    <pluginRepositories>
+        <pluginRepository>
+            <id>maven-snapshots</id>
+            <url>https://repository.apache.org/content/repositories/snapshots/</url>
+        </pluginRepository>
+    </pluginRepositories>
+
     <!--
         Configure what happens when we are building this project (Maven compiles our code into bytecode
         for us automatically).
@@ -195,6 +202,7 @@
                 </configuration>
             </plugin>
 
+
             <!--
                 The second plugin is the shade plugin, packaging every library with
                 the "compile" scope (see dependencies)
@@ -206,7 +214,7 @@
                     You want to check and update the latest version periodically from
                     https://mvnrepository.com/artifact/org.apache.maven.plugins/maven-shade-plugin
                 -->
-                <version>3.2.1</version>
+                <version>3.3.0-SNAPSHOT</version>
                 <executions>
                     <execution>
                         <phase>package</phase>

@@ -4,6 +4,7 @@ import lombok.Getter;
 import me.markings.bubble.bungee.BubbleAction;
 import me.markings.bubble.bungee.BubbleBungeeListener;
 import me.markings.bubble.command.AnnounceCommand;
+import me.markings.bubble.command.ToggleCommand;
 import me.markings.bubble.command.bubble.BubbleGroup;
 import me.markings.bubble.listeners.PlayerChatListener;
 import me.markings.bubble.listeners.PlayerJoinListener;
@@ -16,18 +17,11 @@ import org.mineacademy.fo.bungee.SimpleBungee;
 import org.mineacademy.fo.command.SimpleCommandGroup;
 import org.mineacademy.fo.plugin.SimplePlugin;
 import org.mineacademy.fo.settings.SimpleSettings;
-import org.mineacademy.fo.settings.YamlStaticConfig;
-
-import java.util.Arrays;
-import java.util.List;
 
 public final class Bubble extends SimplePlugin {
 
 	@Getter
 	private final SimpleCommandGroup mainCommand = new BubbleGroup();
-
-	@Getter
-	private final List<Class<? extends YamlStaticConfig>> settings = Arrays.asList(Settings.class, Localization.class);
 
 	@Getter
 	private final SimpleBungee bungeeCord = new SimpleBungee("plugin:bubble", BubbleBungeeListener.class, BubbleAction.class);
@@ -37,14 +31,24 @@ public final class Bubble extends SimplePlugin {
 		Common.setTellPrefix(SimpleSettings.PLUGIN_PREFIX);
 
 		registerCommand(new AnnounceCommand());
+		registerCommand(new ToggleCommand());
 
-		Common.log(Common.getTellPrefix() + " Bubble has been successfully enabled.");
+		if (Common.doesPluginExist("Vault"))
+			Common.log(Common.getTellPrefix() + "Successfully hooked into Vault!");
+
+		if (Common.doesPluginExist("PlaceholderAPI"))
+			Common.log(Common.getTellPrefix() + "Successfully hooked into PlaceholderAPI!");
+
+		if (Common.doesPluginExist("MultiverseCore"))
+			Common.log(Common.getTellPrefix() + "Successfully hooked into MultiverseCore");
+
+		Common.log(Common.getTellPrefix() + "Bubble has been successfully enabled!");
 	}
 
 	@Override
 	protected void onPluginPreReload() {
-		Localization.BroadcastMessages.MESSAGE_LIST.clear();
-		Localization.WelcomeMessages.JOIN_MOTD.clear();
+		Localization.BroadcastMessages.MESSAGE_MAP.clear();
+		Settings.WelcomeSettings.JOIN_MOTD.clear();
 	}
 
 	@Override
@@ -56,8 +60,11 @@ public final class Bubble extends SimplePlugin {
 
 		Messenger.setInfoPrefix(SimpleSettings.PLUGIN_PREFIX);
 
-		new BroadcastTask().runTaskTimerAsynchronously(this, 0,
-				Settings.BroadcastSettings.BROADCAST_DELAY.getTimeTicks());
+		if (Settings.BroadcastSettings.ENABLE_BROADCASTS.equals(Boolean.TRUE))
+			new BroadcastTask().runTaskTimerAsynchronously(this, 0,
+					Settings.BroadcastSettings.BROADCAST_DELAY.getTimeTicks());
+
+		PlayerCache.clearAllData();
 	}
 
 }

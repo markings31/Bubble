@@ -45,6 +45,11 @@ public class MessageUtil {
 	private static final String bungeeActionBarPlaceholder = "<bungee_actionbar>";
 	private static final String bungeeBossBarPlaceholder = "<bungee_bossbar>";
 
+	private static final String titlePlaceholder = "<title>";
+	private static final String actionbarPlaceholder = "<actionbar>";
+	private static final String bossbarPlaceholder = "<bossbar>";
+	private static final String toastPlaceholder = "<toast>";
+
 	public static String format(final String message) {
 		val chatLinePlaceholder = "<chat_line>";
 		val smoothLinePlaceholder = "<smooth_line>";
@@ -57,7 +62,7 @@ public class MessageUtil {
 			return message.replace(smoothLinePlaceholder, Common.chatLineSmooth());
 
 		if (message.contains(fancyLinePlaceholder))
-			return message.replace(fancyLinePlaceholder, "-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-");
+			return message.replace(fancyLinePlaceholder, "-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-");
 
 		if (message.contains(centerPlaceholder))
 			return ChatUtil.center(message.replace(centerPlaceholder, ""));
@@ -66,13 +71,14 @@ public class MessageUtil {
 	}
 
 	public static String translateGradient(final String message) {
-		val firstColor = StringUtils.substringBetween(message, ":", "|");
-		val secondColor = StringUtils.substringBetween(message, "|", ">");
+		final String newMessage = stripPlaceholders(message.replace("§", "&"));
+		val firstColor = StringUtils.substringBetween(newMessage, ":", "|");
+		val secondColor = StringUtils.substringBetween(newMessage, "|", ">");
 
 		val fullGradientPrefix = gradientPlaceholder + firstColor + "|" + secondColor + ">";
 
-		if (message.contains(gradientPlaceholder) && message.contains(gradientEndPlaceholder))
-			return ChatUtil.generateGradient(message.replace(fullGradientPrefix, "")
+		if (newMessage.contains(gradientPlaceholder) && newMessage.contains(gradientEndPlaceholder))
+			return getPlaceholder(message) + ChatUtil.generateGradient(newMessage.replace(fullGradientPrefix, "")
 					.replace(gradientEndPlaceholder, ""), CompChatColor.of(firstColor), CompChatColor.of(secondColor));
 
 		return message;
@@ -95,12 +101,30 @@ public class MessageUtil {
 			BungeeUtil.tellBungee(BubbleAction.NOTIFICATION, bossbarArg, Variables.replace(message.replace(bungeeBossBarPlaceholder, ""), player));
 	}
 
-	public static boolean isCommand(final String message) {
-		return message.startsWith(commandPlaceholder);
+	public static String getPlaceholder(final String message) {
+		if (message.contains(titlePlaceholder))
+			return titlePlaceholder;
+		if (message.contains(actionbarPlaceholder))
+			return actionbarPlaceholder;
+		if (message.contains(bossbarPlaceholder))
+			return bossbarPlaceholder;
+		if (message.contains(toastPlaceholder))
+			return toastPlaceholder;
+
+		return "";
 	}
 
-	public static boolean isBungeeTitle(final String message) {
-		return message.startsWith(bungeeTitlePlaceholder);
+	public static String stripPlaceholders(final String message) {
+		if (message.contains(titlePlaceholder))
+			return message.replace(titlePlaceholder, "");
+		if (message.contains(actionbarPlaceholder))
+			return message.replace(actionbarPlaceholder, "");
+		if (message.contains(bossbarPlaceholder))
+			return message.replace(bossbarPlaceholder, "");
+		if (message.contains(toastPlaceholder))
+			return message.replace(toastPlaceholder, "");
+
+		return message;
 	}
 
 	public static boolean containsGradient(final String message) {

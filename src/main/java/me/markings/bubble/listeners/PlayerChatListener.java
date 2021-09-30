@@ -3,7 +3,6 @@ package me.markings.bubble.listeners;
 import lombok.val;
 import me.markings.bubble.settings.Settings;
 import org.bukkit.Bukkit;
-import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
@@ -13,7 +12,6 @@ import org.mineacademy.fo.model.SimpleSound;
 import org.mineacademy.fo.remain.Remain;
 
 import java.util.Arrays;
-import java.util.Iterator;
 import java.util.concurrent.atomic.AtomicReference;
 
 public class PlayerChatListener implements Listener {
@@ -26,7 +24,7 @@ public class PlayerChatListener implements Listener {
 		val eventMessage = event.getMessage();
 		val mentionPlayer = new AtomicReference<>();
 		Remain.getOnlinePlayers().forEach(loopPlayer -> {
-			final String[] groupedMessage = eventMessage.split(" ");
+			val groupedMessage = eventMessage.split(" ");
 			Arrays.asList(groupedMessage).forEach(messageArg -> {
 				if (messageArg.toLowerCase().contains("@" + loopPlayer.getName().toLowerCase())) {
 					mentionPlayer.set(loopPlayer.getName());
@@ -35,9 +33,9 @@ public class PlayerChatListener implements Listener {
 			});
 		});
 		val player = Bukkit.getPlayer(mentionPlayer.toString());
-		final Iterator<Player> i = event.getRecipients().iterator();
+		val i = event.getRecipients().iterator();
 		while (i.hasNext()) {
-			final Player recipient = i.next();
+			val recipient = i.next();
 			if (recipient != player && player != null) {
 				Common.tell(recipient, String.format(event.getFormat(), event.getPlayer().getDisplayName(), event.getMessage()).replace("@", ""));
 				i.remove();
@@ -47,7 +45,8 @@ public class PlayerChatListener implements Listener {
 		event.setMessage(eventMessage.replace(mention, Common.colorize(Settings.ChatSettings.MENTION_COLOR
 				+ mention.replace("@", "") + "&r")));
 
-		new SimpleSound(mentionSound.getSound(), mentionSound.getVolume(), mentionSound.getPitch()).play(player);
+		if (player != null)
+			new SimpleSound(mentionSound.getSound(), mentionSound.getVolume(), mentionSound.getPitch()).play(player);
 	}
 
 }

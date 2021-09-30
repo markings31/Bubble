@@ -2,18 +2,18 @@ package me.markings.bubble.settings;
 
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
+import lombok.val;
 import org.mineacademy.fo.settings.SimpleLocalization;
+import org.mineacademy.fo.settings.SimpleSettings;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Objects;
+import java.io.File;
+import java.io.IOException;
+import java.util.*;
 
 @SuppressWarnings("unused")
 public class Localization extends SimpleLocalization {
 
 	private static final String messagePath = "Broadcast.Messages";
-	private static final String motdPath = "Welcome.Join_MOTD";
 
 	@Override
 	protected int getConfigVersion() {
@@ -28,14 +28,34 @@ public class Localization extends SimpleLocalization {
 	@NoArgsConstructor(access = AccessLevel.PRIVATE)
 	public static class BroadcastMessages {
 
-		public static final List<List<String>> MESSAGE_LIST = new ArrayList<>();
+		public static final Map<List<String>, String> MESSAGE_MAP = new HashMap<>();
+
+		public static final Map<String, String> PERMISSION = new HashMap<>();
 
 		public static String HEADER;
 		public static String FOOTER;
 
 		private static void init() {
-			Objects.requireNonNull(getConfig().getConfigurationSection(messagePath)).getKeys(false)
-					.stream().map(path -> getConfig().getStringList(messagePath + "." + path)).forEach(MESSAGE_LIST::add);
+			pathPrefix(null);
+			Objects.requireNonNull(getConfig().getConfigurationSection(messagePath)).getKeys(false).forEach(path -> {
+				val permissionPath = messagePath + "." + path + ".Permission";
+
+				if (!isSet(permissionPath))
+					getConfig().set(permissionPath, "bubble.vip");
+
+				if (!isSet(messagePath + "." + path + ".Message"))
+					getConfig().createSection(messagePath + "." + path + ".Message");
+
+				val stringList = getStringList(messagePath + "." + path + ".Message");
+
+				PERMISSION.put(path, getString(permissionPath));
+				MESSAGE_MAP.put(stringList, path);
+				try {
+					getConfig().save(new File("plugins/Bubble/localization/messages_" + SimpleSettings.LOCALE_PREFIX + ".yml"));
+				} catch (final IOException e) {
+					e.printStackTrace();
+				}
+			});
 
 			pathPrefix("Broadcast");
 			HEADER = getString("Header");
@@ -45,15 +65,9 @@ public class Localization extends SimpleLocalization {
 
 	@NoArgsConstructor(access = AccessLevel.PRIVATE)
 	public static class WelcomeMessages {
-
-		public static List<List<String>> JOIN_MOTD = new ArrayList<>();
-
 		public static List<String> JOIN_BROADCAST;
 
 		private static void init() {
-			Objects.requireNonNull(getConfig().getConfigurationSection(motdPath)).getKeys(false)
-					.forEach(path -> JOIN_MOTD.add(getConfig().getStringList(motdPath + "." + path)));
-
 			pathPrefix("Welcome");
 			JOIN_BROADCAST = getStringList("Join_Broadcasts");
 		}

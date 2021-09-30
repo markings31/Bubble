@@ -30,7 +30,7 @@ public class NotificationCommand extends SimpleSubCommand {
 
 		setMinArguments(3);
 
-		setUsage("<playerName|all|bungee> <message|title|bossbar|actionbar|toast> [<material>] <input|...>");
+		setUsage("<player_name|all|bungee> <message|title|bossbar|actionbar|toast> [<material>] <input|...>");
 		setPermission("bubble.command.notify");
 	}
 
@@ -59,47 +59,40 @@ public class NotificationCommand extends SimpleSubCommand {
 
 	private void sendNotification(final String param, final String primaryPart, final String secondaryPart, final Player target, final CompMaterial material) {
 		switch (param) {
-			case "message":
+			case "message" -> {
 				if (getPlayer() != null)
 					checkBoolean(getPlayer().hasPermission(getPermission() + ".message"), noPermissionMsg);
-
 				Common.tell(target, Common.colorize(primaryPart));
-				break;
-			case "title":
+			}
+			case "title" -> {
 				if (getPlayer() != null)
 					checkBoolean(getPlayer().hasPermission(getPermission() + ".title"), noPermissionMsg);
-
 				Remain.sendTitle(target, primaryPart, secondaryPart);
-				break;
-			case "actionbar":
-			case "action":
+			}
+			case "actionbar", "action" -> {
 				if (getPlayer() != null)
 					checkBoolean(getPlayer().hasPermission(getPermission() + ".actionbar"), noPermissionMsg);
-
 				Remain.sendActionBar(target, primaryPart);
-				break;
-			case "bossbar":
+			}
+			case "bossbar" -> {
 				if (getPlayer() != null)
 					checkBoolean(getPlayer().hasPermission(getPermission() + ".bossbar"), noPermissionMsg);
-
 				Remain.sendBossbarPercent(target, primaryPart, 100);
-				break;
-			case "toast":
+			}
+			case "toast" -> {
 				if (getPlayer() != null)
 					checkBoolean(getPlayer().hasPermission(getPermission() + ".toast"), noPermissionMsg);
-
 				Remain.sendToast(target, primaryPart, material);
-				break;
+			}
 		}
 	}
 
 	@Override
 	protected List<String> tabComplete() {
 		if (args.length == 1)
-			return completeLastWord("player", "all", bungeeArg);
+			return completeLastWord("player_name", "all", bungeeArg);
 		if (args.length == 2)
-			return completeLastWord(messageArg, titleArg,
-					actionbarArg, bossbarArg, toastArg);
+			return completeLastWord(messageArg, titleArg, actionbarArg, bossbarArg, toastArg);
 		if (args.length == 3 && args[1].equalsIgnoreCase(toastArg))
 			return completeLastWord(CompMaterial.values());
 

@@ -3,12 +3,18 @@ Broadcast:
   Footer: "&8<smooth_line>"
   Messages:
     Example_Message:
-      - '&6This is an example message!'
+      Permission: bubble.vip
+      Message:
+        - '&6This is an example message!'
     Multi_Line_Message:
-      - '&eThis is an example of a'
-      - '&emulti-line message!'
+      Permission: bubble.vip
+      Message:
+        - '&eThis is an example of a'
+        - '&emulti-line message!'
     HEX_Example_Message:
-      - '#ff3393This is an example of a HEX message!'
+      Permission: bubble.vip
+      Message:
+        - '#ff3393This is an example of a HEX message!'
 
 Welcome:
   Join_MOTD:

@@ -31,10 +31,6 @@ Notifications:
     # Enable broadcast messages?
     Enable: true
 
-    # Should players only receive broadcast messages when they have
-    # a specific permission (configured below)?
-    Enable_Permission: false
-
     # Should all broadcast messages be forwarded to connected Bungeecord servers?
     # NOTE: This requires the "BubbleBungee" addon (included with the download) to
     # be installed onto your Bungeecord proxy server.
@@ -47,8 +43,8 @@ Notifications:
     # Setting this to false will broadcast them in order.
     Random_Message: false
 
-    # The permission players are required to have to receive broadcast messages.
-    Broadcast_Permission: "bubble.broadcast"
+    # Should all broadcast messages be centered automatically?
+    Center_All: false
 
     # Which worlds should the broadcast messages be sent to?
     Worlds:
@@ -65,10 +61,26 @@ Notifications:
     # Should the message of the day be displayed to users on-join?
     Enable_MOTD: true
 
+    # Should all broadcast messages be forwarded to connected Bungeecord servers?
+    # NOTE: This requires the "BubbleBungee" addon (included with the download) to
+    # be installed onto your Bungeecord proxy server.
+    Bungeecord: false
+
     # The delay between when the player joins and when the message is
     # sent. Used to separate the MOTD message from other server messages
     # that could backup the chat.
     MOTD_Delay: 1 second
+
+    # The message sent to players on-join.
+    Join_MOTD:
+      Example_MOTD_1:
+        - "&8<chat_line>"
+        - "&7Welcome to the server, &b{player}&7!"
+        - "&f"
+        - "&bWebsite: &fyourserver.com"
+        - "&bDiscord: &fdiscord.com/yourserver"
+        - "&bTwitter: &ftwitter.com/yourserver"
+        - "&8<chat_line>"
 
     # What sound should be played when the player joins?
     # A list of the compatible values can be found here:
