@@ -8,7 +8,6 @@ import me.markings.bubble.command.ToggleCommand;
 import me.markings.bubble.command.bubble.BubbleGroup;
 import me.markings.bubble.listeners.PlayerChatListener;
 import me.markings.bubble.listeners.PlayerJoinListener;
-import me.markings.bubble.settings.Localization;
 import me.markings.bubble.settings.Settings;
 import me.markings.bubble.tasks.BroadcastTask;
 import org.mineacademy.fo.Common;
@@ -47,7 +46,7 @@ public final class Bubble extends SimplePlugin {
 
 	@Override
 	protected void onPluginPreReload() {
-		Localization.BroadcastMessages.MESSAGE_MAP.clear();
+		Settings.BroadcastSettings.MESSAGE_MAP.clear();
 		Settings.WelcomeSettings.JOIN_MOTD.clear();
 	}
 
