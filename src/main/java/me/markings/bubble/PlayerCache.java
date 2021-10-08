@@ -13,7 +13,10 @@ public final class PlayerCache extends YamlSectionConfig {
 	private static final ExpiringMap<UUID, PlayerCache> cacheMap = ExpiringMap.builder().expiration(30, TimeUnit.MINUTES).build();
 
 	private final UUID uuid;
+
 	private boolean broadcastStatus;
+	private boolean motdStatus;
+	private boolean mentionsStatus;
 
 	private PlayerCache(final UUID uuid) {
 		super("Players." + uuid.toString());
@@ -26,6 +29,8 @@ public final class PlayerCache extends YamlSectionConfig {
 	@Override
 	protected void onLoadFinish() {
 		broadcastStatus = getBoolean("Receive_Broadcasts", true);
+		motdStatus = getBoolean("Receive_MOTD", true);
+		mentionsStatus = getBoolean("Receive_Mentions", true);
 	}
 
 
@@ -33,11 +38,31 @@ public final class PlayerCache extends YamlSectionConfig {
 		return broadcastStatus;
 	}
 
+	public boolean getMOTDStatus() {
+		return motdStatus;
+	}
+
+	public boolean getMentionsStatus() {
+		return mentionsStatus;
+	}
+
 
 	public void setBroadcastStatus(final boolean broadcastStatus) {
 		this.broadcastStatus = broadcastStatus;
 
 		save("Receive_Broadcasts", broadcastStatus);
+	}
+
+	public void setMOTDStatus(final boolean motdStatus) {
+		this.motdStatus = motdStatus;
+
+		save("Receive_MOTD", motdStatus);
+	}
+
+	public void setMentionsStatus(final boolean mentionsStatus) {
+		this.mentionsStatus = mentionsStatus;
+
+		save("Receive_MOTD", mentionsStatus);
 	}
 
 

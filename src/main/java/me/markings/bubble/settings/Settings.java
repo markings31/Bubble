@@ -2,16 +2,19 @@ package me.markings.bubble.settings;
 
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
+import lombok.val;
 import org.mineacademy.fo.model.SimpleSound;
 import org.mineacademy.fo.model.SimpleTime;
 import org.mineacademy.fo.settings.SimpleSettings;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Objects;
+import java.io.File;
+import java.io.IOException;
+import java.util.*;
 
 @SuppressWarnings("unused")
 public final class Settings extends SimpleSettings {
+
+	private static final String messagePath = "Notifications.Broadcast.Messages";
 
 	@Override
 	protected int getConfigVersion() {
@@ -23,13 +26,25 @@ public final class Settings extends SimpleSettings {
 		return true;
 	}
 
+	@Override
+	protected List<String> getUncommentedSections() {
+		return List.of(messagePath);
+	}
+
 	@NoArgsConstructor(access = AccessLevel.PRIVATE)
 	public static class BroadcastSettings {
+
+		public static final Map<List<String>, String> MESSAGE_MAP = new HashMap<>();
+
+		public static final Map<String, String> PERMISSION = new HashMap<>();
 
 		public static Boolean ENABLE_BROADCASTS;
 		public static Boolean BUNGEECORD;
 		public static Boolean RANDOM_MESSAGE;
 		public static Boolean CENTER_ALL;
+
+		public static String HEADER;
+		public static String FOOTER;
 
 		public static List<String> BROADCAST_WORLDS = new ArrayList<>();
 
@@ -38,6 +53,27 @@ public final class Settings extends SimpleSettings {
 		public static SimpleSound BROADCAST_SOUND;
 
 		private static void init() {
+			pathPrefix(null);
+			Objects.requireNonNull(getConfig().getConfigurationSection(messagePath)).getKeys(false).forEach(path -> {
+				val permissionPath = messagePath + "." + path + ".Permission";
+
+				if (!isSet(permissionPath))
+					getConfig().set(permissionPath, "bubble.vip");
+
+				if (!isSet(messagePath + "." + path + ".Message"))
+					getConfig().createSection(messagePath + "." + path + ".Message");
+
+				val stringList = getStringList(messagePath + "." + path + ".Message");
+
+				PERMISSION.put(path, getString(permissionPath));
+				MESSAGE_MAP.put(stringList, path);
+				try {
+					getConfig().save(new File("plugins/Bubble/localization/messages_" + SimpleSettings.LOCALE_PREFIX + ".yml"));
+				} catch (final IOException e) {
+					e.printStackTrace();
+				}
+			});
+
 			pathPrefix("Notifications.Broadcast");
 			ENABLE_BROADCASTS = getBoolean("Enable");
 			BUNGEECORD = getBoolean("Bungeecord");
@@ -46,6 +82,8 @@ public final class Settings extends SimpleSettings {
 			CENTER_ALL = getBoolean("Center_All");
 			BROADCAST_WORLDS = getStringList("Worlds");
 			BROADCAST_SOUND = getSound("Sound");
+			HEADER = getString("Header");
+			FOOTER = getString("Footer");
 		}
 	}
 

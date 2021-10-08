@@ -1,6 +1,7 @@
 package me.markings.bubble.listeners;
 
 import lombok.val;
+import me.markings.bubble.PlayerCache;
 import me.markings.bubble.bungee.BubbleAction;
 import me.markings.bubble.settings.Localization;
 import me.markings.bubble.settings.Settings;
@@ -24,13 +25,15 @@ public class PlayerJoinListener implements Listener {
 		event.setJoinMessage(Settings.JoinSettings.ENABLE_JOIN_MESSAGE.equals(Boolean.TRUE) ?
 				Common.colorize(Variables.replace(Localization.JoinQuitMessages.JOIN_MESSAGE, player)) : null);
 
+		val cache = PlayerCache.getCache(player.getUniqueId());
+
 		val messages = Settings.WelcomeSettings.JOIN_MOTD;
 		val broadcastMessages = Localization.WelcomeMessages.JOIN_BROADCAST;
 
 		val motdSound = Settings.WelcomeSettings.MOTD_SOUND;
 		val motdDelay = Settings.WelcomeSettings.MOTD_DELAY;
 
-		if (Settings.WelcomeSettings.ENABLE_JOIN_MOTD.equals(Boolean.TRUE)) {
+		if (Settings.WelcomeSettings.ENABLE_JOIN_MOTD.equals(Boolean.TRUE) && cache.getMOTDStatus()) {
 			messages.forEach(messageGroup ->
 					IntStream.range(0, messageGroup.toArray().length).forEach(i -> {
 						MessageUtil.executePlaceholders(messageGroup.get(i), player);

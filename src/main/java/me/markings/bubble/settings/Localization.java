@@ -2,18 +2,12 @@ package me.markings.bubble.settings;
 
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
-import lombok.val;
 import org.mineacademy.fo.settings.SimpleLocalization;
-import org.mineacademy.fo.settings.SimpleSettings;
 
-import java.io.File;
-import java.io.IOException;
-import java.util.*;
+import java.util.List;
 
 @SuppressWarnings("unused")
 public class Localization extends SimpleLocalization {
-
-	private static final String messagePath = "Broadcast.Messages";
 
 	@Override
 	protected int getConfigVersion() {
@@ -22,45 +16,7 @@ public class Localization extends SimpleLocalization {
 
 	@Override
 	protected List<String> getUncommentedSections() {
-		return Arrays.asList("Broadcast.Messages", "Welcome");
-	}
-
-	@NoArgsConstructor(access = AccessLevel.PRIVATE)
-	public static class BroadcastMessages {
-
-		public static final Map<List<String>, String> MESSAGE_MAP = new HashMap<>();
-
-		public static final Map<String, String> PERMISSION = new HashMap<>();
-
-		public static String HEADER;
-		public static String FOOTER;
-
-		private static void init() {
-			pathPrefix(null);
-			Objects.requireNonNull(getConfig().getConfigurationSection(messagePath)).getKeys(false).forEach(path -> {
-				val permissionPath = messagePath + "." + path + ".Permission";
-
-				if (!isSet(permissionPath))
-					getConfig().set(permissionPath, "bubble.vip");
-
-				if (!isSet(messagePath + "." + path + ".Message"))
-					getConfig().createSection(messagePath + "." + path + ".Message");
-
-				val stringList = getStringList(messagePath + "." + path + ".Message");
-
-				PERMISSION.put(path, getString(permissionPath));
-				MESSAGE_MAP.put(stringList, path);
-				try {
-					getConfig().save(new File("plugins/Bubble/localization/messages_" + SimpleSettings.LOCALE_PREFIX + ".yml"));
-				} catch (final IOException e) {
-					e.printStackTrace();
-				}
-			});
-
-			pathPrefix("Broadcast");
-			HEADER = getString("Header");
-			FOOTER = getString("Footer");
-		}
+		return List.of("Welcome");
 	}
 
 	@NoArgsConstructor(access = AccessLevel.PRIVATE)

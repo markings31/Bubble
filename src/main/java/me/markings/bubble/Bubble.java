@@ -4,11 +4,11 @@ import lombok.Getter;
 import me.markings.bubble.bungee.BubbleAction;
 import me.markings.bubble.bungee.BubbleBungeeListener;
 import me.markings.bubble.command.AnnounceCommand;
+import me.markings.bubble.command.PrefsCommand;
 import me.markings.bubble.command.ToggleCommand;
 import me.markings.bubble.command.bubble.BubbleGroup;
 import me.markings.bubble.listeners.PlayerChatListener;
 import me.markings.bubble.listeners.PlayerJoinListener;
-import me.markings.bubble.settings.Localization;
 import me.markings.bubble.settings.Settings;
 import me.markings.bubble.tasks.BroadcastTask;
 import org.mineacademy.fo.Common;
@@ -32,6 +32,7 @@ public final class Bubble extends SimplePlugin {
 
 		registerCommand(new AnnounceCommand());
 		registerCommand(new ToggleCommand());
+		registerCommand(new PrefsCommand());
 
 		if (Common.doesPluginExist("Vault"))
 			Common.log(Common.getTellPrefix() + "Successfully hooked into Vault!");
@@ -47,7 +48,7 @@ public final class Bubble extends SimplePlugin {
 
 	@Override
 	protected void onPluginPreReload() {
-		Localization.BroadcastMessages.MESSAGE_MAP.clear();
+		Settings.BroadcastSettings.MESSAGE_MAP.clear();
 		Settings.WelcomeSettings.JOIN_MOTD.clear();
 	}
 

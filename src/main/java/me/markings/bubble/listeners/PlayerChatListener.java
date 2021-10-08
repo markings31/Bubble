@@ -1,6 +1,7 @@
 package me.markings.bubble.listeners;
 
 import lombok.val;
+import me.markings.bubble.PlayerCache;
 import me.markings.bubble.settings.Settings;
 import org.bukkit.Bukkit;
 import org.bukkit.event.EventHandler;
@@ -33,10 +34,20 @@ public class PlayerChatListener implements Listener {
 			});
 		});
 		val player = Bukkit.getPlayer(mentionPlayer.toString());
+		final PlayerCache cache;
+
+		if (player != null && player.isOnline()) {
+			cache = PlayerCache.getCache(player.getUniqueId());
+			if (!cache.getMentionsStatus())
+				return;
+		} else
+			return;
+
+
 		val i = event.getRecipients().iterator();
 		while (i.hasNext()) {
 			val recipient = i.next();
-			if (recipient != player && player != null) {
+			if (recipient != player) {
 				Common.tell(recipient, String.format(event.getFormat(), event.getPlayer().getDisplayName(), event.getMessage()).replace("@", ""));
 				i.remove();
 			}
@@ -45,8 +56,7 @@ public class PlayerChatListener implements Listener {
 		event.setMessage(eventMessage.replace(mention, Common.colorize(Settings.ChatSettings.MENTION_COLOR
 				+ mention.replace("@", "") + "&r")));
 
-		if (player != null)
-			new SimpleSound(mentionSound.getSound(), mentionSound.getVolume(), mentionSound.getPitch()).play(player);
+		new SimpleSound(mentionSound.getSound(), mentionSound.getVolume(), mentionSound.getPitch()).play(player);
 	}
 
 }

@@ -3,7 +3,6 @@ package me.markings.bubble.tasks;
 import lombok.val;
 import me.markings.bubble.PlayerCache;
 import me.markings.bubble.bungee.BubbleAction;
-import me.markings.bubble.settings.Localization;
 import me.markings.bubble.settings.Settings;
 import me.markings.bubble.util.MessageUtil;
 import org.bukkit.scheduler.BukkitRunnable;
@@ -33,8 +32,11 @@ public class BroadcastTask extends BukkitRunnable {
 			val worlds = Settings.BroadcastSettings.BROADCAST_WORLDS;
 			val broadcastSound = Settings.BroadcastSettings.BROADCAST_SOUND;
 
-			val messageList = Localization.BroadcastMessages.MESSAGE_MAP;
-			val broadcastPerm = Localization.BroadcastMessages.PERMISSION;
+			val header = Settings.BroadcastSettings.HEADER;
+			val footer = Settings.BroadcastSettings.FOOTER;
+
+			val messageList = Settings.BroadcastSettings.MESSAGE_MAP;
+			val broadcastPerm = Settings.BroadcastSettings.PERMISSION;
 
 			worlds.forEach(world -> {
 
@@ -49,7 +51,8 @@ public class BroadcastTask extends BukkitRunnable {
 
 						if (player.getWorld().getName().equals(world)) {
 							val currentMessages = messages;
-							currentPath = broadcastPerm.keySet().stream().filter(path -> path.equals(messageList.get(currentMessages))).findFirst().orElse(currentPath);
+							currentPath = broadcastPerm.keySet().stream().filter(path
+									-> path.equals(messageList.get(currentMessages))).findFirst().orElse(currentPath);
 						}
 
 						if (!player.hasPermission(broadcastPerm.get(currentPath))) {
@@ -59,9 +62,9 @@ public class BroadcastTask extends BukkitRunnable {
 						}
 
 						if (!Settings.BroadcastSettings.BUNGEECORD)
-							Common.tellNoPrefix(player, MessageUtil.format(Localization.BroadcastMessages.HEADER), "&f");
+							Common.tellNoPrefix(player, MessageUtil.format(header), "&f");
 						else
-							BungeeUtil.tellBungee(BubbleAction.NOTIFICATION, messageType, MessageUtil.format(Localization.BroadcastMessages.HEADER) + "\n");
+							BungeeUtil.tellBungee(BubbleAction.NOTIFICATION, messageType, MessageUtil.format(header) + "\n");
 
 						messages.forEach(message -> {
 							message = Settings.BroadcastSettings.CENTER_ALL ? ChatUtil.center(message) : message;
@@ -73,9 +76,9 @@ public class BroadcastTask extends BukkitRunnable {
 						});
 
 						if (!Settings.BroadcastSettings.BUNGEECORD)
-							Common.tellNoPrefix(player, "&f", MessageUtil.format(Localization.BroadcastMessages.FOOTER));
+							Common.tellNoPrefix(player, "&f", MessageUtil.format(footer));
 						else
-							BungeeUtil.tellBungee(BubbleAction.NOTIFICATION, "messageType", "\n" + MessageUtil.format(Localization.BroadcastMessages.FOOTER));
+							BungeeUtil.tellBungee(BubbleAction.NOTIFICATION, "messageType", "\n" + MessageUtil.format(footer));
 
 						new SimpleSound(broadcastSound.getSound(), broadcastSound.getVolume(), broadcastSound.getPitch()).play(player);
 					}

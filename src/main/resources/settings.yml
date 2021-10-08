@@ -55,6 +55,25 @@ Notifications:
     # https://gist.github.com/NiklasEi/7bd0ffd136f8459df0940e4501d47a8a
     Sound: NOTE_PLING, 1F, 1.5F
 
+    Header: "&8<smooth_line>"
+    Footer: "&8<smooth_line>"
+
+    # The messages that will be broadcasted to players.
+    Messages:
+      Example_Message:
+        Permission: bubble.vip
+        Message:
+          - '&6This is an example message!'
+      Multi_Line_Message:
+        Permission: bubble.vip
+        Message:
+          - '&eThis is an example of a'
+          - '&emulti-line message!'
+      HEX_Example_Message:
+        Permission: bubble.vip
+        Message:
+          - '#ff3393This is an example of a HEX message!'
+
   # Welcome Messages
   Welcome:
 
