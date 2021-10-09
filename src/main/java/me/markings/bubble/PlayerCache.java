@@ -71,7 +71,7 @@ public final class PlayerCache extends YamlSectionConfig {
 	// --------------------------------------------------------------------------------------------------------------
 
 	public static PlayerCache getCache(final UUID uuid) {
-		PlayerCache cache = cacheMap.get(uuid);
+		var cache = cacheMap.get(uuid);
 
 		if (cache == null) {
 			cache = new PlayerCache(uuid);

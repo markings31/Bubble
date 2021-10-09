@@ -71,7 +71,7 @@ public class MessageUtil {
 	}
 
 	public static String translateGradient(final String message) {
-		final String newMessage = stripPlaceholders(message.replace("§", "&"));
+		val newMessage = stripPlaceholders(message.replace("§", "&"));
 		val firstColor = StringUtils.substringBetween(newMessage, ":", "|");
 		val secondColor = StringUtils.substringBetween(newMessage, "|", ">");
 

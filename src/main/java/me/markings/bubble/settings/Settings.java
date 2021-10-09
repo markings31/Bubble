@@ -136,12 +136,14 @@ public final class Settings extends SimpleSettings {
 		public static Boolean ENABLE_MENTIONS;
 
 		public static String MENTION_COLOR;
+		public static String MENTION_IGNORE_PERMISSION;
 
 		public static SimpleSound MENTION_SOUND;
 
 		private static void init() {
 			pathPrefix("Chat.Mentions");
 			ENABLE_MENTIONS = getBoolean("Enable");
+			MENTION_IGNORE_PERMISSION = getString("Ignore_Permission");
 			MENTION_COLOR = getString("Color");
 			MENTION_SOUND = getSound("Sound");
 		}

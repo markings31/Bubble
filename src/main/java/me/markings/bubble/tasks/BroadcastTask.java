@@ -40,7 +40,7 @@ public class BroadcastTask extends BukkitRunnable {
 
 			worlds.forEach(world -> {
 
-				List<String> messages = Settings.BroadcastSettings.RANDOM_MESSAGE.equals(Boolean.TRUE) ?
+				var messages = Settings.BroadcastSettings.RANDOM_MESSAGE.equals(Boolean.TRUE) ?
 						RandomUtil.nextItem(messageList.keySet()) : messageList.keySet().stream().toList().get(index);
 
 				for (val player : Remain.getOnlinePlayers()) {
@@ -91,7 +91,6 @@ public class BroadcastTask extends BukkitRunnable {
 
 
 	private static void updateIndex(final List<List<String>> messages) {
-		index++;
-		index = index == messages.size() ? 0 : index;
+		index = ++index == messages.size() ? 0 : index;
 	}
 }

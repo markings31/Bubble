@@ -134,6 +134,9 @@ Chat:
     # Should players be notified when they are mentioned in the chat (prepended by the @ symbol)?
     Enable: true
 
+    # What permission should players have if they don't want to be notified when they are mentioned in the chat?
+    Ignore_Permission: "mentions.ignore"
+
     # What color should the player name be highlighted with when mentioned in the chat?
     Color: '&e'
 
