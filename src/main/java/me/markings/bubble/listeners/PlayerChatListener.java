@@ -17,24 +17,26 @@ public class PlayerChatListener implements Listener {
 	public void onPlayerChat(final AsyncPlayerChatEvent event) {
 		val mentionSound = Settings.ChatSettings.MENTION_SOUND;
 		val eventMessage = event.getMessage();
+		val eventPlayerName = event.getPlayer().getDisplayName();
 
 		Remain.getOnlinePlayers().forEach(loopPlayer -> {
 
-			val cache = PlayerCache.getCache(loopPlayer.getUniqueId());
+			val cache = PlayerCache.getCache(loopPlayer);
+			val playerName = loopPlayer.getName();
 
 			event.setCancelled(true);
-			if (eventMessage.toLowerCase().contains("@" + loopPlayer.getName().toLowerCase())
+			if (eventMessage.toLowerCase().contains("@" + playerName.toLowerCase())
 					&& !loopPlayer.hasPermission(Settings.ChatSettings.MENTION_IGNORE_PERMISSION)
-					&& cache.getMentionsStatus()) {
+					&& cache.isMentionsStatus()) {
 
-				Common.tell(loopPlayer, String.format(event.getFormat(), event.getPlayer().getDisplayName(), eventMessage)
-						.replace("@" + loopPlayer.getName(), Settings.ChatSettings.MENTION_COLOR + loopPlayer.getName() + "&r"));
+				Common.tell(loopPlayer, String.format(event.getFormat(), eventPlayerName, eventMessage)
+						.replace("@" + playerName, Settings.ChatSettings.MENTION_COLOR + playerName + "&r"));
 				new SimpleSound(mentionSound.getSound(), mentionSound.getVolume(), mentionSound.getPitch()).play(loopPlayer);
 
 				return;
 			}
 
-			Common.tell(loopPlayer, String.format(event.getFormat(), event.getPlayer().getDisplayName(), eventMessage));
+			Common.tell(loopPlayer, String.format(event.getFormat(), eventPlayerName, eventMessage));
 
 		});
 	}

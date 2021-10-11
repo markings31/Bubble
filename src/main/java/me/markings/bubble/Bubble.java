@@ -1,6 +1,7 @@
 package me.markings.bubble;
 
 import lombok.Getter;
+import lombok.val;
 import me.markings.bubble.bungee.BubbleAction;
 import me.markings.bubble.bungee.BubbleBungeeListener;
 import me.markings.bubble.command.AnnounceCommand;
@@ -11,12 +12,17 @@ import me.markings.bubble.listeners.PlayerChatListener;
 import me.markings.bubble.listeners.PlayerJoinListener;
 import me.markings.bubble.settings.Settings;
 import me.markings.bubble.tasks.BroadcastTask;
+import net.md_5.bungee.api.ProxyServer;
+import net.md_5.bungee.api.connection.ProxiedPlayer;
 import org.mineacademy.fo.Common;
 import org.mineacademy.fo.Messenger;
 import org.mineacademy.fo.bungee.SimpleBungee;
 import org.mineacademy.fo.command.SimpleCommandGroup;
 import org.mineacademy.fo.plugin.SimplePlugin;
 import org.mineacademy.fo.settings.SimpleSettings;
+
+import java.util.ArrayList;
+import java.util.Collection;
 
 public final class Bubble extends SimplePlugin {
 
@@ -66,6 +72,19 @@ public final class Bubble extends SimplePlugin {
 					Settings.BroadcastSettings.BROADCAST_DELAY.getTimeTicks());
 
 		PlayerCache.clearAllData();
+	}
+
+	public static Bubble getInstance() {
+		return (Bubble) SimplePlugin.getInstance();
+	}
+
+	public static Collection<ProxiedPlayer> getPlayers() {
+		final Collection<ProxiedPlayer> players = new ArrayList<>();
+
+		for (val serverInfo : ProxyServer.getInstance().getServers().values())
+			players.addAll(serverInfo.getPlayers());
+
+		return players;
 	}
 
 }

@@ -14,9 +14,9 @@ public class ToggleCommand extends SimpleCommand {
 	@Override
 	protected void onCommand() {
 		checkConsole();
-		val cache = PlayerCache.getCache(getPlayer().getUniqueId());
+		val cache = PlayerCache.getCache(getPlayer());
 
-		cache.setBroadcastStatus(!cache.getBroadcastStatus());
-		Messenger.success(getPlayer(), "&7Broadcasts have now been toggled " + (cache.getBroadcastStatus() ? "&aON&7." : "&cOFF&7."));
+		cache.setBroadcastStatus(!cache.isBroadcastStatus());
+		Messenger.success(getPlayer(), "&7Broadcasts have now been toggled " + (cache.isBroadcastStatus() ? "&aON&7." : "&cOFF&7."));
 	}
 }

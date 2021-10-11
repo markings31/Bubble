@@ -1,18 +1,20 @@
 package me.markings.bubble;
 
 import lombok.Getter;
+import lombok.Setter;
+import org.bukkit.entity.Player;
 import org.mineacademy.fo.collection.expiringmap.ExpiringMap;
+import org.mineacademy.fo.constants.FoConstants;
 import org.mineacademy.fo.settings.YamlSectionConfig;
 
 import java.util.UUID;
 import java.util.concurrent.TimeUnit;
 
 @Getter
+@Setter
 public final class PlayerCache extends YamlSectionConfig {
 
 	private static final ExpiringMap<UUID, PlayerCache> cacheMap = ExpiringMap.builder().expiration(30, TimeUnit.MINUTES).build();
-
-	private final UUID uuid;
 
 	private boolean broadcastStatus;
 	private boolean motdStatus;
@@ -21,9 +23,7 @@ public final class PlayerCache extends YamlSectionConfig {
 	private PlayerCache(final UUID uuid) {
 		super("Players." + uuid.toString());
 
-		this.uuid = uuid;
-
-		loadConfiguration(NO_DEFAULT, "data.db");
+		loadConfiguration(NO_DEFAULT, FoConstants.File.DATA);
 	}
 
 	@Override
@@ -33,56 +33,20 @@ public final class PlayerCache extends YamlSectionConfig {
 		mentionsStatus = getBoolean("Receive_Mentions", true);
 	}
 
-
-	public boolean getBroadcastStatus() {
-		return broadcastStatus;
-	}
-
-	public boolean getMOTDStatus() {
-		return motdStatus;
-	}
-
-	public boolean getMentionsStatus() {
-		return mentionsStatus;
-	}
-
-
-	public void setBroadcastStatus(final boolean broadcastStatus) {
-		this.broadcastStatus = broadcastStatus;
-
-		save("Receive_Broadcasts", broadcastStatus);
-	}
-
-	public void setMOTDStatus(final boolean motdStatus) {
-		this.motdStatus = motdStatus;
-
-		save("Receive_MOTD", motdStatus);
-	}
-
-	public void setMentionsStatus(final boolean mentionsStatus) {
-		this.mentionsStatus = mentionsStatus;
-
-		save("Receive_MOTD", mentionsStatus);
-	}
-
-
 	// --------------------------------------------------------------------------------------------------------------
 	// Static Methods
 	// --------------------------------------------------------------------------------------------------------------
 
-	public static PlayerCache getCache(final UUID uuid) {
-		var cache = cacheMap.get(uuid);
-
-		if (cache == null) {
-			cache = new PlayerCache(uuid);
-
-			cacheMap.put(uuid, new PlayerCache(uuid));
+	public static PlayerCache getCache(final Player player) {
+		synchronized (cacheMap) {
+			return cacheMap.computeIfAbsent(player.getUniqueId(), k
+					-> cacheMap.get(player.getUniqueId()));
 		}
-
-		return cache;
 	}
 
 	public static void clearAllData() {
-		cacheMap.clear();
+		synchronized (cacheMap) {
+			cacheMap.clear();
+		}
 	}
 }
