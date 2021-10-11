@@ -31,6 +31,7 @@ public class BroadcastTask extends BukkitRunnable {
 					|| (Boolean.TRUE.equals(Settings.BroadcastSettings.BUNGEECORD) && Bubble.getPlayers().isEmpty()))
 				return;
 
+
 			val worlds = Settings.BroadcastSettings.BROADCAST_WORLDS;
 			val broadcastSound = Settings.BroadcastSettings.BROADCAST_SOUND;
 
@@ -40,10 +41,13 @@ public class BroadcastTask extends BukkitRunnable {
 			val messageList = Settings.BroadcastSettings.MESSAGE_MAP;
 			val broadcastPerm = Settings.BroadcastSettings.PERMISSION;
 
+
 			worlds.forEach(world -> {
+
 
 				var messages = Settings.BroadcastSettings.RANDOM_MESSAGE.equals(Boolean.TRUE) ?
 						RandomUtil.nextItem(messageList.keySet()) : messageList.keySet().stream().toList().get(index);
+
 
 				for (val player : Remain.getOnlinePlayers()) {
 
@@ -57,6 +61,7 @@ public class BroadcastTask extends BukkitRunnable {
 									-> path.equals(messageList.get(currentMessages))).findFirst().orElse(currentPath);
 						}
 
+
 						if (!player.hasPermission(broadcastPerm.get(currentPath))) {
 							updateIndex(messageList.keySet().stream().toList());
 
@@ -64,9 +69,13 @@ public class BroadcastTask extends BukkitRunnable {
 									RandomUtil.nextItem(messageList.keySet()) : messageList.keySet().stream().toList().get(index);
 						}
 
+
 						messages.forEach(message -> {
+
 							message = Settings.BroadcastSettings.CENTER_ALL ? ChatUtil.center(message) : message;
+
 							MessageUtil.executePlaceholders(message, player);
+
 							if (!Settings.BroadcastSettings.BUNGEECORD)
 								Common.tellNoPrefix(player,
 										MessageUtil.format(header),
