@@ -10,6 +10,7 @@ import org.bukkit.entity.Player;
 import org.mineacademy.fo.BungeeUtil;
 import org.mineacademy.fo.ChatUtil;
 import org.mineacademy.fo.Common;
+import org.mineacademy.fo.model.SimpleTime;
 import org.mineacademy.fo.model.Variables;
 import org.mineacademy.fo.remain.CompChatColor;
 
@@ -50,6 +51,9 @@ public class MessageUtil {
 	private static final String bossbarPlaceholder = "<bossbar>";
 	private static final String toastPlaceholder = "<toast>";
 
+	private static final String delayPlaceholder = "<delay:";
+	private static final String delayEndPlaceholder = "</delay>";
+
 	public static String format(final String message) {
 		val chatLinePlaceholder = "<chat_line>";
 		val smoothLinePlaceholder = "<smooth_line>";
@@ -82,6 +86,10 @@ public class MessageUtil {
 					.replace(gradientEndPlaceholder, ""), CompChatColor.of(firstColor), CompChatColor.of(secondColor));
 
 		return message;
+	}
+
+	public static void executeWithDelay(final String message) {
+		val delayTime = SimpleTime.from(StringUtils.substringBetween(message, ":", "|"));
 	}
 
 	public static void executePlaceholders(final String message, final Player player) {
