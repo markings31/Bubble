@@ -38,53 +38,45 @@ public class NotificationCommand extends SimpleSubCommand {
 	protected void onCommand() {
 		val param = args[1].toLowerCase();
 
-		val material = args[1].equalsIgnoreCase(toastArg) ?
-				findMaterial(args[2], "No such material " + args[2] + " found!") : null;
-
-		val inputs = joinArgs((args[1].equalsIgnoreCase(toastArg) ? 3 : 2)).split("\\|");
-
 		if (args[0].equalsIgnoreCase(bungeeArg))
 			BungeeUtil.tellBungee(BubbleAction.NOTIFICATION, param, joinArgs((args[1].equalsIgnoreCase(toastArg) ? 3 : 2)));
+
+		if (args[0].equalsIgnoreCase("all"))
+			Remain.getOnlinePlayers().forEach(this::sendNotification);
+		else if (!args[0].equalsIgnoreCase(bungeeArg))
+			sendNotification(findPlayer(args[0]));
+	}
+
+	private void sendNotification(final Player target) {
+		val inputs = joinArgs((args[1].equalsIgnoreCase(toastArg) ? 3 : 2)).split("\\|");
 
 		val primaryPart = Variables.replace(inputs[0], getPlayer());
 		val secondaryPart = Variables.replace(inputs.length == 1 ? "" : inputs[1], getPlayer());
 
-		if (args[0].equalsIgnoreCase("all"))
-			Remain.getOnlinePlayers().forEach(onlinePlayer -> sendNotification(param, primaryPart, secondaryPart, onlinePlayer, material));
-		else if (!args[0].equalsIgnoreCase(bungeeArg)) {
-			val target = findPlayer(args[0]);
-			sendNotification(param, primaryPart, secondaryPart, target, material);
-		}
-	}
-
-	private void sendNotification(final String param, final String primaryPart, final String secondaryPart, final Player target, final CompMaterial material) {
-		switch (param) {
-			case "message" -> {
-				if (getPlayer() != null)
+		if (getPlayer() != null)
+			switch (args[1].toLowerCase()) {
+				case "message" -> {
 					checkBoolean(getPlayer().hasPermission(getPermission() + ".message"), noPermissionMsg);
-				Common.tell(target, Common.colorize(primaryPart));
-			}
-			case "title" -> {
-				if (getPlayer() != null)
+					Common.tell(target, Common.colorize(primaryPart));
+				}
+				case "title" -> {
 					checkBoolean(getPlayer().hasPermission(getPermission() + ".title"), noPermissionMsg);
-				Remain.sendTitle(target, primaryPart, secondaryPart);
-			}
-			case "actionbar", "action" -> {
-				if (getPlayer() != null)
+					Remain.sendTitle(target, primaryPart, secondaryPart);
+				}
+				case "actionbar", "action" -> {
 					checkBoolean(getPlayer().hasPermission(getPermission() + ".actionbar"), noPermissionMsg);
-				Remain.sendActionBar(target, primaryPart);
-			}
-			case "bossbar" -> {
-				if (getPlayer() != null)
+					Remain.sendActionBar(target, primaryPart);
+				}
+				case "bossbar" -> {
 					checkBoolean(getPlayer().hasPermission(getPermission() + ".bossbar"), noPermissionMsg);
-				Remain.sendBossbarPercent(target, primaryPart, 100);
-			}
-			case "toast" -> {
-				if (getPlayer() != null)
+					Remain.sendBossbarPercent(target, primaryPart, 100);
+				}
+				case "toast" -> {
 					checkBoolean(getPlayer().hasPermission(getPermission() + ".toast"), noPermissionMsg);
-				Remain.sendToast(target, primaryPart, material);
+					Remain.sendToast(target, primaryPart, args[1].equalsIgnoreCase(toastArg) ?
+							findMaterial(args[2], "No such material " + args[2] + " found!") : null);
+				}
 			}
-		}
 	}
 
 	@Override

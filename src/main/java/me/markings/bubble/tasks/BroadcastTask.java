@@ -83,7 +83,6 @@ public class BroadcastTask extends BukkitRunnable {
 					-> path.equals(messageList.get(currentMessages))).findFirst().orElse(currentPath);
 		}
 
-
 		if (!player.hasPermission(broadcastPerm.get(currentPath))) {
 			updateIndex(messageList.keySet().stream().toList());
 

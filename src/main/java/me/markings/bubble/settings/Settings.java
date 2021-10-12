@@ -54,25 +54,7 @@ public final class Settings extends SimpleSettings {
 
 		private static void init() {
 			pathPrefix(null);
-			Objects.requireNonNull(getConfig().getConfigurationSection(messagePath)).getKeys(false).forEach(path -> {
-				val permissionPath = messagePath + "." + path + ".Permission";
-
-				if (!isSet(permissionPath))
-					getConfig().set(permissionPath, "bubble.vip");
-
-				if (!isSet(messagePath + "." + path + ".Message"))
-					getConfig().createSection(messagePath + "." + path + ".Message");
-
-				val stringList = getStringList(messagePath + "." + path + ".Message");
-
-				PERMISSION.put(path, getString(permissionPath));
-				MESSAGE_MAP.put(stringList, path);
-				try {
-					getConfig().save(new File("plugins/Bubble/localization/messages_" + SimpleSettings.LOCALE_PREFIX + ".yml"));
-				} catch (final IOException e) {
-					e.printStackTrace();
-				}
-			});
+			generateBroadcastSections();
 
 			pathPrefix("Notifications.Broadcast");
 			ENABLE_BROADCASTS = getBoolean("Enable");
@@ -147,5 +129,27 @@ public final class Settings extends SimpleSettings {
 			MENTION_COLOR = getString("Color");
 			MENTION_SOUND = getSound("Sound");
 		}
+	}
+
+	private static void generateBroadcastSections() {
+		Objects.requireNonNull(getConfig().getConfigurationSection(messagePath)).getKeys(false).forEach(path -> {
+			val permissionPath = messagePath + "." + path + ".Permission";
+
+			if (!isSet(permissionPath))
+				getConfig().set(permissionPath, "bubble.vip");
+
+			if (!isSet(messagePath + "." + path + ".Message"))
+				getConfig().createSection(messagePath + "." + path + ".Message");
+
+			val stringList = getStringList(messagePath + "." + path + ".Message");
+
+			BroadcastSettings.PERMISSION.put(path, getString(permissionPath));
+			BroadcastSettings.MESSAGE_MAP.put(stringList, path);
+			try {
+				getConfig().save(new File("plugins/Bubble/localization/messages_" + SimpleSettings.LOCALE_PREFIX + ".yml"));
+			} catch (final IOException e) {
+				e.printStackTrace();
+			}
+		});
 	}
 }
