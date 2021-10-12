@@ -33,7 +33,9 @@ public class BroadcastTask extends BukkitRunnable {
 
 	private static List<String> messages = Settings.BroadcastSettings.RANDOM_MESSAGE.equals(Boolean.TRUE) ?
 			RandomUtil.nextItem(messageList.keySet()) : messageList.keySet().stream().toList().get(index);
+	private static final List<String> worlds = Settings.BroadcastSettings.BROADCAST_WORLDS;
 
+	// TODO: Test with extracted functions.
 	@Override
 	public void run() {
 		if (Settings.BroadcastSettings.ENABLE_BROADCASTS.equals(Boolean.TRUE)) {
@@ -42,24 +44,9 @@ public class BroadcastTask extends BukkitRunnable {
 					|| (Boolean.TRUE.equals(Settings.BroadcastSettings.BUNGEECORD) && Bubble.getPlayers().isEmpty()))
 				return;
 
-			val worlds = Settings.BroadcastSettings.BROADCAST_WORLDS;
 			val broadcastSound = Settings.BroadcastSettings.BROADCAST_SOUND;
 
-			worlds.forEach(world -> {
-				for (val player : Remain.getOnlinePlayers()) {
-
-					val cache = PlayerCache.getCache(player);
-
-					if (cache.isBroadcastStatus()) {
-
-						playerChecks(player, world);
-
-						sendMessage(messages, player);
-
-						new SimpleSound(broadcastSound.getSound(), broadcastSound.getVolume(), broadcastSound.getPitch()).play(player);
-					}
-				}
-			});
+			loopWorlds(broadcastSound);
 
 			updateIndex(messageList.keySet().stream().toList());
 		}
@@ -103,6 +90,24 @@ public class BroadcastTask extends BukkitRunnable {
 			messages = Settings.BroadcastSettings.RANDOM_MESSAGE.equals(Boolean.TRUE) ?
 					RandomUtil.nextItem(messageList.keySet()) : messageList.keySet().stream().toList().get(index);
 		}
+	}
+
+	private static void loopWorlds(final SimpleSound broadcastSound) {
+		worlds.forEach(world -> {
+			for (val player : Remain.getOnlinePlayers()) {
+
+				val cache = PlayerCache.getCache(player);
+
+				if (cache.isBroadcastStatus()) {
+
+					playerChecks(player, world);
+
+					sendMessage(messages, player);
+
+					new SimpleSound(broadcastSound.getSound(), broadcastSound.getVolume(), broadcastSound.getPitch()).play(player);
+				}
+			}
+		});
 	}
 
 	private static void updateIndex(final List<List<String>> messages) {
