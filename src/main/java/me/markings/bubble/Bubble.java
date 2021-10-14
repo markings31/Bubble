@@ -8,8 +8,10 @@ import me.markings.bubble.command.AnnounceCommand;
 import me.markings.bubble.command.PrefsCommand;
 import me.markings.bubble.command.ToggleCommand;
 import me.markings.bubble.command.bubble.BubbleGroup;
+import me.markings.bubble.listeners.DatabaseListener;
 import me.markings.bubble.listeners.PlayerChatListener;
 import me.markings.bubble.listeners.PlayerJoinListener;
+import me.markings.bubble.mysql.BubbleDatabase;
 import me.markings.bubble.settings.Settings;
 import me.markings.bubble.tasks.BroadcastTask;
 import net.md_5.bungee.api.ProxyServer;
@@ -36,9 +38,19 @@ public final class Bubble extends SimplePlugin {
 	protected void onPluginStart() {
 		Common.setTellPrefix(SimpleSettings.PLUGIN_PREFIX);
 
+		BubbleDatabase.getInstance().connect(
+				"db4free.net",
+				3306,
+				"markings_db",
+				"markings",
+				"S@sha123",
+				"Bubble");
+
 		registerCommand(new AnnounceCommand());
 		registerCommand(new ToggleCommand());
 		registerCommand(new PrefsCommand());
+
+		registerEvents(new DatabaseListener());
 
 		if (Common.doesPluginExist("Vault"))
 			Common.log(Common.getTellPrefix() + "Successfully hooked into Vault!");
@@ -80,7 +92,6 @@ public final class Bubble extends SimplePlugin {
 
 	public static Collection<ProxiedPlayer> getPlayers() {
 		final Collection<ProxiedPlayer> players = new ArrayList<>();
-
 		for (val serverInfo : ProxyServer.getInstance().getServers().values())
 			players.addAll(serverInfo.getPlayers());
 

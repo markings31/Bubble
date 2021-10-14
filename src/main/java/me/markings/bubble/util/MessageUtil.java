@@ -90,6 +90,7 @@ public class MessageUtil {
 
 	public static void executeWithDelay(final String message) {
 		val delayTime = SimpleTime.from(StringUtils.substringBetween(message, ":", "|"));
+
 	}
 
 	public static void executePlaceholders(final String message, final Player player) {
