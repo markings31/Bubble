@@ -131,6 +131,17 @@ public final class Settings extends SimpleSettings {
 		}
 	}
 
+	@NoArgsConstructor(access = AccessLevel.PRIVATE)
+	public static class DatabaseSettings {
+
+		public static Boolean ENABLE_MYSQL;
+
+		private static void init() {
+			pathPrefix("Database");
+			ENABLE_MYSQL = getBoolean("Enable_MySQL");
+		}
+	}
+
 	private static void generateBroadcastSections() {
 		Objects.requireNonNull(getConfig().getConfigurationSection(messagePath)).getKeys(false).forEach(path -> {
 			val permissionPath = messagePath + "." + path + ".Permission";
@@ -153,3 +164,4 @@ public final class Settings extends SimpleSettings {
 		});
 	}
 }
+

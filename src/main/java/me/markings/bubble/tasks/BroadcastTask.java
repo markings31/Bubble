@@ -46,13 +46,19 @@ public class BroadcastTask extends BukkitRunnable {
 
 			val broadcastSound = Settings.BroadcastSettings.BROADCAST_SOUND;
 
-			loopWorlds(broadcastSound);
+			executeTasks(broadcastSound);
 
 			updateIndex(messageList.keySet().stream().toList());
 		}
 	}
 
-	private static void sendMessage(final List<String> messages, final Player player) {
+	private static void sendMessages(final List<String> messages, final Player player) {
+
+		if (Boolean.FALSE.equals(Settings.BroadcastSettings.BUNGEECORD))
+			Common.tellNoPrefix(player, MessageUtil.format(header), "&f");
+		else
+			BungeeUtil.tellBungee(BubbleAction.NOTIFICATION, messageType, "&f", MessageUtil.format(header));
+
 		messages.forEach(message -> {
 
 			message = Boolean.TRUE.equals(Settings.BroadcastSettings.CENTER_ALL) ? ChatUtil.center(message) : message;
@@ -60,20 +66,16 @@ public class BroadcastTask extends BukkitRunnable {
 			MessageUtil.executePlaceholders(message, player);
 
 			if (Boolean.FALSE.equals(Settings.BroadcastSettings.BUNGEECORD))
-				Common.tellNoPrefix(player,
-						MessageUtil.format(header),
-						"&f",
-						MessageUtil.replaceVarsAndGradient(message, player),
-						"&f",
-						MessageUtil.format(footer));
+				Common.tellNoPrefix(player, MessageUtil.replaceVarsAndGradient(message, player));
 			else
 				BungeeUtil.tellBungee(BubbleAction.NOTIFICATION, messageType,
-						MessageUtil.format(header)
-								+ "\n"
-								+ MessageUtil.replaceVarsAndGradient(message, player)
-								+ "\n"
-								+ MessageUtil.format(footer));
+						MessageUtil.replaceVarsAndGradient(message, player));
 		});
+
+		if (Boolean.FALSE.equals(Settings.BroadcastSettings.BUNGEECORD))
+			Common.tellNoPrefix(player, "&f", MessageUtil.format(footer));
+		else
+			BungeeUtil.tellBungee(BubbleAction.NOTIFICATION, messageType, "&f", MessageUtil.format(footer));
 	}
 
 	private static void playerChecks(final Player player, final String world) {
@@ -91,7 +93,7 @@ public class BroadcastTask extends BukkitRunnable {
 		}
 	}
 
-	private static void loopWorlds(final SimpleSound broadcastSound) {
+	private static void executeTasks(final SimpleSound broadcastSound) {
 		worlds.forEach(world -> {
 			for (val player : Remain.getOnlinePlayers()) {
 
@@ -101,7 +103,7 @@ public class BroadcastTask extends BukkitRunnable {
 
 					playerChecks(player, world);
 
-					sendMessage(messages, player);
+					sendMessages(messages, player);
 
 					new SimpleSound(broadcastSound.getSound(), broadcastSound.getVolume(), broadcastSound.getPitch()).play(player);
 				}

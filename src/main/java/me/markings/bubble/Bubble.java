@@ -12,6 +12,7 @@ import me.markings.bubble.listeners.DatabaseListener;
 import me.markings.bubble.listeners.PlayerChatListener;
 import me.markings.bubble.listeners.PlayerJoinListener;
 import me.markings.bubble.mysql.BubbleDatabase;
+import me.markings.bubble.settings.DatabaseFile;
 import me.markings.bubble.settings.Settings;
 import me.markings.bubble.tasks.BroadcastTask;
 import net.md_5.bungee.api.ProxyServer;
@@ -38,13 +39,16 @@ public final class Bubble extends SimplePlugin {
 	protected void onPluginStart() {
 		Common.setTellPrefix(SimpleSettings.PLUGIN_PREFIX);
 
-		BubbleDatabase.getInstance().connect(
-				"db4free.net",
-				3306,
-				"markings_db",
-				"markings",
-				"S@sha123",
-				"Bubble");
+		val dataFile = DatabaseFile.getInstance();
+
+		if (Boolean.TRUE.equals(Settings.DatabaseSettings.ENABLE_MYSQL))
+			BubbleDatabase.getInstance().connect(
+					dataFile.getHOST(),
+					dataFile.getPORT(),
+					dataFile.getNAME(),
+					dataFile.getUSERNAME(),
+					dataFile.getPASSWORD(),
+					dataFile.getTABLE_NAME());
 
 		registerCommand(new AnnounceCommand());
 		registerCommand(new ToggleCommand());
@@ -59,7 +63,7 @@ public final class Bubble extends SimplePlugin {
 			Common.log(Common.getTellPrefix() + "Successfully hooked into PlaceholderAPI!");
 
 		if (Common.doesPluginExist("MultiverseCore"))
-			Common.log(Common.getTellPrefix() + "Successfully hooked into MultiverseCore");
+			Common.log(Common.getTellPrefix() + "Successfully hooked into MultiverseCore!");
 
 		Common.log(Common.getTellPrefix() + "Bubble has been successfully enabled!");
 	}
@@ -82,6 +86,8 @@ public final class Bubble extends SimplePlugin {
 		if (Settings.BroadcastSettings.ENABLE_BROADCASTS.equals(Boolean.TRUE))
 			new BroadcastTask().runTaskTimerAsynchronously(this, 0,
 					Settings.BroadcastSettings.BROADCAST_DELAY.getTimeTicks());
+
+		DatabaseFile.getInstance().save();
 
 		PlayerCache.clearAllData();
 	}

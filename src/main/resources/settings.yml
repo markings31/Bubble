@@ -146,6 +146,15 @@ Chat:
     Sound: ORB_PICKUP
 
 # -------------------------------------------------------------------------------------------------
+# Database Section
+# -------------------------------------------------------------------------------------------------
+Database:
+
+  # Should we connect to the MySQL database upon plugin startup?
+  # Note: MySQL credentials can be found in the mysql.yml file.
+  Enable_MySQL: false
+
+# -------------------------------------------------------------------------------------------------
 # The plugin's main prefix. You can manually add this prefix to other messages using the
 # {plugin_prefix} placeholder.
 # -------------------------------------------------------------------------------------------------

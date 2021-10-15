@@ -1,5 +1,6 @@
 package me.markings.bubble.menu;
 
+import lombok.val;
 import me.markings.bubble.PlayerCache;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.ClickType;
@@ -64,16 +65,16 @@ public class NotificationsMenu extends Menu {
 			setSize(9 * 3);
 
 			toggleBroadcastsButton = new Button() {
-				final PlayerCache cache = PlayerCache.getCache(getViewer());
-
 				@Override
 				public void onClickedInMenu(final Player player, final Menu menu, final ClickType click) {
+					val cache = PlayerCache.getCache(getViewer());
 					cache.setBroadcastStatus(!cache.isBroadcastStatus());
 					restartMenu(cache.isBroadcastStatus() ? "&aBroadcasts ENABLED!" : "&cBroadcasts DISABLED!");
 				}
 
 				@Override
 				public ItemStack getItem() {
+					val cache = PlayerCache.getCache(getViewer());
 					return ItemCreator.of(cache.isBroadcastStatus() ? CompMaterial.LIME_DYE : CompMaterial.GRAY_DYE,
 							"&7Broadcasts: " + (cache.isBroadcastStatus() ? enabledText : disabledText),
 							"",
@@ -100,16 +101,16 @@ public class NotificationsMenu extends Menu {
 			setSize(9 * 3);
 
 			toggleMOTDButton = new Button() {
-				final PlayerCache cache = PlayerCache.getCache(getViewer());
-
 				@Override
 				public void onClickedInMenu(final Player player, final Menu menu, final ClickType click) {
+					val cache = PlayerCache.getCache(getViewer());
 					cache.setMotdStatus(!cache.isMotdStatus());
 					restartMenu(cache.isMotdStatus() ? "&aMOTD ENABLED!" : "&cMOTD DISABLED!");
 				}
 
 				@Override
 				public ItemStack getItem() {
+					val cache = PlayerCache.getCache(getViewer());
 					return ItemCreator.of(CompMaterial.WRITABLE_BOOK,
 							"&7Message of the Day: " + (cache.isMotdStatus() ? enabledText : disabledText),
 							"",
@@ -137,16 +138,16 @@ public class NotificationsMenu extends Menu {
 			setSize(9 * 3);
 
 			toggleMentionsButton = new Button() {
-				final PlayerCache cache = PlayerCache.getCache(getViewer());
-
 				@Override
 				public void onClickedInMenu(final Player player, final Menu menu, final ClickType click) {
+					val cache = PlayerCache.getCache(getViewer());
 					cache.setMentionsStatus(!cache.isMentionsStatus());
 					restartMenu(cache.isMentionsStatus() ? "&aMentions ENABLED!" : "&cMentions DISABLED!");
 				}
 
 				@Override
 				public ItemStack getItem() {
+					val cache = PlayerCache.getCache(getViewer());
 					return ItemCreator.of(CompMaterial.NAME_TAG,
 							"&7Chat Mentions: " + (cache.isMentionsStatus() ? enabledText : disabledText),
 							"",

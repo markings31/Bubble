@@ -8,8 +8,6 @@ import me.markings.bubble.PlayerCache;
 import org.mineacademy.fo.collection.SerializedMap;
 import org.mineacademy.fo.database.SimpleFlatDatabase;
 
-// TODO: Create database settings in settings.yml file.
-
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class BubbleDatabase extends SimpleFlatDatabase<PlayerCache> {
 

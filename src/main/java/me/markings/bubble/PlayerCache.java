@@ -1,7 +1,6 @@
 package me.markings.bubble;
 
 import lombok.Getter;
-import lombok.Setter;
 import lombok.val;
 import org.bukkit.entity.Player;
 import org.mineacademy.fo.collection.expiringmap.ExpiringMap;
@@ -14,7 +13,6 @@ import java.util.UUID;
 import java.util.concurrent.TimeUnit;
 
 @Getter
-@Setter
 public final class PlayerCache extends YamlSectionConfig {
 
 	private static final ExpiringMap<UUID, PlayerCache> cacheMap = ExpiringMap.builder().expiration(30, TimeUnit.MINUTES).build();
@@ -43,6 +41,24 @@ public final class PlayerCache extends YamlSectionConfig {
 		mentionsStatus = getBoolean("Receive_Mentions", true);
 	}
 
+	public void setBroadcastStatus(final boolean broadcastStatus) {
+		this.broadcastStatus = broadcastStatus;
+
+		save("Receive_Broadcasts", broadcastStatus);
+	}
+
+	public void setMotdStatus(final boolean motdStatus) {
+		this.motdStatus = motdStatus;
+
+		save("Receive_MOTD", motdStatus);
+	}
+
+	public void setMentionsStatus(final boolean mentionsStatus) {
+		this.mentionsStatus = mentionsStatus;
+
+		save("Receive_Mentions", mentionsStatus);
+	}
+
 	/* ------------------------------------------------------------------------------- */
 	/* Misc methods */
 	/* ------------------------------------------------------------------------------- */
@@ -60,8 +76,18 @@ public final class PlayerCache extends YamlSectionConfig {
 
 	public static PlayerCache getCache(final Player player) {
 		synchronized (cacheMap) {
-			return cacheMap.computeIfAbsent(player.getUniqueId(), k
-					-> cacheMap.get(player.getUniqueId()));
+			val uniqueId = player.getUniqueId();
+			val playerName = player.getName();
+
+			var cache = cacheMap.get(uniqueId);
+
+			if (cache == null) {
+				cache = new PlayerCache(playerName, uniqueId);
+
+				cacheMap.put(uniqueId, cache);
+			}
+
+			return cache;
 		}
 	}
 
