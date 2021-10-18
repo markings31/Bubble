@@ -22,8 +22,13 @@ public final class PlayerCache extends YamlSectionConfig {
 	private final UUID uuid;
 
 	private boolean broadcastStatus;
+	private boolean broadcastSoundStatus;
+
 	private boolean motdStatus;
+
 	private boolean mentionsStatus;
+	private boolean mentionSoundStatus;
+	private boolean mentionToastStatus;
 
 	private PlayerCache(final String name, final UUID uuid) {
 		super("Players." + uuid.toString());
@@ -37,14 +42,25 @@ public final class PlayerCache extends YamlSectionConfig {
 	@Override
 	protected void onLoadFinish() {
 		broadcastStatus = getBoolean("Receive_Broadcasts", true);
+		broadcastSoundStatus = getBoolean("Receive_Broadcast_Sound", true);
+
 		motdStatus = getBoolean("Receive_MOTD", true);
+
 		mentionsStatus = getBoolean("Receive_Mentions", true);
+		mentionSoundStatus = getBoolean("Receive_Mention_Sound", true);
+		mentionToastStatus = getBoolean("Receive_Mentions_Toast", true);
 	}
 
 	public void setBroadcastStatus(final boolean broadcastStatus) {
 		this.broadcastStatus = broadcastStatus;
 
 		save("Receive_Broadcasts", broadcastStatus);
+	}
+
+	public void setBroadcastSoundStatus(final boolean broadcastSoundStatus) {
+		this.broadcastSoundStatus = broadcastSoundStatus;
+
+		save("Receive_Broadcast_Sound", broadcastSoundStatus);
 	}
 
 	public void setMotdStatus(final boolean motdStatus) {
@@ -57,6 +73,18 @@ public final class PlayerCache extends YamlSectionConfig {
 		this.mentionsStatus = mentionsStatus;
 
 		save("Receive_Mentions", mentionsStatus);
+	}
+
+	public void setMentionSoundStatus(final boolean mentionSoundStatus) {
+		this.mentionSoundStatus = mentionSoundStatus;
+
+		save("Receive_Mention_Sound", mentionSoundStatus);
+	}
+
+	public void setMentionToastStatus(final boolean mentionToastStatus) {
+		this.mentionToastStatus = mentionToastStatus;
+
+		save("Receive_Mentions_Toast", mentionToastStatus);
 	}
 
 	/* ------------------------------------------------------------------------------- */

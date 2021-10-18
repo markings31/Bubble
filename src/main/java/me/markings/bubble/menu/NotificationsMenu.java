@@ -57,6 +57,7 @@ public class NotificationsMenu extends Menu {
 	private final class ChatSettingsMenu extends Menu {
 
 		private final Button toggleBroadcastsButton;
+		private final Button toggleBroadcastSoundButton;
 
 		private ChatSettingsMenu() {
 			super(NotificationsMenu.this);
@@ -82,11 +83,35 @@ public class NotificationsMenu extends Menu {
 							"&ebroadcasts that are displayed to you.").build().make();
 				}
 			};
+
+			toggleBroadcastSoundButton = new Button() {
+				@Override
+				public void onClickedInMenu(final Player player, final Menu menu, final ClickType click) {
+					val cache = PlayerCache.getCache(getViewer());
+					cache.setBroadcastSoundStatus(!cache.isBroadcastSoundStatus());
+					restartMenu(cache.isBroadcastSoundStatus() ? "&aBroadcast Sound ENABLED!" : "&cBroadcast Sound DISABLED!");
+				}
+
+				@Override
+				public ItemStack getItem() {
+					val cache = PlayerCache.getCache(getViewer());
+					return ItemCreator.of(CompMaterial.MUSIC_DISC_13,
+							"&7Broadcast Sound: " + (cache.isBroadcastSoundStatus() ? enabledText : disabledText),
+							"",
+							clickToToggleMessage,
+							"&ethe sound played to you when you",
+							"&ereceive a broadcast message.").build().make();
+				}
+			};
 		}
 
 		@Override
 		public ItemStack getItemAt(final int slot) {
-			return slot == 9 + 4 ? toggleBroadcastsButton.getItem() : null;
+			return switch (slot) {
+				case 9 + 2 -> toggleBroadcastsButton.getItem();
+				case 9 + 6 -> toggleBroadcastSoundButton.getItem();
+				default -> null;
+			};
 		}
 	}
 
@@ -130,6 +155,8 @@ public class NotificationsMenu extends Menu {
 	public class MentionsSettingsMenu extends Menu {
 
 		private final Button toggleMentionsButton;
+		private final Button toggleMentionSoundButton;
+		private final Button toggleMentionToastButton;
 
 		public MentionsSettingsMenu() {
 			super(NotificationsMenu.this);
@@ -156,11 +183,56 @@ public class NotificationsMenu extends Menu {
 							"&ename is mentioned in the chat.").build().make();
 				}
 			};
+
+			toggleMentionSoundButton = new Button() {
+				@Override
+				public void onClickedInMenu(final Player player, final Menu menu, final ClickType click) {
+					val cache = PlayerCache.getCache(getViewer());
+					cache.setMentionSoundStatus(!cache.isMentionSoundStatus());
+					restartMenu(cache.isMentionSoundStatus() ? "&aMentions ENABLED!" : "&cMentions DISABLED!");
+				}
+
+				@Override
+				public ItemStack getItem() {
+					val cache = PlayerCache.getCache(getViewer());
+					return ItemCreator.of(CompMaterial.NOTE_BLOCK,
+							"&7Mention Sound: " + (cache.isMentionSoundStatus() ? enabledText : disabledText),
+							"",
+							clickToToggleMessage,
+							"&ethe sound played to you when your",
+							"&ename is mentioned in the chat.").build().make();
+				}
+			};
+
+			toggleMentionToastButton = new Button() {
+				@Override
+				public void onClickedInMenu(final Player player, final Menu menu, final ClickType click) {
+					val cache = PlayerCache.getCache(getViewer());
+					cache.setMentionToastStatus(!cache.isMentionToastStatus());
+					restartMenu(cache.isMentionToastStatus() ? "&aMention Toast ENABLED!" : "&cMention Toast DISABLED!");
+				}
+
+				@Override
+				public ItemStack getItem() {
+					val cache = PlayerCache.getCache(getViewer());
+					return ItemCreator.of(CompMaterial.BREAD,
+							"&7Mention Toast: " + (cache.isMentionToastStatus() ? enabledText : disabledText),
+							"",
+							clickToToggleMessage,
+							"&ethe achievement popup received when",
+							"&eyour name is mentioned in the chat.").build().make();
+				}
+			};
 		}
 
 		@Override
 		public ItemStack getItemAt(final int slot) {
-			return slot == 9 + 4 ? toggleMentionsButton.getItem() : null;
+			return switch (slot) {
+				case 9 + 2 -> toggleMentionsButton.getItem();
+				case 9 + 4 -> toggleMentionSoundButton.getItem();
+				case 9 + 6 -> toggleMentionToastButton.getItem();
+				default -> null;
+			};
 		}
 	}
 }

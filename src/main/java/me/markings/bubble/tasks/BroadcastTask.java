@@ -1,7 +1,6 @@
 package me.markings.bubble.tasks;
 
 import lombok.val;
-import me.markings.bubble.Bubble;
 import me.markings.bubble.PlayerCache;
 import me.markings.bubble.bungee.BubbleAction;
 import me.markings.bubble.settings.Settings;
@@ -35,13 +34,11 @@ public class BroadcastTask extends BukkitRunnable {
 			RandomUtil.nextItem(messageList.keySet()) : messageList.keySet().stream().toList().get(index);
 	private static final List<String> worlds = Settings.BroadcastSettings.BROADCAST_WORLDS;
 
-	// TODO: Test with extracted functions.
 	@Override
 	public void run() {
 		if (Settings.BroadcastSettings.ENABLE_BROADCASTS.equals(Boolean.TRUE)) {
 
-			if ((Remain.getOnlinePlayers().isEmpty() && Boolean.FALSE.equals(Settings.BroadcastSettings.BUNGEECORD))
-					|| (Boolean.TRUE.equals(Settings.BroadcastSettings.BUNGEECORD) && Bubble.getPlayers().isEmpty()))
+			if (Remain.getOnlinePlayers().isEmpty() && Boolean.FALSE.equals(Settings.BroadcastSettings.BUNGEECORD))
 				return;
 
 			val broadcastSound = Settings.BroadcastSettings.BROADCAST_SOUND;
@@ -53,29 +50,30 @@ public class BroadcastTask extends BukkitRunnable {
 	}
 
 	private static void sendMessages(final List<String> messages, final Player player) {
-
-		if (Boolean.FALSE.equals(Settings.BroadcastSettings.BUNGEECORD))
-			Common.tellNoPrefix(player, MessageUtil.format(header), "&f");
-		else
-			BungeeUtil.tellBungee(BubbleAction.NOTIFICATION, messageType, "&f", MessageUtil.format(header));
-
+		Common.tellNoPrefix(player, MessageUtil.format(header), "&f");
 		messages.forEach(message -> {
 
 			message = Boolean.TRUE.equals(Settings.BroadcastSettings.CENTER_ALL) ? ChatUtil.center(message) : message;
 
 			MessageUtil.executePlaceholders(message, player);
 
-			if (Boolean.FALSE.equals(Settings.BroadcastSettings.BUNGEECORD))
-				Common.tellNoPrefix(player, MessageUtil.replaceVarsAndGradient(message, player));
-			else
-				BungeeUtil.tellBungee(BubbleAction.NOTIFICATION, messageType,
-						MessageUtil.replaceVarsAndGradient(message, player));
+			Common.tellNoPrefix(player, MessageUtil.replaceVarsAndGradient(message, player));
 		});
 
-		if (Boolean.FALSE.equals(Settings.BroadcastSettings.BUNGEECORD))
-			Common.tellNoPrefix(player, "&f", MessageUtil.format(footer));
-		else
-			BungeeUtil.tellBungee(BubbleAction.NOTIFICATION, messageType, "&f", MessageUtil.format(footer));
+		Common.tellNoPrefix(player, "&f", MessageUtil.format(footer));
+	}
+
+	private static void sendBungeeMessages(final List<String> messages) {
+		Common.log("Sent Bungee 1");
+		BungeeUtil.tellBungee(BubbleAction.NOTIFICATION, messageType, MessageUtil.format(header) + "\n");
+
+		messages.forEach(message -> {
+			Common.log("Sent Bungee 2");
+			BungeeUtil.tellBungee(BubbleAction.NOTIFICATION, messageType,
+					(Boolean.TRUE.equals(Settings.BroadcastSettings.CENTER_ALL) ? ChatUtil.center(message) : message));
+		});
+
+		BungeeUtil.tellBungee(BubbleAction.NOTIFICATION, messageType, "\n" + MessageUtil.format(footer));
 	}
 
 	private static void playerChecks(final Player player, final String world) {
@@ -94,21 +92,19 @@ public class BroadcastTask extends BukkitRunnable {
 	}
 
 	private static void executeTasks(final SimpleSound broadcastSound) {
-		worlds.forEach(world -> {
-			for (val player : Remain.getOnlinePlayers()) {
+		if (Boolean.TRUE.equals(Settings.BroadcastSettings.BUNGEECORD))
+			sendBungeeMessages(messages);
+		else worlds.forEach(world -> Remain.getOnlinePlayers().forEach(player -> {
+			val cache = PlayerCache.getCache(player);
+			if (cache.isBroadcastStatus()) {
 
-				val cache = PlayerCache.getCache(player);
+				playerChecks(player, world);
 
-				if (cache.isBroadcastStatus()) {
+				sendMessages(messages, player);
 
-					playerChecks(player, world);
-
-					sendMessages(messages, player);
-
-					new SimpleSound(broadcastSound.getSound(), broadcastSound.getVolume(), broadcastSound.getPitch()).play(player);
-				}
+				new SimpleSound(broadcastSound.getSound(), broadcastSound.getVolume(), broadcastSound.getPitch()).play(player);
 			}
-		});
+		}));
 	}
 
 	private static void updateIndex(final List<List<String>> messages) {

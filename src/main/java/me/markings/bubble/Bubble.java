@@ -15,17 +15,12 @@ import me.markings.bubble.mysql.BubbleDatabase;
 import me.markings.bubble.settings.DatabaseFile;
 import me.markings.bubble.settings.Settings;
 import me.markings.bubble.tasks.BroadcastTask;
-import net.md_5.bungee.api.ProxyServer;
-import net.md_5.bungee.api.connection.ProxiedPlayer;
 import org.mineacademy.fo.Common;
 import org.mineacademy.fo.Messenger;
 import org.mineacademy.fo.bungee.SimpleBungee;
 import org.mineacademy.fo.command.SimpleCommandGroup;
 import org.mineacademy.fo.plugin.SimplePlugin;
 import org.mineacademy.fo.settings.SimpleSettings;
-
-import java.util.ArrayList;
-import java.util.Collection;
 
 public final class Bubble extends SimplePlugin {
 
@@ -95,13 +90,4 @@ public final class Bubble extends SimplePlugin {
 	public static Bubble getInstance() {
 		return (Bubble) SimplePlugin.getInstance();
 	}
-
-	public static Collection<ProxiedPlayer> getPlayers() {
-		final Collection<ProxiedPlayer> players = new ArrayList<>();
-		for (val serverInfo : ProxyServer.getInstance().getServers().values())
-			players.addAll(serverInfo.getPlayers());
-
-		return players;
-	}
-
 }
