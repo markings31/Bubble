@@ -13,12 +13,15 @@ import me.markings.bubble.listeners.PlayerChatListener;
 import me.markings.bubble.listeners.PlayerJoinListener;
 import me.markings.bubble.mysql.BubbleDatabase;
 import me.markings.bubble.settings.DatabaseFile;
+import me.markings.bubble.settings.MenuSettings;
 import me.markings.bubble.settings.Settings;
 import me.markings.bubble.tasks.BroadcastTask;
+import org.bukkit.entity.Player;
 import org.mineacademy.fo.Common;
 import org.mineacademy.fo.Messenger;
 import org.mineacademy.fo.bungee.SimpleBungee;
 import org.mineacademy.fo.command.SimpleCommandGroup;
+import org.mineacademy.fo.model.Variables;
 import org.mineacademy.fo.plugin.SimplePlugin;
 import org.mineacademy.fo.settings.SimpleSettings;
 
@@ -60,6 +63,8 @@ public final class Bubble extends SimplePlugin {
 		if (Common.doesPluginExist("MultiverseCore"))
 			Common.log(Common.getTellPrefix() + "Successfully hooked into MultiverseCore!");
 
+		Variables.addVariable("broadcast_status", viewer -> PlayerCache.getCache((Player) viewer).isBroadcastStatus() ? "ENABLED" : "DISABLED");
+
 		Common.log(Common.getTellPrefix() + "Bubble has been successfully enabled!");
 	}
 
@@ -67,6 +72,8 @@ public final class Bubble extends SimplePlugin {
 	protected void onPluginPreReload() {
 		Settings.BroadcastSettings.MESSAGE_MAP.clear();
 		Settings.WelcomeSettings.JOIN_MOTD.clear();
+		DatabaseFile.getInstance().reload();
+		MenuSettings.getInstance().reload();
 	}
 
 	@Override
@@ -83,6 +90,7 @@ public final class Bubble extends SimplePlugin {
 					Settings.BroadcastSettings.BROADCAST_DELAY.getTimeTicks());
 
 		DatabaseFile.getInstance().save();
+		MenuSettings.getInstance().save();
 
 		PlayerCache.clearAllData();
 	}

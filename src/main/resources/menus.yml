@@ -1,0 +1,36 @@
+Preferences:
+
+  Menu_Title: "&6Notification Preferences"
+  Menu_Size: 27
+
+  Chat_Settings_Button:
+    Title_Chat: "&eChat Settings"
+    Material_Chat: PAPER
+    Lore_Chat: [ "", "Click here to access the chat", "settings menu." ]
+    Slot_Chat: 11
+
+  MOTD_Settings_Button:
+    Title_MOTD: "&eMOTD Settings"
+    Material_MOTD: DIAMOND
+    Lore_MOTD: [ "", "Click here to access the MOTD", "settings menu." ]
+    Slot_MOTD: 13
+
+  Mentions_Settings_Button:
+    Title_Mentions: "&eMentions Settings"
+    Material_Mentions: SUNFLOWER
+    Lore_Mentions: [ "", "Click here to access the mentions", "settings menu." ]
+    Slot_Mentions: 15
+
+Chat_Settings_Menu:
+
+  Menu_Title: "&eChat Settings"
+  Menu_Size: 27
+
+  Toggle_Broadcasts_Button:
+    Title_Broadcasts_Enabled: "&7Broadcasts: &aENABLED"
+    Title_Broadcasts_Disabled: "&7Broadcasts: &cDISABLED"
+
+    Material_Broadcasts_Enabled: LIME_DYE
+    Material_Broadcasts_Disabled: GRAY_DYE
+
+    Lore_Broadcasts: [ "", "&eClick this item to toggle on/off", "&ebroadcasts that are displayed to you." ]

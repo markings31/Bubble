@@ -31,7 +31,12 @@ public class PlayerChatListener implements Listener {
 
 				Common.tell(loopPlayer, String.format(event.getFormat(), eventPlayerName, eventMessage)
 						.replace("@" + playerName, Settings.ChatSettings.MENTION_COLOR + playerName + "&r"));
-				new SimpleSound(mentionSound.getSound(), mentionSound.getVolume(), mentionSound.getPitch()).play(loopPlayer);
+
+				if (cache.isMentionToastStatus())
+					Common.dispatchCommand(loopPlayer, "bu notify {player} toast PAPER &e&oYou were mentioned in the chat!");
+
+				if (cache.isMentionSoundStatus())
+					new SimpleSound(mentionSound.getSound(), mentionSound.getVolume(), mentionSound.getPitch()).play(loopPlayer);
 
 				return;
 			}

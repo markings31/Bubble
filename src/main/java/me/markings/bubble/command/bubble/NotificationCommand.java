@@ -53,30 +53,39 @@ public class NotificationCommand extends SimpleSubCommand {
 		val primaryPart = Variables.replace(inputs[0], getPlayer());
 		val secondaryPart = Variables.replace(inputs.length == 1 ? "" : inputs[1], getPlayer());
 
-		if (getPlayer() != null)
-			switch (args[1].toLowerCase()) {
-				case "message" -> {
+		switch (args[1].toLowerCase()) {
+			case "message" -> {
+				if (getPlayer() != null)
 					checkBoolean(getPlayer().hasPermission(getPermission() + ".message"), noPermissionMsg);
-					Common.tell(target, Common.colorize(primaryPart));
-				}
-				case "title" -> {
-					checkBoolean(getPlayer().hasPermission(getPermission() + ".title"), noPermissionMsg);
-					Remain.sendTitle(target, primaryPart, secondaryPart);
-				}
-				case "actionbar", "action" -> {
-					checkBoolean(getPlayer().hasPermission(getPermission() + ".actionbar"), noPermissionMsg);
-					Remain.sendActionBar(target, primaryPart);
-				}
-				case "bossbar" -> {
-					checkBoolean(getPlayer().hasPermission(getPermission() + ".bossbar"), noPermissionMsg);
-					Remain.sendBossbarPercent(target, primaryPart, 100);
-				}
-				case "toast" -> {
-					checkBoolean(getPlayer().hasPermission(getPermission() + ".toast"), noPermissionMsg);
-					Remain.sendToast(target, primaryPart, args[1].equalsIgnoreCase(toastArg) ?
-							findMaterial(args[2], "No such material " + args[2] + " found!") : null);
-				}
+
+				Common.tell(target, Common.colorize(primaryPart));
 			}
+			case "title" -> {
+				if (getPlayer() != null)
+					checkBoolean(getPlayer().hasPermission(getPermission() + ".title"), noPermissionMsg);
+
+				Remain.sendTitle(target, primaryPart, secondaryPart);
+			}
+			case "actionbar", "action" -> {
+				if (getPlayer() != null)
+					checkBoolean(getPlayer().hasPermission(getPermission() + ".actionbar"), noPermissionMsg);
+
+				Remain.sendActionBar(target, primaryPart);
+			}
+			case "bossbar" -> {
+				if (getPlayer() != null)
+					checkBoolean(getPlayer().hasPermission(getPermission() + ".bossbar"), noPermissionMsg);
+
+				Remain.sendBossbarPercent(target, primaryPart, 100);
+			}
+			case "toast" -> {
+				if (getPlayer() != null)
+					checkBoolean(getPlayer().hasPermission(getPermission() + ".toast"), noPermissionMsg);
+				
+				Remain.sendToast(target, primaryPart, args[1].equalsIgnoreCase(toastArg) ?
+						findMaterial(args[2], "No such material " + args[2] + " found!") : null);
+			}
+		}
 	}
 
 	@Override

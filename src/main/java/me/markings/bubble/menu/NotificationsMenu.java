@@ -2,6 +2,7 @@ package me.markings.bubble.menu;
 
 import lombok.val;
 import me.markings.bubble.PlayerCache;
+import me.markings.bubble.settings.MenuSettings;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.ClickType;
 import org.bukkit.inventory.ItemStack;
@@ -22,26 +23,17 @@ public class NotificationsMenu extends Menu {
 	private final Button mentionsSettingsButton;
 
 	public NotificationsMenu() {
-		setTitle("&6Notification Preferences");
-		setSize(9 * 3);
+		setTitle(MenuSettings.getInstance().getMenuTitle());
+		setSize(MenuSettings.getInstance().getMenuSize());
 
-		chatSettingsButton = new ButtonMenu(new ChatSettingsMenu(), CompMaterial.PAPER,
-				"&eChat Settings",
-				"",
-				"Click here to access the chat",
-				"settings menu.");
+		chatSettingsButton = new ButtonMenu(new ChatSettingsMenu(), MenuSettings.getInstance().getChatSettingsButtonMaterial(),
+				MenuSettings.getInstance().getChatSettingsButtonTitle(), MenuSettings.getInstance().getChatSettingsButtonLore());
 
-		motdSettingsButton = new ButtonMenu(new MOTDSettingsMenu(), CompMaterial.DIAMOND,
-				"&eMOTD Settings",
-				"",
-				"Click here to access the MOTD",
-				"settings menu.");
+		motdSettingsButton = new ButtonMenu(new MOTDSettingsMenu(), MenuSettings.getInstance().getMotdSettingsButtonMaterial(),
+				MenuSettings.getInstance().getMotdSettingsButtonTitle(), MenuSettings.getInstance().getMotdSettingsButtonLore());
 
-		mentionsSettingsButton = new ButtonMenu(new MentionsSettingsMenu(), CompMaterial.SUNFLOWER,
-				"&eMentions Settings",
-				"",
-				"Click here to access the mentions",
-				"settings menu.");
+		mentionsSettingsButton = new ButtonMenu(new MentionsSettingsMenu(), MenuSettings.getInstance().getMentionsSettingsButtonMaterial(),
+				MenuSettings.getInstance().getMentionsSettingsButtonTitle(), MenuSettings.getInstance().getMentionsSettingsButtonLore());
 	}
 
 	@Override

@@ -18,6 +18,11 @@ public class DatabaseFile extends YamlConfig {
 
 	private int PORT;
 
+	@Override
+	protected boolean saveComments() {
+		return true;
+	}
+
 	private DatabaseFile() {
 		loadConfiguration("mysql.yml");
 	}
