@@ -10,7 +10,6 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.player.AsyncPlayerPreLoginEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 import org.mineacademy.fo.Common;
-import org.mineacademy.fo.remain.Remain;
 
 public class DatabaseListener implements Listener {
 
@@ -20,7 +19,7 @@ public class DatabaseListener implements Listener {
 			val uuid = event.getUniqueId();
 
 			if (event.getLoginResult() == AsyncPlayerPreLoginEvent.Result.ALLOWED) {
-				val cache = PlayerCache.getCache(Remain.getPlayerByUUID(uuid));
+				val cache = PlayerCache.getCache(uuid);
 
 				BubbleDatabase.getInstance().load(uuid, cache);
 			}

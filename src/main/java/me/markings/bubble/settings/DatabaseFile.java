@@ -10,13 +10,13 @@ public class DatabaseFile extends YamlConfig {
 	@Getter
 	private static final DatabaseFile instance = new DatabaseFile();
 
-	private String HOST;
-	private String NAME;
-	private String USERNAME;
-	private String PASSWORD;
-	private String TABLE_NAME;
+	private String host;
+	private String name;
+	private String username;
+	private String password;
+	private String tableName;
 
-	private int PORT;
+	private int port;
 
 	@Override
 	protected boolean saveComments() {
@@ -30,22 +30,22 @@ public class DatabaseFile extends YamlConfig {
 	@Override
 	protected void onLoadFinish() {
 		pathPrefix(null);
-		HOST = getString("Host");
-		PORT = getInteger("Port");
-		NAME = getString("Database_Name");
-		USERNAME = getString("Username");
-		PASSWORD = getString("Password");
-		TABLE_NAME = getString("Table_Name");
+		host = getString("Host");
+		port = getInteger("Port");
+		name = getString("Database_Name");
+		username = getString("Username");
+		password = getString("Password");
+		tableName = getString("Table_Name");
 	}
 
 	@Override
 	protected SerializedMap serialize() {
 		return SerializedMap.ofArray(
-				"Host", HOST,
-				"Port", PORT,
-				"Name", NAME,
-				"Username", USERNAME,
-				"Password", PASSWORD,
-				"Table_Name", TABLE_NAME);
+				"Host", host,
+				"Port", port,
+				"Name", name,
+				"Username", username,
+				"Password", password,
+				"Table_Name", tableName);
 	}
 }

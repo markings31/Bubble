@@ -10,39 +10,46 @@ import org.mineacademy.fo.menu.Menu;
 import org.mineacademy.fo.menu.button.Button;
 import org.mineacademy.fo.menu.button.ButtonMenu;
 import org.mineacademy.fo.menu.model.ItemCreator;
-import org.mineacademy.fo.remain.CompMaterial;
 
 public class NotificationsMenu extends Menu {
-
-	private static final String clickToToggleMessage = "&eClick this item to toggle on/off";
-	private static final String enabledText = "&aENABLED";
-	private static final String disabledText = "&cDISABLED";
 
 	private final Button chatSettingsButton;
 	private final Button motdSettingsButton;
 	private final Button mentionsSettingsButton;
 
+	private static final MenuSettings menuSettings = MenuSettings.getInstance();
+
 	public NotificationsMenu() {
-		setTitle(MenuSettings.getInstance().getMenuTitle());
-		setSize(MenuSettings.getInstance().getMenuSize());
+		setTitle(menuSettings.getPrefMenuTitle());
+		setSize(menuSettings.getPrefMenuSize());
 
-		chatSettingsButton = new ButtonMenu(new ChatSettingsMenu(), MenuSettings.getInstance().getChatSettingsButtonMaterial(),
-				MenuSettings.getInstance().getChatSettingsButtonTitle(), MenuSettings.getInstance().getChatSettingsButtonLore());
+		chatSettingsButton = new ButtonMenu(new ChatSettingsMenu(), menuSettings.getChatSettingsButtonMaterial(),
+				menuSettings.getChatSettingsButtonTitle(), menuSettings.getChatSettingsButtonLore());
 
-		motdSettingsButton = new ButtonMenu(new MOTDSettingsMenu(), MenuSettings.getInstance().getMotdSettingsButtonMaterial(),
-				MenuSettings.getInstance().getMotdSettingsButtonTitle(), MenuSettings.getInstance().getMotdSettingsButtonLore());
+		motdSettingsButton = new ButtonMenu(new MOTDSettingsMenu(), menuSettings.getMotdSettingsButtonMaterial(),
+				menuSettings.getMotdSettingsButtonTitle(), menuSettings.getMotdSettingsButtonLore());
 
-		mentionsSettingsButton = new ButtonMenu(new MentionsSettingsMenu(), MenuSettings.getInstance().getMentionsSettingsButtonMaterial(),
-				MenuSettings.getInstance().getMentionsSettingsButtonTitle(), MenuSettings.getInstance().getMentionsSettingsButtonLore());
+		mentionsSettingsButton = new ButtonMenu(new MentionsSettingsMenu(), menuSettings.getMentionsSettingsButtonMaterial(),
+				menuSettings.getMentionsSettingsButtonTitle(), menuSettings.getMentionsSettingsButtonLore());
 	}
 
 	@Override
 	public ItemStack getItemAt(final int slot) {
-		return switch (slot) {
-			case 9 + 2 -> chatSettingsButton.getItem();
-			case 9 + 4 -> motdSettingsButton.getItem();
-			case 9 + 6 -> mentionsSettingsButton.getItem();
-			default -> null;
+		if (slot == menuSettings.getBroadcastStatusButtonSlot())
+			return chatSettingsButton.getItem();
+		else if (slot == menuSettings.getMotdSettingsButtonSlot())
+			return motdSettingsButton.getItem();
+		else if (slot == menuSettings.getMentionsSettingsButtonSlot())
+			return mentionsSettingsButton.getItem();
+
+		return null;
+	}
+
+	@Override
+	protected String[] getInfo() {
+		return new String[]{
+				"&6Use this menu to configure your",
+				"&6notification preferences!"
 		};
 	}
 
@@ -54,25 +61,25 @@ public class NotificationsMenu extends Menu {
 		private ChatSettingsMenu() {
 			super(NotificationsMenu.this);
 
-			setTitle("&eChat Settings");
-			setSize(9 * 3);
+			setTitle(menuSettings.getChatMenuTitle());
+			setSize(menuSettings.getChatMenuSize());
 
 			toggleBroadcastsButton = new Button() {
 				@Override
 				public void onClickedInMenu(final Player player, final Menu menu, final ClickType click) {
 					val cache = PlayerCache.getCache(getViewer());
 					cache.setBroadcastStatus(!cache.isBroadcastStatus());
-					restartMenu(cache.isBroadcastStatus() ? "&aBroadcasts ENABLED!" : "&cBroadcasts DISABLED!");
+					restartMenu(cache.isBroadcastStatus() ? "&aBroadcasts ENABLED" : "&cBroadcasts DISABLED");
 				}
 
 				@Override
 				public ItemStack getItem() {
 					val cache = PlayerCache.getCache(getViewer());
-					return ItemCreator.of(cache.isBroadcastStatus() ? CompMaterial.LIME_DYE : CompMaterial.GRAY_DYE,
-							"&7Broadcasts: " + (cache.isBroadcastStatus() ? enabledText : disabledText),
-							"",
-							clickToToggleMessage,
-							"&ebroadcasts that are displayed to you.").build().make();
+					return ItemCreator.of(cache.isBroadcastStatus() ? menuSettings.getBroadcastsEnabledButtonMaterial()
+									: menuSettings.getBroadcastsDisabledButtonMaterial(),
+							(cache.isBroadcastStatus() ? menuSettings.getBroadcastsEnabledButtonTitle()
+									: menuSettings.getBroadcastsDisabledButtonTitle()),
+							menuSettings.getBroadcastStatusButtonLore()).build().make();
 				}
 			};
 
@@ -87,23 +94,22 @@ public class NotificationsMenu extends Menu {
 				@Override
 				public ItemStack getItem() {
 					val cache = PlayerCache.getCache(getViewer());
-					return ItemCreator.of(CompMaterial.MUSIC_DISC_13,
-							"&7Broadcast Sound: " + (cache.isBroadcastSoundStatus() ? enabledText : disabledText),
-							"",
-							clickToToggleMessage,
-							"&ethe sound played to you when you",
-							"&ereceive a broadcast message.").build().make();
+					return ItemCreator.of(menuSettings.getBroadcastSoundButtonMaterial(),
+							(cache.isBroadcastSoundStatus() ? menuSettings.getBroadcastSoundEnabledButtonTitle()
+									: menuSettings.getBroadcastSoundDisabledButtonTitle()),
+							menuSettings.getBroadcastSoundButtonLore()).build().make();
 				}
 			};
 		}
 
 		@Override
 		public ItemStack getItemAt(final int slot) {
-			return switch (slot) {
-				case 9 + 2 -> toggleBroadcastsButton.getItem();
-				case 9 + 6 -> toggleBroadcastSoundButton.getItem();
-				default -> null;
-			};
+			if (slot == menuSettings.getBroadcastStatusButtonSlot())
+				return toggleBroadcastsButton.getItem();
+			else if (slot == menuSettings.getBroadcastSoundButtonSlot())
+				return toggleBroadcastSoundButton.getItem();
+
+			return null;
 		}
 	}
 
@@ -114,8 +120,8 @@ public class NotificationsMenu extends Menu {
 		public MOTDSettingsMenu() {
 			super(NotificationsMenu.this);
 
-			setTitle("&dMOTD Settings");
-			setSize(9 * 3);
+			setTitle(menuSettings.getMotdMenuTitle());
+			setSize(menuSettings.getMotdMenuSize());
 
 			toggleMOTDButton = new Button() {
 				@Override
@@ -128,19 +134,17 @@ public class NotificationsMenu extends Menu {
 				@Override
 				public ItemStack getItem() {
 					val cache = PlayerCache.getCache(getViewer());
-					return ItemCreator.of(CompMaterial.WRITABLE_BOOK,
-							"&7Message of the Day: " + (cache.isMotdStatus() ? enabledText : disabledText),
-							"",
-							clickToToggleMessage,
-							"&ethe message sent to you when you join",
-							"&ethe server.").build().make();
+					return ItemCreator.of(menuSettings.getMotdStatusButtonMaterial(),
+							(cache.isMotdStatus() ? menuSettings.getMotdEnabledButtonTitle()
+									: menuSettings.getMotdDisabledButtonTitle()),
+							menuSettings.getMotdStatusButtonLore()).build().make();
 				}
 			};
 		}
 
 		@Override
 		public ItemStack getItemAt(final int slot) {
-			return slot == 9 + 4 ? toggleMOTDButton.getItem() : null;
+			return slot == menuSettings.getMotdStatusButtonSlot() ? toggleMOTDButton.getItem() : null;
 		}
 	}
 
@@ -153,8 +157,8 @@ public class NotificationsMenu extends Menu {
 		public MentionsSettingsMenu() {
 			super(NotificationsMenu.this);
 
-			setTitle("&2Mentions Settings");
-			setSize(9 * 3);
+			setTitle(menuSettings.getMentionMenuTitle());
+			setSize(menuSettings.getMentionMenuSize());
 
 			toggleMentionsButton = new Button() {
 				@Override
@@ -167,12 +171,9 @@ public class NotificationsMenu extends Menu {
 				@Override
 				public ItemStack getItem() {
 					val cache = PlayerCache.getCache(getViewer());
-					return ItemCreator.of(CompMaterial.NAME_TAG,
-							"&7Chat Mentions: " + (cache.isMentionsStatus() ? enabledText : disabledText),
-							"",
-							clickToToggleMessage,
-							"&enotifications you receive when your",
-							"&ename is mentioned in the chat.").build().make();
+					return ItemCreator.of(menuSettings.getMentionsStatusButtonMaterial(),
+							(cache.isMentionsStatus() ? menuSettings.getMentionsEnabledButtonTitle()
+									: menuSettings.getMentionsDisabledButtonTitle()), menuSettings.getMentionsStatusButtonLore()).build().make();
 				}
 			};
 
@@ -187,12 +188,9 @@ public class NotificationsMenu extends Menu {
 				@Override
 				public ItemStack getItem() {
 					val cache = PlayerCache.getCache(getViewer());
-					return ItemCreator.of(CompMaterial.NOTE_BLOCK,
-							"&7Mention Sound: " + (cache.isMentionSoundStatus() ? enabledText : disabledText),
-							"",
-							clickToToggleMessage,
-							"&ethe sound played to you when your",
-							"&ename is mentioned in the chat.").build().make();
+					return ItemCreator.of(menuSettings.getMentionSoundStatusButtonMaterial(),
+							(cache.isMentionSoundStatus() ? menuSettings.getMentionSoundEnabledButtonTitle()
+									: menuSettings.getMentionSoundDisabledButtonTitle()), menuSettings.getBroadcastSoundButtonLore()).build().make();
 				}
 			};
 
@@ -207,24 +205,23 @@ public class NotificationsMenu extends Menu {
 				@Override
 				public ItemStack getItem() {
 					val cache = PlayerCache.getCache(getViewer());
-					return ItemCreator.of(CompMaterial.BREAD,
-							"&7Mention Toast: " + (cache.isMentionToastStatus() ? enabledText : disabledText),
-							"",
-							clickToToggleMessage,
-							"&ethe achievement popup received when",
-							"&eyour name is mentioned in the chat.").build().make();
+					return ItemCreator.of(menuSettings.getMentionToastStatusButtonMaterial(),
+							(cache.isMentionToastStatus() ? menuSettings.getMentionToastEnabledButtonTitle()
+									: menuSettings.getMentionToastDisabledButtonTitle()), menuSettings.getMentionToastStatusButtonLore()).build().make();
 				}
 			};
 		}
 
 		@Override
 		public ItemStack getItemAt(final int slot) {
-			return switch (slot) {
-				case 9 + 2 -> toggleMentionsButton.getItem();
-				case 9 + 4 -> toggleMentionSoundButton.getItem();
-				case 9 + 6 -> toggleMentionToastButton.getItem();
-				default -> null;
-			};
+			if (slot == menuSettings.getMentionsStatusButtonSlot())
+				return toggleMentionsButton.getItem();
+			else if (slot == menuSettings.getMentionSoundStatusButtonSlot())
+				return toggleMentionSoundButton.getItem();
+			else if (slot == menuSettings.getMentionToastStatusButtonSlot())
+				return toggleMentionToastButton.getItem();
+
+			return null;
 		}
 	}
 }

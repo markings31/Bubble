@@ -1,7 +1,7 @@
 Preferences:
 
-  Menu_Title: "&6Notification Preferences"
-  Menu_Size: 27
+  Preferences_Menu_Title: "&6Notification Preferences"
+  Preferences_Menu_Size: 27
 
   Chat_Settings_Button:
     Title_Chat: "&eChat Settings"
@@ -21,10 +21,10 @@ Preferences:
     Lore_Mentions: [ "", "Click here to access the mentions", "settings menu." ]
     Slot_Mentions: 15
 
-Chat_Settings_Menu:
+Chat_Settings:
 
-  Menu_Title: "&eChat Settings"
-  Menu_Size: 27
+  Chat_Menu_Title: "&eChat Settings"
+  Chat_Menu_Size: 27
 
   Toggle_Broadcasts_Button:
     Title_Broadcasts_Enabled: "&7Broadcasts: &aENABLED"
@@ -34,3 +34,65 @@ Chat_Settings_Menu:
     Material_Broadcasts_Disabled: GRAY_DYE
 
     Lore_Broadcasts: [ "", "&eClick this item to toggle on/off", "&ebroadcasts that are displayed to you." ]
+
+    Slot_Broadcasts: 11
+
+  Toggle_Broadcast_Sound_Button:
+    Title_Broadcast_Sound_Enabled: "&7Broadcast Sound: &aENABLED"
+    Title_Broadcast_Sound_Disabled: "&7Broadcast Sound: &cDISABLED"
+
+    Material_Broadcast_Sound: MUSIC_DISC_13
+
+    Lore_Sound: [ "", "&eClick this item to toggle on/off", "&ethe sound played to you when you", "&ereceive a broadcast message." ]
+
+    Slot_Sound: 15
+
+MOTD_Settings:
+
+  MOTD_Menu_Title: "&dMOTD Settings"
+  MOTD_Menu_Size: 27
+
+  Toggle_MOTD_Button:
+    Title_MOTD_Enabled: "&7Message of the Day: &aENABLED"
+    Title_MOTD_Disabled: "&7Message of the Day: &cDISABLED"
+
+    Material_MOTD_Status: WRITABLE_BOOK
+
+    Lore_MOTD_Status: [ "", "&eClick this item to toggle on/off", "&ethe message sent to you when you join", "&ethe server." ]
+
+    Slot_MOTD_Status: 13
+
+Mentions_Settings:
+
+  Mentions_Menu_Title: "&2Mentions Settings"
+  Mentions_Menu_Size: 27
+
+  Toggle_Mentions_Button:
+    Title_Mentions_Enabled: "&7Chat Mentions: &aENABLED"
+    Title_Mentions_Disabled: "&7Chat Mentions: &cDISABLED"
+
+    Material_Mentions_Status: NAME_TAG
+
+    Lore_Mentions_Status: [ "", "&eClick this item to toggle on/off", "&enotifications you receive when your", "&ename is mentioned in the chat." ]
+
+    Slot_Mentions_Status: 11
+
+  Toggle_Mention_Sound_Button:
+    Title_Mention_Sound_Enabled: "&7Mention Sound: &aENABLED"
+    Title_Mention_Sound_Disabled: "&7Mention Sound: &cDISABLED"
+
+    Material_Mention_Sound_Status: NOTE_BLOCK
+
+    Lore_Mention_Sound_Status: [ "", "&eClick this item to toggle on/off", "&ethe sound played to you when your", "&ename is mentioned in the chat." ]
+
+    Slot_Mention_Sound_Status: 13
+
+  Toggle_Mention_Toast_Button:
+    Title_Mention_Toast_Enabled: "&7Mention Toast: &aENABLED"
+    Title_Mention_Toast_Disabled: "&7Mention Toast: &cDISABLED"
+
+    Material_Mention_Toast_Status: BREAD
+
+    Lore_Mention_Toast_Status: [ "", "&eClick this item to toggle on/off", "&ethe sound played to you when your", "&ename is mentioned in the chat." ]
+
+    Slot_Mention_Toast_Status: 15

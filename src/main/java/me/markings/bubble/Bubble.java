@@ -23,6 +23,7 @@ import org.mineacademy.fo.bungee.SimpleBungee;
 import org.mineacademy.fo.command.SimpleCommandGroup;
 import org.mineacademy.fo.model.Variables;
 import org.mineacademy.fo.plugin.SimplePlugin;
+import org.mineacademy.fo.remain.Remain;
 import org.mineacademy.fo.settings.SimpleSettings;
 
 public final class Bubble extends SimplePlugin {
@@ -33,6 +34,8 @@ public final class Bubble extends SimplePlugin {
 	@Getter
 	private final SimpleBungee bungeeCord = new SimpleBungee("plugin:bubble", BubbleBungeeListener.class, BubbleAction.class);
 
+	private final BubbleDatabase database = BubbleDatabase.getInstance();
+
 	@Override
 	protected void onPluginStart() {
 		Common.setTellPrefix(SimpleSettings.PLUGIN_PREFIX);
@@ -40,13 +43,13 @@ public final class Bubble extends SimplePlugin {
 		val dataFile = DatabaseFile.getInstance();
 
 		if (Boolean.TRUE.equals(Settings.DatabaseSettings.ENABLE_MYSQL))
-			BubbleDatabase.getInstance().connect(
-					dataFile.getHOST(),
-					dataFile.getPORT(),
-					dataFile.getNAME(),
-					dataFile.getUSERNAME(),
-					dataFile.getPASSWORD(),
-					dataFile.getTABLE_NAME());
+			Common.runLaterAsync(() -> database.connect(
+					dataFile.getHost(),
+					dataFile.getPort(),
+					dataFile.getName(),
+					dataFile.getUsername(),
+					dataFile.getPassword(),
+					dataFile.getTableName()));
 
 		registerCommand(new AnnounceCommand());
 		registerCommand(new ToggleCommand());
@@ -63,7 +66,9 @@ public final class Bubble extends SimplePlugin {
 		if (Common.doesPluginExist("MultiverseCore"))
 			Common.log(Common.getTellPrefix() + "Successfully hooked into MultiverseCore!");
 
-		Variables.addVariable("broadcast_status", viewer -> PlayerCache.getCache((Player) viewer).isBroadcastStatus() ? "ENABLED" : "DISABLED");
+		Variables.addVariable("broadcast_status", player -> PlayerCache.getCache((Player) player).isBroadcastStatus() ? "ENABLED" : "DISABLED");
+		Variables.addVariable("motd_status", player -> PlayerCache.getCache((Player) player).isMotdStatus() ? "ENABLED" : "DISABLED");
+		Variables.addVariable("mentions_status", player -> PlayerCache.getCache((Player) player).isMentionsStatus() ? "ENABLED" : "DISABLED");
 
 		Common.log(Common.getTellPrefix() + "Bubble has been successfully enabled!");
 	}
@@ -88,6 +93,12 @@ public final class Bubble extends SimplePlugin {
 		if (Settings.BroadcastSettings.ENABLE_BROADCASTS.equals(Boolean.TRUE))
 			new BroadcastTask().runTaskTimerAsynchronously(this, 0,
 					Settings.BroadcastSettings.BROADCAST_DELAY.getTimeTicks());
+
+		Remain.getOnlinePlayers().forEach(player -> {
+			val cache = PlayerCache.getCache(player);
+			database.save(player.getName(), player.getUniqueId(), cache);
+		});
+
 
 		DatabaseFile.getInstance().save();
 		MenuSettings.getInstance().save();

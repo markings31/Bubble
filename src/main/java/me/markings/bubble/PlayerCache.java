@@ -2,6 +2,7 @@ package me.markings.bubble;
 
 import lombok.Getter;
 import lombok.val;
+import me.markings.bubble.api.Cache;
 import org.bukkit.entity.Player;
 import org.mineacademy.fo.collection.expiringmap.ExpiringMap;
 import org.mineacademy.fo.constants.FoConstants;
@@ -13,11 +14,9 @@ import java.util.UUID;
 import java.util.concurrent.TimeUnit;
 
 @Getter
-public final class PlayerCache extends YamlSectionConfig {
+public final class PlayerCache extends YamlSectionConfig implements Cache {
 
 	private static final ExpiringMap<UUID, PlayerCache> cacheMap = ExpiringMap.builder().expiration(30, TimeUnit.MINUTES).build();
-
-	private final String playerName;
 
 	private final UUID uuid;
 
@@ -30,10 +29,9 @@ public final class PlayerCache extends YamlSectionConfig {
 	private boolean mentionSoundStatus;
 	private boolean mentionToastStatus;
 
-	private PlayerCache(final String name, final UUID uuid) {
+	private PlayerCache(final UUID uuid) {
 		super("Players." + uuid.toString());
 
-		this.playerName = name;
 		this.uuid = uuid;
 
 		loadConfiguration(NO_DEFAULT, FoConstants.File.DATA);
@@ -103,16 +101,17 @@ public final class PlayerCache extends YamlSectionConfig {
 	// --------------------------------------------------------------------------------------------------------------
 
 	public static PlayerCache getCache(final Player player) {
-		synchronized (cacheMap) {
-			val uniqueId = player.getUniqueId();
-			val playerName = player.getName();
+		return getCache(player.getUniqueId());
+	}
 
-			var cache = cacheMap.get(uniqueId);
+	public static PlayerCache getCache(final UUID uuid) {
+		synchronized (cacheMap) {
+			PlayerCache cache = cacheMap.get(uuid);
 
 			if (cache == null) {
-				cache = new PlayerCache(playerName, uniqueId);
+				cache = new PlayerCache(uuid);
 
-				cacheMap.put(uniqueId, cache);
+				cacheMap.put(uuid, cache);
 			}
 
 			return cache;
