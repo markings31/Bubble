@@ -3,6 +3,7 @@ package me.markings.bubble.tasks;
 import lombok.val;
 import me.markings.bubble.PlayerCache;
 import me.markings.bubble.bungee.BubbleAction;
+import me.markings.bubble.event.BroadcastEvent;
 import me.markings.bubble.settings.Settings;
 import me.markings.bubble.util.MessageUtil;
 import org.bukkit.entity.Player;
@@ -30,14 +31,14 @@ public class BroadcastTask extends BukkitRunnable {
 	private static final Map<List<String>, String> messageList = Settings.BroadcastSettings.MESSAGE_MAP;
 	private static final Map<String, String> broadcastPerm = Settings.BroadcastSettings.PERMISSION;
 
+	private static SimpleSound broadcastSound = Settings.BroadcastSettings.BROADCAST_SOUND;
+
 	private static final List<String> worlds = Settings.BroadcastSettings.BROADCAST_WORLDS;
 
 	@Override
 	public void run() {
 		if (Settings.BroadcastSettings.ENABLE_BROADCASTS.equals(Boolean.TRUE) &&
 				!(Remain.getOnlinePlayers().isEmpty() && Boolean.FALSE.equals(Settings.BroadcastSettings.BUNGEECORD))) {
-
-			val broadcastSound = Settings.BroadcastSettings.BROADCAST_SOUND;
 
 			executeTasks(broadcastSound);
 
@@ -49,6 +50,14 @@ public class BroadcastTask extends BukkitRunnable {
 		Common.tellNoPrefix(player, MessageUtil.format(header), "&f");
 		messages.forEach(message -> {
 			message = Boolean.TRUE.equals(Settings.BroadcastSettings.CENTER_ALL) ? ChatUtil.center(message) : message;
+
+			val event = new BroadcastEvent(message, broadcastSound);
+
+			if (!Common.callEvent(event))
+				return;
+
+			message = event.getMessage();
+			broadcastSound = event.getSound();
 
 			MessageUtil.executePlaceholders(message, player);
 

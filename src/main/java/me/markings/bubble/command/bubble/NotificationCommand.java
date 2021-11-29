@@ -81,7 +81,7 @@ public class NotificationCommand extends SimpleSubCommand {
 			case "toast" -> {
 				if (getPlayer() != null)
 					checkBoolean(getPlayer().hasPermission(getPermission() + ".toast"), noPermissionMsg);
-				
+
 				Remain.sendToast(target, primaryPart, args[1].equalsIgnoreCase(toastArg) ?
 						findMaterial(args[2], "No such material " + args[2] + " found!") : null);
 			}

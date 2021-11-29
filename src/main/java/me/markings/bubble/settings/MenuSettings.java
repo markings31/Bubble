@@ -12,6 +12,11 @@ public class MenuSettings extends YamlConfig {
 	@Getter
 	private static final MenuSettings instance = new MenuSettings();
 
+	private static final String preferencesPath = "Preferences_";
+	private static final String chatPath = "Chat_";
+	private static final String motdPath = "MOTD_";
+	private static final String mentionsPath = "Mentions_";
+
 	private static final String menuTitle = "Menu_Title";
 	private static final String menuSize = "Menu_Size";
 
@@ -109,8 +114,8 @@ public class MenuSettings extends YamlConfig {
 	@Override
 	protected void onLoadFinish() {
 		pathPrefix("Preferences");
-		prefMenuTitle = getString("Preferences_" + menuTitle);
-		prefMenuSize = getInteger("Preferences_" + menuSize);
+		prefMenuTitle = getString(preferencesPath + menuTitle);
+		prefMenuSize = getInteger(preferencesPath + menuSize);
 
 		pathPrefix("Preferences.Chat_Settings_Button");
 		chatSettingsButtonTitle = getString("Title_Chat");
@@ -130,8 +135,8 @@ public class MenuSettings extends YamlConfig {
 		mentionsSettingsButtonSlot = getInteger("Slot_Mentions");
 
 		pathPrefix("Chat_Settings");
-		chatMenuTitle = getString("Chat_" + menuTitle);
-		chatMenuSize = getInteger("Chat_" + menuSize);
+		chatMenuTitle = getString(chatPath + menuTitle);
+		chatMenuSize = getInteger(chatPath + menuSize);
 
 		pathPrefix("Chat_Settings.Toggle_Broadcasts_Button");
 		broadcastsEnabledButtonTitle = getString("Title_Broadcasts_Enabled");
@@ -149,8 +154,8 @@ public class MenuSettings extends YamlConfig {
 		broadcastSoundButtonSlot = getInteger("Slot_Sound");
 
 		pathPrefix("MOTD_Settings");
-		motdMenuTitle = getString("MOTD_" + menuTitle);
-		motdMenuSize = getInteger("MOTD_" + menuSize);
+		motdMenuTitle = getString(motdPath + menuTitle);
+		motdMenuSize = getInteger(motdPath + menuSize);
 
 		pathPrefix("MOTD_Settings.Toggle_MOTD_Button");
 		motdEnabledButtonTitle = getString("Title_MOTD_Enabled");
@@ -160,8 +165,8 @@ public class MenuSettings extends YamlConfig {
 		motdStatusButtonSlot = getInteger("Slot_MOTD_Status");
 
 		pathPrefix("Mentions_Settings");
-		mentionMenuTitle = getString("Mentions_" + menuTitle);
-		mentionMenuSize = getInteger("Mentions_" + menuSize);
+		mentionMenuTitle = getString(mentionsPath + menuTitle);
+		mentionMenuSize = getInteger(mentionsPath + menuSize);
 
 		pathPrefix("Mentions_Settings.Toggle_Mentions_Button");
 		mentionsEnabledButtonTitle = getString("Title_Mentions_Enabled");
@@ -190,8 +195,8 @@ public class MenuSettings extends YamlConfig {
 		val map = new SerializedMap();
 
 		pathPrefix("Preferences");
-		map.put("Preferences_" + menuTitle, prefMenuTitle);
-		map.put("Preferences_" + menuSize, prefMenuSize);
+		map.put(preferencesPath + menuTitle, prefMenuTitle);
+		map.put(preferencesPath + menuSize, prefMenuSize);
 
 		pathPrefix("Preferences.Chat_Settings_Button");
 		map.put("Title_Chat", chatSettingsButtonTitle);
@@ -211,8 +216,8 @@ public class MenuSettings extends YamlConfig {
 		map.put("Slot_Mentions", mentionsSettingsButtonSlot);
 
 		pathPrefix("Chat_Settings");
-		map.put("Chat_" + menuTitle, chatMenuTitle);
-		map.put("Chat_" + menuSize, chatMenuSize);
+		map.put(chatPath + menuTitle, chatMenuTitle);
+		map.put(chatPath + menuSize, chatMenuSize);
 
 		pathPrefix("Chat_Settings.Toggle_Broadcasts_Button");
 		map.put("Title_Broadcasts_Enabled", broadcastsDisabledButtonTitle);
@@ -230,8 +235,8 @@ public class MenuSettings extends YamlConfig {
 		map.put("Slot_Sound", broadcastSoundButtonSlot);
 
 		pathPrefix("MOTD_Settings.Toggle_MOTD_Button");
-		map.put("MOTD_" + menuTitle, motdMenuTitle);
-		map.put("MOTD_" + menuSize, motdMenuSize);
+		map.put(motdPath + menuTitle, motdMenuTitle);
+		map.put(motdPath + menuSize, motdMenuSize);
 		map.put("Title_MOTD_Enabled", motdEnabledButtonTitle);
 		map.put("Title_MOTD_Disabled", motdDisabledButtonTitle);
 		map.put("Material_MOTD_Status", motdStatusButtonMaterial);
@@ -239,8 +244,8 @@ public class MenuSettings extends YamlConfig {
 		map.put("Slot_MOTD_Status", motdStatusButtonSlot);
 
 		pathPrefix("Mentions_Settings");
-		map.put("Mentions_" + menuTitle, mentionMenuTitle);
-		map.put("Mentions_" + menuSize, mentionMenuSize);
+		map.put(mentionsPath + menuTitle, mentionMenuTitle);
+		map.put(mentionsPath + menuSize, mentionMenuSize);
 
 		pathPrefix("Mentions_Settings.Toggle_Mentions_Button");
 		map.put("Title_Mentions_Enabled", mentionsEnabledButtonTitle);

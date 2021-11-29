@@ -207,7 +207,8 @@ public class NotificationsMenu extends Menu {
 					val cache = PlayerCache.getCache(getViewer());
 					return ItemCreator.of(menuSettings.getMentionToastStatusButtonMaterial(),
 							(cache.isMentionToastStatus() ? menuSettings.getMentionToastEnabledButtonTitle()
-									: menuSettings.getMentionToastDisabledButtonTitle()), menuSettings.getMentionToastStatusButtonLore()).build().make();
+									: menuSettings.getMentionToastDisabledButtonTitle()),
+							menuSettings.getMentionToastStatusButtonLore()).build().make();
 				}
 			};
 		}
