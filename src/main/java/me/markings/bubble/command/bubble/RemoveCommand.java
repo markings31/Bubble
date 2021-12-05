@@ -1,13 +1,12 @@
 package me.markings.bubble.command.bubble;
 
 import lombok.val;
-import me.markings.bubble.Bubble;
 import org.apache.commons.lang.math.NumberUtils;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
-import org.mineacademy.fo.Common;
 import org.mineacademy.fo.Messenger;
 import org.mineacademy.fo.command.SimpleSubCommand;
+import org.mineacademy.fo.settings.SimpleSettings;
 
 import java.io.File;
 import java.io.IOException;
@@ -17,25 +16,25 @@ import java.util.Objects;
 
 public class RemoveCommand extends SimpleSubCommand {
 
-	final File file = new File("plugins/Bubble/", "settings.yml");
+	final File file = new File("plugins/Bubble/localization/", "messages_" + SimpleSettings.LOCALE_PREFIX + ".yml");
 	final FileConfiguration config = YamlConfiguration.loadConfiguration(file);
 
 	protected RemoveCommand() {
 		super("remove");
 
 		setMinArguments(2);
-		setUsage("<section|line> <broadcast_label> [<line_number>]");
+		setUsage("<section|line> <section> [<line_number>]");
 	}
 
 	// TODO: Finish line removal support.
 	@Override
 	protected void onCommand() {
-		val newSection = "Notifications.Broadcast.Messages." + args[1];
+		val newSection = "Broadcast.Messages." + args[1];
 
 		if (args[0].equalsIgnoreCase("section")) {
 
 			if (!config.isSet(newSection)) {
-				Messenger.error(getPlayer(), "&cNo such section " + args[1] + " found!");
+				Messenger.error(getPlayer(), "&cNo such localization section " + args[1] + " found!");
 				return;
 			}
 
@@ -48,15 +47,13 @@ public class RemoveCommand extends SimpleSubCommand {
 				return;
 			}
 
-			Common.log(config.getConfigurationSection(newSection + ".Message") + "");
-
-			messageList.remove(Integer.parseInt(args[2]) - 1);
-			config.set(newSection + ".Message", messageList);
+			Objects.requireNonNull(config.getConfigurationSection(newSection + ".Message")).getKeys(true).remove("Test 2");
+			//Objects.requireNonNull(config.getConfigurationSection(newSection + ".Message"))
+			//		.getValues(false).keySet().remove(messageList.get(Integer.parseInt(args[2]) - 1));
 		}
 
 		try {
 			config.save(file);
-			Bubble.getInstance().reload();
 			Messenger.success(getPlayer(), "&aSuccessfully removed line/section!");
 		} catch (final IOException e) {
 			e.printStackTrace();

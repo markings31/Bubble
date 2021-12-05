@@ -4,7 +4,6 @@ import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
 import org.mineacademy.fo.settings.SimpleLocalization;
 
-import java.util.Collections;
 import java.util.List;
 
 @SuppressWarnings("unused")
@@ -17,7 +16,7 @@ public class Localization extends SimpleLocalization {
 
 	@Override
 	protected List<String> getUncommentedSections() {
-		return Collections.singletonList( "Welcome");
+		return List.of("Welcome");
 	}
 
 	@NoArgsConstructor(access = AccessLevel.PRIVATE)
