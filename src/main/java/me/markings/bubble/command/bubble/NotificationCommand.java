@@ -54,36 +54,42 @@ public class NotificationCommand extends SimpleSubCommand {
 		val secondaryPart = Variables.replace(inputs.length == 1 ? "" : inputs[1], getPlayer());
 
 		switch (args[1].toLowerCase()) {
-			case "message" -> {
+			case "message":  {
 				if (getPlayer() != null)
 					checkBoolean(getPlayer().hasPermission(getPermission() + ".message"), noPermissionMsg);
 
 				Common.tell(target, Common.colorize(primaryPart));
+				break;
 			}
-			case "title" -> {
+			case "title": {
 				if (getPlayer() != null)
 					checkBoolean(getPlayer().hasPermission(getPermission() + ".title"), noPermissionMsg);
 
 				Remain.sendTitle(target, primaryPart, secondaryPart);
+				break;
 			}
-			case "actionbar", "action" -> {
+			case "actionbar":
+			case "action": {
 				if (getPlayer() != null)
 					checkBoolean(getPlayer().hasPermission(getPermission() + ".actionbar"), noPermissionMsg);
 
 				Remain.sendActionBar(target, primaryPart);
+				break;
 			}
-			case "bossbar" -> {
+			case "bossbar": {
 				if (getPlayer() != null)
 					checkBoolean(getPlayer().hasPermission(getPermission() + ".bossbar"), noPermissionMsg);
 
 				Remain.sendBossbarPercent(target, primaryPart, 100);
+				break;
 			}
-			case "toast" -> {
+			case "toast": {
 				if (getPlayer() != null)
 					checkBoolean(getPlayer().hasPermission(getPermission() + ".toast"), noPermissionMsg);
 
 				Remain.sendToast(target, primaryPart, args[1].equalsIgnoreCase(toastArg) ?
 						findMaterial(args[2], "No such material " + args[2] + " found!") : null);
+				break;
 			}
 		}
 	}

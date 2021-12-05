@@ -1,0 +1,6 @@
+Host: "127.0.0.1"
+Port: 3306
+Database_Name: ""
+Username: "root"
+Password: ""
+Table_Name: "Bubble Data"

@@ -56,7 +56,7 @@
         <foundation.version>5.11.2</foundation.version>
 
         <!-- The Java version your plugin uses, see bstats.org for what most servers have and use that -->
-        <java.version>16</java.version>
+        <java.version>1.8</java.version>
 
         <!-- How letters in your code should be saved on your disk, leave to UTF-8 to support all languages -->
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -174,8 +174,8 @@
                 -->
                 <version>3.8.1</version>
                 <configuration>
-                    <source>${java.version}</source>
-                    <target>${java.version}</target>
+                    <source>14</source>
+                    <target>14</target>
                 </configuration>
             </plugin>
 

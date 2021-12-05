@@ -30,10 +30,6 @@ public class PlayerChatListener implements Listener {
 					&& !loopPlayer.hasPermission(Settings.ChatSettings.MENTION_IGNORE_PERMISSION)
 					&& cache.isMentionsStatus()) {
 
-				if (cache.isMentionToastStatus())
-					Remain.sendToast(loopPlayer, "You've been mentioned in the chat! \n"
-							+ event.getPlayer() + ": " + eventMessage, CompMaterial.PAPER);
-				
 				Common.tell(loopPlayer, String.format(event.getFormat(), eventPlayerName, eventMessage)
 						.replace("@" + playerName, Settings.ChatSettings.MENTION_COLOR + playerName + "&r"));
 

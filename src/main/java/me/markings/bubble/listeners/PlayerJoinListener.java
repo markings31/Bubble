@@ -12,6 +12,7 @@ import org.bukkit.event.player.PlayerJoinEvent;
 import org.jetbrains.annotations.NotNull;
 import org.mineacademy.fo.BungeeUtil;
 import org.mineacademy.fo.Common;
+import org.mineacademy.fo.PlayerUtil;
 import org.mineacademy.fo.model.SimpleSound;
 import org.mineacademy.fo.model.Variables;
 
@@ -34,20 +35,19 @@ public class PlayerJoinListener implements Listener {
 		val motdDelay = Settings.WelcomeSettings.MOTD_DELAY;
 
 		if (Settings.WelcomeSettings.ENABLE_JOIN_MOTD.equals(Boolean.TRUE) && cache.isMotdStatus()) {
-			messages.forEach(messageGroup ->
-					IntStream.range(0, messageGroup.toArray().length).forEach(i -> {
-						MessageUtil.executePlaceholders(messageGroup.get(i), player);
-						if (!Settings.WelcomeSettings.BUNGEECORD)
-							Common.tellLater(Settings.WelcomeSettings
-									.MOTD_DELAY.getTimeTicks(), player, MessageUtil.replaceVarsAndGradient(messageGroup.get(i), player));
-						else
-							BungeeUtil.tellBungee(BubbleAction.NOTIFICATION, "message", MessageUtil.replaceVarsAndGradient(messageGroup.get(i), player));
-					}));
-			Common.runLaterAsync(motdDelay.getTimeTicks(), () ->
-					new SimpleSound(motdSound.getSound(), motdSound.getVolume(), motdSound.getPitch()).play(player));
+			Common.runLaterAsync(motdDelay.getTimeTicks(), () -> {
+				messages.forEach(messageGroup -> IntStream.range(0, messageGroup.toArray().length).forEach(i -> {
+					MessageUtil.executePlaceholders(messageGroup.get(i), player);
+					if (!Settings.WelcomeSettings.BUNGEECORD) {
+						Common.tell(player, MessageUtil.replaceVarsAndGradient(messageGroup.get(i), player));
+					} else
+						BungeeUtil.tellBungee(BubbleAction.NOTIFICATION, "message", MessageUtil.replaceVarsAndGradient(messageGroup.get(i), player));
+				}));
+				new SimpleSound(motdSound.getSound(), motdSound.getVolume(), motdSound.getPitch()).play(player);
+			});
 		}
 
-		if (Settings.JoinSettings.ENABLE_JOIN_BROADCASTS.equals(Boolean.TRUE) && !player.hasPlayedBefore())
+		if (Settings.JoinSettings.ENABLE_JOIN_BROADCASTS.equals(Boolean.TRUE) && !player.hasPlayedBefore() && !PlayerUtil.isVanished(player))
 			IntStream.range(0, broadcastMessages.toArray().length).mapToObj(i ->
 					MessageUtil.replaceVarsAndGradient(broadcastMessages.get(i), player)).forEach(Common::broadcast);
 	}
