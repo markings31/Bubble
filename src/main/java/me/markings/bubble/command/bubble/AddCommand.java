@@ -1,11 +1,11 @@
 package me.markings.bubble.command.bubble;
 
 import lombok.val;
+import me.markings.bubble.Bubble;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.mineacademy.fo.Messenger;
 import org.mineacademy.fo.command.SimpleSubCommand;
-import org.mineacademy.fo.settings.SimpleSettings;
 
 import java.io.File;
 import java.io.IOException;
@@ -15,7 +15,7 @@ import java.util.Objects;
 
 public class AddCommand extends SimpleSubCommand {
 
-	final File file = new File("plugins/Bubble/localization/", "messages_" + SimpleSettings.LOCALE_PREFIX + ".yml");
+	final File file = new File("plugins/Bubble/", "settings.yml");
 	final FileConfiguration config = YamlConfiguration.loadConfiguration(file);
 
 	public AddCommand() {
@@ -27,29 +27,29 @@ public class AddCommand extends SimpleSubCommand {
 
 	@Override
 	protected void onCommand() {
-		val newSection = "Broadcast.Messages." + args[1];
+		val newSection = "Notifications.Broadcast.Messages." + args[1];
 		val messagePathSuffix = ".Message";
+		val message = config.getStringList(newSection + messagePathSuffix);
 
 		if (args[0].equalsIgnoreCase("section")) {
 			config.createSection(newSection);
 
-			val message = config.getStringList(newSection + messagePathSuffix);
-			
 			message.add("Test Message");
 			config.set(newSection + ".Permission", "bubble.vip");
 			config.set(newSection + messagePathSuffix, message);
 			Messenger.success(getPlayer(), "&aSuccessfully added section " + args[1] + "!");
 		} else if (args[0].equalsIgnoreCase("line")) {
-			val message = joinArgs(2);
+			val messageLine = joinArgs(2);
 			val section = config.getStringList(newSection + messagePathSuffix);
 
-			section.add(message);
+			section.add(messageLine);
 			config.set(newSection + messagePathSuffix, section);
-			Messenger.success(getPlayer(), "&aSuccessfully added line '" + message + "' to section " + args[1] + "!");
 		}
 
 		try {
 			config.save(file);
+			Bubble.getInstance().reload();
+			Messenger.success(getPlayer(), "&aSuccessfully added line '" + message + "' to section " + args[1] + "!");
 		} catch (final IOException e) {
 			e.printStackTrace();
 			Messenger.error(getPlayer(), "&cFailed to create line/section! Error: " + e);

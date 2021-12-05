@@ -16,6 +16,33 @@ public final class Settings extends SimpleSettings {
 
 	private static final String messagePath = "Notifications.Broadcast.Messages";
 
+	private static void generateBroadcastSections() {
+		Objects.requireNonNull(getConfig().getConfigurationSection(messagePath)).getKeys(false).forEach(path -> {
+			val permissionPath = messagePath + "." + path + ".Permission";
+			val centerPath = messagePath + "." + path + ".Center";
+
+			if (!isSet(permissionPath))
+				getConfig().set(permissionPath, "none");
+
+			if (!isSet(centerPath))
+				getConfig().set(centerPath, false);
+			
+			if (!isSet(messagePath + "." + path + ".Message"))
+				getConfig().createSection(messagePath + "." + path + ".Message");
+
+			val stringList = getStringList(messagePath + "." + path + ".Message");
+
+			BroadcastSettings.PERMISSION.put(path, getString(permissionPath));
+			BroadcastSettings.CENTERED.put(centerPath, getBoolean(centerPath));
+			BroadcastSettings.MESSAGE_MAP.put(stringList, path);
+			try {
+				getConfig().save(new File("plugins/Bubble/settings.yml"));
+			} catch (final IOException e) {
+				e.printStackTrace();
+			}
+		});
+	}
+
 	@Override
 	protected int getConfigVersion() {
 		return 1;
@@ -28,7 +55,7 @@ public final class Settings extends SimpleSettings {
 
 	@Override
 	protected List<String> getUncommentedSections() {
-		return List.of(messagePath);
+		return Collections.singletonList(messagePath);
 	}
 
 	@NoArgsConstructor(access = AccessLevel.PRIVATE)
@@ -37,6 +64,8 @@ public final class Settings extends SimpleSettings {
 		public static final Map<List<String>, String> MESSAGE_MAP = new HashMap<>();
 
 		public static final Map<String, String> PERMISSION = new HashMap<>();
+
+		public static final Map<String, Boolean> CENTERED = new HashMap<>();
 
 		public static Boolean ENABLE_BROADCASTS;
 		public static Boolean BUNGEECORD;
@@ -140,28 +169,6 @@ public final class Settings extends SimpleSettings {
 			pathPrefix("Database");
 			ENABLE_MYSQL = getBoolean("Enable_MySQL");
 		}
-	}
-
-	private static void generateBroadcastSections() {
-		Objects.requireNonNull(getConfig().getConfigurationSection(messagePath)).getKeys(false).forEach(path -> {
-			val permissionPath = messagePath + "." + path + ".Permission";
-
-			if (!isSet(permissionPath))
-				getConfig().set(permissionPath, "bubble.vip");
-
-			if (!isSet(messagePath + "." + path + ".Message"))
-				getConfig().createSection(messagePath + "." + path + ".Message");
-
-			val stringList = getStringList(messagePath + "." + path + ".Message");
-
-			BroadcastSettings.PERMISSION.put(path, getString(permissionPath));
-			BroadcastSettings.MESSAGE_MAP.put(stringList, path);
-			try {
-				getConfig().save(new File("plugins/Bubble/localization/messages_" + SimpleSettings.LOCALE_PREFIX + ".yml"));
-			} catch (final IOException e) {
-				e.printStackTrace();
-			}
-		});
 	}
 }
 

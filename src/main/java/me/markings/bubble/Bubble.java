@@ -5,10 +5,10 @@ import lombok.val;
 import me.markings.bubble.bungee.BubbleAction;
 import me.markings.bubble.bungee.BubbleBungeeListener;
 import me.markings.bubble.command.AnnounceCommand;
+import me.markings.bubble.command.ConversationCommand;
 import me.markings.bubble.command.PrefsCommand;
 import me.markings.bubble.command.ToggleCommand;
 import me.markings.bubble.command.bubble.BubbleGroup;
-import me.markings.bubble.event.BroadcastEvent;
 import me.markings.bubble.listeners.DatabaseListener;
 import me.markings.bubble.listeners.PlayerChatListener;
 import me.markings.bubble.listeners.PlayerJoinListener;
@@ -17,8 +17,9 @@ import me.markings.bubble.settings.DatabaseFile;
 import me.markings.bubble.settings.MenuSettings;
 import me.markings.bubble.settings.Settings;
 import me.markings.bubble.tasks.BroadcastTask;
+import org.bukkit.configuration.file.FileConfiguration;
+import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
-import org.bukkit.event.EventHandler;
 import org.mineacademy.fo.Common;
 import org.mineacademy.fo.Messenger;
 import org.mineacademy.fo.bungee.SimpleBungee;
@@ -29,15 +30,45 @@ import org.mineacademy.fo.plugin.SimplePlugin;
 import org.mineacademy.fo.remain.Remain;
 import org.mineacademy.fo.settings.SimpleSettings;
 
+import java.io.File;
+
+@Getter
 public final class Bubble extends SimplePlugin {
 
-	@Getter
-	private final SimpleCommandGroup mainCommand = new BubbleGroup();
+	public static final File file = new File("plugins/Bubble/", "settings.yml");
+	public static final FileConfiguration config = YamlConfiguration.loadConfiguration(file);
 
-	@Getter
+	private final SimpleCommandGroup mainCommand = new BubbleGroup();
 	private final SimpleBungee bungeeCord = new SimpleBungee("plugin:bubble", BubbleBungeeListener.class, BubbleAction.class);
 
 	private final BubbleDatabase database = BubbleDatabase.getInstance();
+
+	public static Bubble getInstance() {
+		return (Bubble) SimplePlugin.getInstance();
+	}
+
+	private static void registerVariables() {
+		// Plugin-Wide Variable
+		Variables.addVariable("broadcast_status", player -> PlayerCache.getCache((Player) player).isBroadcastStatus() ? "enabled" : "disabled");
+
+		// PlaceholderAPI Variable
+		HookManager.addPlaceholder("broadcast_status", player -> PlayerCache.getCache(player).isBroadcastStatus() ? "enabled" : "disabled");
+
+		Variables.addVariable("broadcast_sound_status", player -> PlayerCache.getCache((Player) player).isBroadcastSoundStatus() ? "enabled" : "disabled");
+		HookManager.addPlaceholder("broadcast_sound_status", player -> PlayerCache.getCache(player).isBroadcastSoundStatus() ? "enabled" : "disabled");
+
+		Variables.addVariable("motd_status", player -> PlayerCache.getCache((Player) player).isMotdStatus() ? "enabled" : "disabled");
+		HookManager.addPlaceholder("motd_status", player -> PlayerCache.getCache(player).isMotdStatus() ? "enabled" : "disabled");
+
+		Variables.addVariable("mentions_status", player -> PlayerCache.getCache((Player) player).isMentionsStatus() ? "enabled" : "disabled");
+		HookManager.addPlaceholder("mentions_status", player -> PlayerCache.getCache(player).isMentionsStatus() ? "enabled" : "disabled");
+
+		Variables.addVariable("mentions_sound_status", player -> PlayerCache.getCache((Player) player).isMentionSoundStatus() ? "enabled" : "disabled");
+		HookManager.addPlaceholder("mentions_sound_status", player -> PlayerCache.getCache(player).isMentionSoundStatus() ? "enabled" : "disabled");
+
+		Variables.addVariable("mentions_toast_status", player -> PlayerCache.getCache((Player) player).isMentionToastStatus() ? "enabled" : "disabled");
+		HookManager.addPlaceholder("mentions_toast_status", player -> PlayerCache.getCache(player).isMentionToastStatus() ? "enabled" : "disabled");
+	}
 
 	@Override
 	protected void onPluginStart() {
@@ -57,6 +88,7 @@ public final class Bubble extends SimplePlugin {
 		registerCommand(new AnnounceCommand());
 		registerCommand(new ToggleCommand());
 		registerCommand(new PrefsCommand());
+		registerCommand(new ConversationCommand());
 
 		registerEvents(new DatabaseListener());
 
@@ -69,27 +101,7 @@ public final class Bubble extends SimplePlugin {
 		if (Common.doesPluginExist("MultiverseCore"))
 			Common.log(Common.getTellPrefix() + "Successfully hooked into MultiverseCore!");
 
-		// TODO: Decapitalize return strings + add toUppercase() to menu variables.
-		// Plugin-Wide Variable
-		Variables.addVariable("broadcast_status", player -> PlayerCache.getCache((Player) player).isBroadcastStatus() ? "ENABLED" : "DISABLED");
-
-		// PlaceholderAPI Variable
-		HookManager.addPlaceholder("broadcast_status", player -> PlayerCache.getCache(player).isBroadcastStatus() ? "ENABLED" : "DISABLED");
-
-		Variables.addVariable("broadcast_sound_status", player -> PlayerCache.getCache((Player) player).isBroadcastSoundStatus() ? "ENABLED" : "DISABLED");
-		HookManager.addPlaceholder("broadcast_sound_status", player -> PlayerCache.getCache(player).isBroadcastSoundStatus() ? "ENABLED" : "DISABLED");
-
-		Variables.addVariable("motd_status", player -> PlayerCache.getCache((Player) player).isMotdStatus() ? "ENABLED" : "DISABLED");
-		HookManager.addPlaceholder("motd_status", player -> PlayerCache.getCache(player).isMotdStatus() ? "ENABLED" : "DISABLED");
-
-		Variables.addVariable("mentions_status", player -> PlayerCache.getCache((Player) player).isMentionsStatus() ? "ENABLED" : "DISABLED");
-		HookManager.addPlaceholder("mentions_status", player -> PlayerCache.getCache(player).isMentionsStatus() ? "ENABLED" : "DISABLED");
-
-		Variables.addVariable("mentions_sound_status", player -> PlayerCache.getCache((Player) player).isMentionSoundStatus() ? "ENABLED" : "DISABLED");
-		HookManager.addPlaceholder("mentions_sound_status", player -> PlayerCache.getCache(player).isMentionSoundStatus() ? "ENABLED" : "DISABLED");
-
-		Variables.addVariable("mentions_toast_status", player -> PlayerCache.getCache((Player) player).isMentionToastStatus() ? "ENABLED" : "DISABLED");
-		HookManager.addPlaceholder("mentions_toast_status", player -> PlayerCache.getCache(player).isMentionToastStatus() ? "ENABLED" : "DISABLED");
+		registerVariables();
 
 		Common.log(Common.getTellPrefix() + "Bubble has been successfully enabled!");
 	}
@@ -117,19 +129,10 @@ public final class Bubble extends SimplePlugin {
 
 		Remain.getOnlinePlayers().forEach(player ->
 				database.save(player.getName(), player.getUniqueId(), PlayerCache.getCache(player)));
-		
+
 		DatabaseFile.getInstance().save();
 		MenuSettings.getInstance().save();
 
 		PlayerCache.clearAllData();
-	}
-
-	public static Bubble getInstance() {
-		return (Bubble) SimplePlugin.getInstance();
-	}
-
-	@EventHandler
-	public void onBroadcast(final BroadcastEvent event) {
-		Common.log("Message: " + event.getMessage(), "Sound: " + event.getSound());
 	}
 }
