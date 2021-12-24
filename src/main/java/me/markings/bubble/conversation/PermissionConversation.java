@@ -16,14 +16,14 @@ import org.mineacademy.fo.conversation.SimplePrompt;
 
 import java.io.File;
 
-public class EditConversation extends SimplePrompt {
+public class PermissionConversation extends SimplePrompt {
 
 	final File file = new File("plugins/Bubble/", "settings.yml");
 	final FileConfiguration config = YamlConfiguration.loadConfiguration(file);
 
 	@Override
 	protected String getPrompt(final ConversationContext context) {
-		return "&8&l[&9&li&8&l] &ePlease write the desired message in the chat.\n&7&oNote: Use the '|' delimiter to add multiple messages.";
+		return "&8&l[&9&li&8&l] &ePlease write the desired permission in the chat.";
 	}
 
 	@Nullable
@@ -31,22 +31,14 @@ public class EditConversation extends SimplePrompt {
 	@SneakyThrows
 	protected Prompt acceptValidatedInput(@NotNull final ConversationContext context, @NotNull final String input) {
 		val commandArg = EditCommand.getInput();
-		val inputs = input.split("\\|");
 		val newSection = "Notifications.Broadcast.Messages." + commandArg;
 
-		val section = config.getStringList(newSection + ".Message");
-
-		section.clear();
-		for (final String message : inputs) {
-			section.add(message);
-			config.set(newSection + ".Message", section);
-			config.save(file);
-		}
-
+		config.set(newSection + ".Permission", input);
+		config.save(file);
 		Bubble.getInstance().reload();
 
 		Messenger.success((CommandSender) context.getForWhom(),
-				"&aSuccessfully replaced message section " + commandArg + " with line(input) '" + input + "&a'!");
+				"&aSuccessfully changed permission in section " + commandArg + " to " + input + "!");
 
 		return Prompt.END_OF_CONVERSATION;
 	}

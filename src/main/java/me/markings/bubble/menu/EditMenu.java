@@ -4,6 +4,7 @@ import lombok.val;
 import me.markings.bubble.Bubble;
 import me.markings.bubble.command.bubble.EditCommand;
 import me.markings.bubble.conversation.EditConversation;
+import me.markings.bubble.conversation.PermissionConversation;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
@@ -28,7 +29,7 @@ public class EditMenu extends Menu {
 	private final Button changePermissionButton;
 
 	public EditMenu() {
-		setTitle("&9Editing Message");
+		setTitle("&9&lEditing Message");
 		setSize(9 * 3);
 
 		editMessageButton = new Button() {
@@ -49,7 +50,7 @@ public class EditMenu extends Menu {
 				val path = EditCommand.getInput();
 				val centerPath = "Notifications.Broadcast.Messages." + path + ".Center";
 				config.set(centerPath, !config.getBoolean(centerPath));
-
+				
 				player.closeInventory();
 
 				try {
@@ -69,28 +70,30 @@ public class EditMenu extends Menu {
 			}
 		};
 
-		// TODO: Create permission change conversation.
 		changePermissionButton = new Button() {
 			@Override
 			public void onClickedInMenu(final Player player, final Menu menu, final ClickType click) {
-
+				new PermissionConversation().show(player);
 			}
 
 			@Override
 			public ItemStack getItem() {
-				return null;
+				return ItemCreator.of(CompMaterial.GOLD_INGOT, "&dChange Permission").build().make();
 			}
 		};
 	}
 
 	@Override
 	public ItemStack getItemAt(final int slot) {
-		if (slot == 9 + 2)
-			return editMessageButton.getItem();
-
-		if (slot == 9 + 6)
-			return centerMessageButton.getItem();
-
-		return null;
+		switch (slot) {
+			case 9 + 1:
+				return editMessageButton.getItem();
+			case 9 + 4:
+				return changePermissionButton.getItem();
+			case 9 + 7:
+				return centerMessageButton.getItem();
+			default:
+				return null;
+		}
 	}
 }

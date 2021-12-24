@@ -2,6 +2,7 @@ package me.markings.bubble.command.bubble;
 
 import lombok.val;
 import me.markings.bubble.Bubble;
+import me.markings.bubble.model.Permissions;
 import org.apache.commons.lang.math.NumberUtils;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
@@ -25,6 +26,7 @@ public class RemoveCommand extends SimpleSubCommand {
 
 		setMinArguments(2);
 		setUsage("<section|line> <broadcast_label> [<line_number>]");
+		setPermission(Permissions.Command.REMOVE);
 	}
 
 	// TODO: Finish line removal support.

@@ -2,6 +2,7 @@ package me.markings.bubble.command.bubble;
 
 import lombok.val;
 import me.markings.bubble.bungee.BubbleAction;
+import me.markings.bubble.model.Permissions;
 import me.markings.bubble.util.MessageUtil;
 import org.bukkit.entity.Player;
 import org.mineacademy.fo.BungeeUtil;
@@ -31,7 +32,7 @@ public class NotificationCommand extends SimpleSubCommand {
 		setMinArguments(3);
 
 		setUsage("<player_name|all|bungee> <message|title|bossbar|actionbar|toast> [<material>] <input|...>");
-		setPermission("bubble.command.notify");
+		setPermission(Permissions.Command.NOTIFY);
 	}
 
 	@Override
@@ -54,7 +55,7 @@ public class NotificationCommand extends SimpleSubCommand {
 		val secondaryPart = Variables.replace(inputs.length == 1 ? "" : inputs[1], getPlayer());
 
 		switch (args[1].toLowerCase()) {
-			case "message":  {
+			case "message": {
 				if (getPlayer() != null)
 					checkBoolean(getPlayer().hasPermission(getPermission() + ".message"), noPermissionMsg);
 

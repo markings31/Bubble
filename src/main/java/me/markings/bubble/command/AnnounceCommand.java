@@ -1,6 +1,7 @@
 package me.markings.bubble.command;
 
 import lombok.val;
+import me.markings.bubble.model.Permissions;
 import me.markings.bubble.util.MessageUtil;
 import org.mineacademy.fo.Common;
 import org.mineacademy.fo.command.SimpleCommand;
@@ -18,6 +19,7 @@ public class AnnounceCommand extends SimpleCommand {
 
 		setMinArguments(2);
 		setUsage("<message|title|bossbar|actionbar|toast> [<material>] <input|...>");
+		setPermission(Permissions.Command.ANNOUNCE);
 	}
 
 	@Override

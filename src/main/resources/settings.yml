@@ -46,6 +46,9 @@ Notifications:
     # Should all broadcast messages be centered automatically?
     Center_All: false
 
+    # Do you want messages to be sent asynchronously? (may improve performance)
+    Send_Asynchronously: true
+
     # Which worlds should the broadcast messages be sent to?
     Worlds:
       - 'world'
@@ -153,6 +156,20 @@ Database:
   # Should we connect to the MySQL database upon plugin startup?
   # Note: MySQL credentials can be found in the mysql.yml file.
   Enable_MySQL: false
+
+# -------------------------------------------------------------------------------------------------
+# Hooks Section
+# -------------------------------------------------------------------------------------------------
+Hooks:
+
+  # Hook into the Vault library?
+  Vault: true
+
+  # Hook into the PlaceholderAPI library?
+  PlaceholderAPI: true
+
+  # Hook into the MultiverseCore library?
+  MultiverseCore: false
 
 # -------------------------------------------------------------------------------------------------
 # The plugin's main prefix. You can manually add this prefix to other messages using the

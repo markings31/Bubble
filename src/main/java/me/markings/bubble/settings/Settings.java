@@ -16,33 +16,6 @@ public final class Settings extends SimpleSettings {
 
 	private static final String messagePath = "Notifications.Broadcast.Messages";
 
-	private static void generateBroadcastSections() {
-		Objects.requireNonNull(getConfig().getConfigurationSection(messagePath)).getKeys(false).forEach(path -> {
-			val permissionPath = messagePath + "." + path + ".Permission";
-			val centerPath = messagePath + "." + path + ".Center";
-
-			if (!isSet(permissionPath))
-				getConfig().set(permissionPath, "none");
-
-			if (!isSet(centerPath))
-				getConfig().set(centerPath, false);
-			
-			if (!isSet(messagePath + "." + path + ".Message"))
-				getConfig().createSection(messagePath + "." + path + ".Message");
-
-			val stringList = getStringList(messagePath + "." + path + ".Message");
-
-			BroadcastSettings.PERMISSION.put(path, getString(permissionPath));
-			BroadcastSettings.CENTERED.put(centerPath, getBoolean(centerPath));
-			BroadcastSettings.MESSAGE_MAP.put(stringList, path);
-			try {
-				getConfig().save(new File("plugins/Bubble/settings.yml"));
-			} catch (final IOException e) {
-				e.printStackTrace();
-			}
-		});
-	}
-
 	@Override
 	protected int getConfigVersion() {
 		return 1;
@@ -71,6 +44,7 @@ public final class Settings extends SimpleSettings {
 		public static Boolean BUNGEECORD;
 		public static Boolean RANDOM_MESSAGE;
 		public static Boolean CENTER_ALL;
+		public static Boolean SEND_ASYNC;
 
 		public static String HEADER;
 		public static String FOOTER;
@@ -91,6 +65,7 @@ public final class Settings extends SimpleSettings {
 			BROADCAST_DELAY = getTime("Delay");
 			RANDOM_MESSAGE = getBoolean("Random_Message");
 			CENTER_ALL = getBoolean("Center_All");
+			SEND_ASYNC = getBoolean("Send_Asynchronously");
 			BROADCAST_WORLDS = getStringList("Worlds");
 			BROADCAST_SOUND = getSound("Sound");
 			HEADER = getString("Header");
@@ -169,6 +144,48 @@ public final class Settings extends SimpleSettings {
 			pathPrefix("Database");
 			ENABLE_MYSQL = getBoolean("Enable_MySQL");
 		}
+	}
+
+	@NoArgsConstructor(access = AccessLevel.PRIVATE)
+	public static class HookSettings {
+
+		public static Boolean VAULT;
+		public static Boolean PAPI;
+		public static Boolean MVCORE;
+
+		private static void init() {
+			pathPrefix("Hooks");
+			VAULT = getBoolean("Vault");
+			PAPI = getBoolean("PlaceholderAPI");
+			MVCORE = getBoolean("MultiverseCore");
+		}
+	}
+
+	private static void generateBroadcastSections() {
+		Objects.requireNonNull(getConfig().getConfigurationSection(messagePath)).getKeys(false).forEach(path -> {
+			val permissionPath = messagePath + "." + path + ".Permission";
+			val centerPath = messagePath + "." + path + ".Center";
+
+			if (!isSet(permissionPath))
+				getConfig().set(permissionPath, "none");
+
+			if (!isSet(centerPath))
+				getConfig().set(centerPath, false);
+
+			if (!isSet(messagePath + "." + path + ".Message"))
+				getConfig().createSection(messagePath + "." + path + ".Message");
+
+			val stringList = getStringList(messagePath + "." + path + ".Message");
+
+			BroadcastSettings.PERMISSION.put(path, getString(permissionPath));
+			BroadcastSettings.CENTERED.put(centerPath, getBoolean(centerPath));
+			BroadcastSettings.MESSAGE_MAP.put(stringList, path);
+			try {
+				getConfig().save(new File("plugins/Bubble/settings.yml"));
+			} catch (final IOException e) {
+				e.printStackTrace();
+			}
+		});
 	}
 }
 

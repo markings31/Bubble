@@ -1,49 +1,40 @@
 <?xml version="1.0" ?>
 <project name="Bubble" default="Build">
 
-    <!--
-        To make it easier to develop on multiple computers, I included three paths to
-        your test server below. Change the ones that are relevant for you.
+    <!-- We use this file to compile your plugin to your plugins/ directory
+             automatically and use the hot swap (also known as live debug) feature.
 
-        Also make sure you change the name="Orion" above to the name of your plugin.
-     -->
+             It does not support dependencies easily so the only dependency
+             we include here is Foundation. It cannot change Foundation's packages
+             so you can only debug one plugin at a time to avoid conflicts. -->
 
-    <!-- Your MC test server location for Windows -->
-    <condition property="serverPath" value="C:\Users\brand\Desktop\Test-Server">
-        <os family="windows"/>
-    </condition>
-
-    <!-- Your MC test server location for Linux -->
-    <condition property="serverPath" value="/home/brandon/Desktop/Test-Server">
-        <os family="unix"/>
-    </condition>
-
-    <!-- Your MC test server location for macOS -->
-    <condition property="serverPath" value="\Users\kangarko\Desktop\Minecraft Server">
-        <os family="mac"/>
-    </condition>
-
-    <!-- Ninja: Read your pom.xml file to find the Foundation version we will be using -->
+    <!-- Ninja: We read pom.xml file to find the Foundation version to use -->
     <xmlproperty file="pom.xml" prefix="pom" keeproot="false"/>
-    <property name="foundation.version" value="5.11.2"/>
+    <property name="foundation.version" value="${pom.properties.foundation.version}"/>
 
-    <!-- Finally, compile the plugin -->
+    <!-- Change the name key on the top to your plugin's name
+         and edit the two paths below to where your server is located.
+
+         You can simply duplicate them or remove the other one if you want
+         to automatically compile your plugin to multiple servers. -->
+
     <target name="Build">
-        <jar jarfile="${serverPath}\plugins\${ant.project.name}.jar" basedir="./target/classes/" includes="**/*">
+        <jar jarfile="/home/brandon/Desktop/Test_Servers/Test-Server1.8.8/plugins/${ant.project.name}.jar"
+             basedir="./target/classes/" includes="**/*">
 
-            <!--
-                Ant can include other plugin's classes however it cannot repackage them.
-
-                By default we use the local Foundation library cached in your m2 folder used by Maven
-
-                However, if you have Foundation downloaded from github.com/kangarko/foundation you can just
-                use the second line instead to include its source code within this plugin directly,
-                just make sure you have Foundation in the same workspace folder where you have this plugin.
-            -->
+            <!-- IF you have Foundation on your disk, remove the <zipgroupfileset> line and uncomment the <fileset> one. Repeat for the other <jar> goal below.
+                 Foundation then needs to be in the same parent's folder as your plugin's source, such as workspace/Foundation and workspace/YourPlugin! -->
 
             <zipgroupfileset dir="${user.home}/.m2/repository/com/github/kangarko/Foundation/${foundation.version}/"
                              includes="**/*${foundation.version}.jar"/>
-            <!-- <fileset dir="../Foundation/target/classes" /> -->
+            <!--<fileset dir="../Foundation/target/classes"/>-->
+        </jar>
+
+        <jar jarfile="/home/brandon/Desktop/Test_Servers/Test-Server/plugins/${ant.project.name}.jar"
+             basedir="./target/classes/" includes="**/*">
+            <zipgroupfileset dir="${user.home}/.m2/repository/com/github/kangarko/Foundation/${foundation.version}/"
+                             includes="**/*${foundation.version}.jar"/>
+            <!--<fileset dir="../Foundation/target/classes"/>-->
         </jar>
     </target>
 

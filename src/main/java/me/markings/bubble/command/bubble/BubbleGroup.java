@@ -13,6 +13,7 @@ public class BubbleGroup extends SimpleCommandGroup {
 		registerSubcommand(new RemoveCommand());
 		registerSubcommand(new GUICommand());
 		registerSubcommand(new EditCommand());
+		registerSubcommand(new ShowCommand());
 	}
 
 	@Override

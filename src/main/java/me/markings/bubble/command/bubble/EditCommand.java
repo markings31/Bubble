@@ -4,7 +4,7 @@ import lombok.Getter;
 import lombok.val;
 import me.markings.bubble.Bubble;
 import me.markings.bubble.menu.EditMenu;
-import org.mineacademy.fo.Messenger;
+import me.markings.bubble.model.Permissions;
 import org.mineacademy.fo.command.SimpleSubCommand;
 
 import java.util.ArrayList;
@@ -21,6 +21,7 @@ public class EditCommand extends SimpleSubCommand {
 
 		setMinArguments(1);
 		setUsage("<broadcast_label>");
+		setPermission(Permissions.Command.EDIT);
 	}
 
 	@Override
@@ -29,10 +30,7 @@ public class EditCommand extends SimpleSubCommand {
 
 		input = args[0];
 
-		if (!Bubble.config.isSet(newSection)) {
-			Messenger.error(getPlayer(), "&cNo such section " + args[0] + " found!");
-			return;
-		}
+		checkBoolean(Bubble.config.isSet(newSection), "&cNo such section " + args[0] + " found!");
 
 		new EditMenu().displayTo(getPlayer());
 	}
