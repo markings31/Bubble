@@ -49,36 +49,42 @@ public final class PlayerCache extends YamlSectionConfig implements Cache {
 		mentionToastStatus = getBoolean("Receive_Mentions_Toast", true);
 	}
 
+	@Override
 	public void setBroadcastStatus(final boolean broadcastStatus) {
 		this.broadcastStatus = broadcastStatus;
 
 		save("Receive_Broadcasts", broadcastStatus);
 	}
 
+	@Override
 	public void setBroadcastSoundStatus(final boolean broadcastSoundStatus) {
 		this.broadcastSoundStatus = broadcastSoundStatus;
 
 		save("Receive_Broadcast_Sound", broadcastSoundStatus);
 	}
 
+	@Override
 	public void setMotdStatus(final boolean motdStatus) {
 		this.motdStatus = motdStatus;
 
 		save("Receive_MOTD", motdStatus);
 	}
 
+	@Override
 	public void setMentionsStatus(final boolean mentionsStatus) {
 		this.mentionsStatus = mentionsStatus;
 
 		save("Receive_Mentions", mentionsStatus);
 	}
 
+	@Override
 	public void setMentionSoundStatus(final boolean mentionSoundStatus) {
 		this.mentionSoundStatus = mentionSoundStatus;
 
 		save("Receive_Mention_Sound", mentionSoundStatus);
 	}
 
+	@Override
 	public void setMentionToastStatus(final boolean mentionToastStatus) {
 		this.mentionToastStatus = mentionToastStatus;
 
@@ -117,6 +123,13 @@ public final class PlayerCache extends YamlSectionConfig implements Cache {
 			return cache;
 		}
 	}
+
+	public void removeFromMemory() {
+		synchronized (cacheMap) {
+			cacheMap.remove(this.uuid);
+		}
+	}
+
 
 	public static void clearAllData() {
 		synchronized (cacheMap) {

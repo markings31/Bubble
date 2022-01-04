@@ -19,7 +19,7 @@ public class ReloadCommand extends SimpleSubCommand {
 		try {
 			Bubble.getInstance().reload();
 			tell(SimpleLocalization.Commands.RELOAD_SUCCESS);
-		} catch (final @NotNull Throwable t) {
+		} catch (final @NotNull Exception t) {
 			t.printStackTrace();
 			tell(SimpleLocalization.Commands.RELOAD_FAIL.replace("{error}", t.toString()));
 		}

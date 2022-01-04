@@ -31,11 +31,6 @@ Notifications:
     # Enable broadcast messages?
     Enable: true
 
-    # Should all broadcast messages be forwarded to connected Bungeecord servers?
-    # NOTE: This requires the "BubbleBungee" addon (included with the download) to
-    # be installed onto your Bungeecord proxy server.
-    Bungeecord: false
-
     # The delay between each broadcast message.
     Delay: 90 seconds
 
@@ -49,31 +44,37 @@ Notifications:
     # Do you want messages to be sent asynchronously? (may improve performance)
     Send_Asynchronously: true
 
-    # Which worlds should the broadcast messages be sent to?
-    Worlds:
-      - 'world'
-
     # What sound should be played when a message is broadcast?
     # A list of the compatible values can be found here:
     # https://gist.github.com/NiklasEi/7bd0ffd136f8459df0940e4501d47a8a
     Sound: NOTE_PLING, 1F, 1.5F
 
-    Header: "&8<smooth_line>"
-    Footer: "&8<smooth_line>"
+    Header: "&8%chat_line_smooth%"
+    Footer: "&8%chat_line_smooth%"
 
     # The messages that will be broadcasted to players.
     Messages:
       Example_Message:
         Permission: bubble.vip
+        Centered: false
+        Worlds:
+          - world
         Message:
           - '&6This is an example message!'
+          - '<title>&6This is a title!|&eThis is a subtitle!'
       Multi_Line_Message:
         Permission: bubble.vip
+        Centered: false
+        Worlds:
+          - world
         Message:
           - '&eThis is an example of a'
           - '&emulti-line message!'
       HEX_Example_Message:
         Permission: bubble.vip
+        Centered: false
+        Worlds:
+          - world
         Message:
           - '#ff3393This is an example of a HEX message!'
 
@@ -83,11 +84,6 @@ Notifications:
     # Should the message of the day be displayed to users on-join?
     Enable_MOTD: true
 
-    # Should all broadcast messages be forwarded to connected Bungeecord servers?
-    # NOTE: This requires the "BubbleBungee" addon (included with the download) to
-    # be installed onto your Bungeecord proxy server.
-    Bungeecord: false
-
     # The delay between when the player joins and when the message is
     # sent. Used to separate the MOTD message from other server messages
     # that could backup the chat.
@@ -95,14 +91,13 @@ Notifications:
 
     # The message sent to players on-join.
     Join_MOTD:
-      Example_MOTD_1:
-        - "&8<chat_line>"
-        - "&7Welcome to the server, &b{player}&7!"
-        - "&f"
-        - "&bWebsite: &fyourserver.com"
-        - "&bDiscord: &fdiscord.com/yourserver"
-        - "&bTwitter: &ftwitter.com/yourserver"
-        - "&8<chat_line>"
+      - "&8%chat_line%"
+      - "&7Welcome to the server, &b%player%&7!"
+      - "&f"
+      - "&bWebsite: &fyourserver.com"
+      - "&bDiscord: &fdiscord.com/yourserver"
+      - "&bTwitter: &ftwitter.com/yourserver"
+      - "&8%chat_line%"
 
     # What sound should be played when the player joins?
     # A list of the compatible values can be found here:
@@ -118,13 +113,19 @@ Notifications:
     # Should join messages be broadcast to the server when a player quits?
     Enable_Quit_Message: false
 
-    # Should a message be broadcasted to the entire server when a player
-    # joins for the first time?
-    Enable_First_Join_Broadcast: true
+    # Should a firework be launched whenever a new player joins the server?
+    Firework_On_First_Join: false
+
+    # Should join/quit messages be silenced if a player is vanished?
+    Mute_If_Vanished: true
 
     # If the above option is enabled, the message will only be broadcast to these worlds.
     Worlds:
       - 'world'
+
+    Join_Message: "&8[&a+&8] &a%player%"
+
+    Quit_Message: "&8[&c-&8] &c%player%"
 
 # -------------------------------------------------------------------------------------------------
 # Chat Section
@@ -167,9 +168,6 @@ Hooks:
 
   # Hook into the PlaceholderAPI library?
   PlaceholderAPI: true
-
-  # Hook into the MultiverseCore library?
-  MultiverseCore: false
 
 # -------------------------------------------------------------------------------------------------
 # The plugin's main prefix. You can manually add this prefix to other messages using the

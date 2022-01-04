@@ -1,35 +1,28 @@
 package me.markings.bubble.menu;
 
 import lombok.val;
-import me.markings.bubble.Bubble;
 import me.markings.bubble.command.bubble.EditCommand;
 import me.markings.bubble.conversation.EditConversation;
 import me.markings.bubble.conversation.PermissionConversation;
-import org.bukkit.configuration.file.FileConfiguration;
-import org.bukkit.configuration.file.YamlConfiguration;
+import me.markings.bubble.settings.MenuSettings;
+import me.markings.bubble.util.ConfigUtil;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.ClickType;
 import org.bukkit.inventory.ItemStack;
-import org.mineacademy.fo.Messenger;
 import org.mineacademy.fo.menu.Menu;
 import org.mineacademy.fo.menu.button.Button;
 import org.mineacademy.fo.menu.model.ItemCreator;
-import org.mineacademy.fo.remain.CompMaterial;
-
-import java.io.File;
-import java.io.IOException;
 
 public class EditMenu extends Menu {
-
-	final File file = new File("plugins/Bubble/", "settings.yml");
-	final FileConfiguration config = YamlConfiguration.loadConfiguration(file);
 
 	private final Button editMessageButton;
 	private final Button centerMessageButton;
 	private final Button changePermissionButton;
 
+	private static final MenuSettings.EditMenuSettings editMenuSettings = MenuSettings.EditMenuSettings.getInstance();
+
 	public EditMenu() {
-		setTitle("&9&lEditing Message");
+		setTitle(editMenuSettings.getEditMenuTitle());
 		setSize(9 * 3);
 
 		editMessageButton = new Button() {
@@ -40,7 +33,7 @@ public class EditMenu extends Menu {
 
 			@Override
 			public ItemStack getItem() {
-				return ItemCreator.of(CompMaterial.WRITABLE_BOOK, "&bEdit Message").build().make();
+				return ItemCreator.of(editMenuSettings.getEditMessageButtonMaterial(), editMenuSettings.getEditMessageButtonTitle()).build().make();
 			}
 		};
 
@@ -48,25 +41,14 @@ public class EditMenu extends Menu {
 			@Override
 			public void onClickedInMenu(final Player player, final Menu menu, final ClickType click) {
 				val path = EditCommand.getInput();
-				val centerPath = "Notifications.Broadcast.Messages." + path + ".Center";
-				config.set(centerPath, !config.getBoolean(centerPath));
-				
+				val centerPath = "Notifications.Broadcast.Messages." + path + ".Centered";
+				ConfigUtil.toggleCentered(centerPath, player);
 				player.closeInventory();
-
-				try {
-					config.save(file);
-					Bubble.getInstance().reload();
-					Messenger.success(player, "&aSuccessfully toggled centered status of message to "
-							+ (config.getBoolean(centerPath) ? "&aENABLED" : "&cDISABLED"));
-				} catch (IOException e) {
-					e.printStackTrace();
-					Messenger.error(player, "&cFailed to center message! Error: " + e);
-				}
 			}
 
 			@Override
 			public ItemStack getItem() {
-				return ItemCreator.of(CompMaterial.ANVIL, "&eCenter Message").build().make();
+				return ItemCreator.of(editMenuSettings.getCenterMessageButtonMaterial(), editMenuSettings.getCenterMessageButtonTitle()).build().make();
 			}
 		};
 
@@ -78,22 +60,20 @@ public class EditMenu extends Menu {
 
 			@Override
 			public ItemStack getItem() {
-				return ItemCreator.of(CompMaterial.GOLD_INGOT, "&dChange Permission").build().make();
+				return ItemCreator.of(editMenuSettings.getChangePermissionButtonMaterial(), editMenuSettings.getChangePermissionButtonTitle()).build().make();
 			}
 		};
 	}
 
 	@Override
 	public ItemStack getItemAt(final int slot) {
-		switch (slot) {
-			case 9 + 1:
-				return editMessageButton.getItem();
-			case 9 + 4:
-				return changePermissionButton.getItem();
-			case 9 + 7:
-				return centerMessageButton.getItem();
-			default:
-				return null;
-		}
+		if (slot == editMenuSettings.getEditMessageButtonSlot())
+			return editMessageButton.getItem();
+		if (slot == editMenuSettings.getCenterMessageButtonSlot())
+			return changePermissionButton.getItem();
+		if (slot == editMenuSettings.getChangePermissionButtonSlot())
+			return centerMessageButton.getItem();
+
+		return null;
 	}
 }

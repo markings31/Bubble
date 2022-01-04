@@ -41,7 +41,7 @@
 
         <!-- Change to the latest one from https://github.com/kangarko/Foundation/releases
              or change to "LATEST" if you downloaded Foundation to your disk. -->
-        <foundation.version>5.12.2</foundation.version>
+        <foundation.version>5.12.4</foundation.version>
 
         <!-- Leave on "com.github.kangarko" if you use Foundation from GitHub like most people,
              or change to "org.mineacademy" if you downloaded our library to your disk. -->
@@ -148,6 +148,40 @@
                             <shadedPattern>${project.groupId}.${project.artifactId}.lib</shadedPattern>
                         </relocation>
                     </relocations>
+                </configuration>
+            </plugin>
+            <plugin>
+                <groupId>com.github.wvengen</groupId>
+                <artifactId>proguard-maven-plugin</artifactId>
+                <!--
+                    Make sure to check for new versions from
+                    https://mvnrepository.com/artifact/com.github.wvengen/proguard-maven-plugin
+                 -->
+                <version>2.5.3</version>
+                <dependencies>
+                    <dependency>
+                        <groupId>net.sf.proguard</groupId>
+                        <artifactId>proguard-base</artifactId>
+                        <!--
+                            Make sure to check for new versions from
+                            https://mvnrepository.com/artifact/net.sf.proguard/proguard-base
+                         -->
+                        <version>6.2.2</version>
+                    </dependency>
+                </dependencies>
+                <executions>
+                    <execution>
+                        <phase>package</phase>
+                        <goals>
+                            <goal>proguard</goal>
+                        </goals>
+                    </execution>
+                </executions>
+                <configuration>
+                    <libs>
+                        <lib>${java.home}/lib/rt.jar</lib>
+                        <lib>${java.home}/lib/jce.jar</lib>
+                    </libs>
                 </configuration>
             </plugin>
         </plugins>

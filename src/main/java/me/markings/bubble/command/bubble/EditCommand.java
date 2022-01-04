@@ -30,7 +30,7 @@ public class EditCommand extends SimpleSubCommand {
 
 		input = args[0];
 
-		checkBoolean(Bubble.config.isSet(newSection), "&cNo such section " + args[0] + " found!");
+		checkBoolean(Bubble.getInstance().getBubbleSettings().isSet(newSection), "&cNo such section " + args[0] + " found!");
 
 		new EditMenu().displayTo(getPlayer());
 	}
@@ -38,7 +38,8 @@ public class EditCommand extends SimpleSubCommand {
 	@Override
 	protected List<String> tabComplete() {
 		if (args.length == 1)
-			return completeLastWord(Objects.requireNonNull(Bubble.config.getConfigurationSection("Notifications.Broadcast.Messages")).getValues(false).keySet());
+			return completeLastWord(Objects.requireNonNull(
+					Bubble.getInstance().getBubbleSettings().getConfigurationSection("Notifications.Broadcast.Messages")).getValues(false).keySet());
 
 		return new ArrayList<>();
 	}

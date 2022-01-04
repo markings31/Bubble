@@ -1,12 +1,11 @@
 package me.markings.bubble.command.bubble;
 
 import lombok.val;
-import me.markings.bubble.bungee.BubbleAction;
 import me.markings.bubble.model.Permissions;
 import me.markings.bubble.util.MessageUtil;
 import org.bukkit.entity.Player;
-import org.mineacademy.fo.BungeeUtil;
 import org.mineacademy.fo.Common;
+import org.mineacademy.fo.MinecraftVersion;
 import org.mineacademy.fo.command.SimpleSubCommand;
 import org.mineacademy.fo.model.Variables;
 import org.mineacademy.fo.remain.CompMaterial;
@@ -24,27 +23,21 @@ public class NotificationCommand extends SimpleSubCommand {
 	private static final String actionbarArg = MessageUtil.getActionbarArg();
 	private static final String bossbarArg = MessageUtil.getBossbarArg();
 	private static final String toastArg = MessageUtil.getToastArg();
-	private static final String bungeeArg = "bungee";
 
 	public NotificationCommand() {
 		super("notify");
 
 		setMinArguments(3);
 
-		setUsage("<player_name|all|bungee> <message|title|bossbar|actionbar|toast> [<material>] <input|...>");
+		setUsage("<player_name|all> <message|title|bossbar|actionbar|toast> [<material>] <input|...>");
 		setPermission(Permissions.Command.NOTIFY);
 	}
 
 	@Override
 	protected void onCommand() {
-		val param = args[1].toLowerCase();
-
-		if (args[0].equalsIgnoreCase(bungeeArg))
-			BungeeUtil.tellBungee(BubbleAction.NOTIFICATION, param, joinArgs((args[1].equalsIgnoreCase(toastArg) ? 3 : 2)));
-
 		if (args[0].equalsIgnoreCase("all"))
 			Remain.getOnlinePlayers().forEach(this::sendNotification);
-		else if (!args[0].equalsIgnoreCase(bungeeArg))
+		else
 			sendNotification(findPlayer(args[0]));
 	}
 
@@ -88,6 +81,8 @@ public class NotificationCommand extends SimpleSubCommand {
 				if (getPlayer() != null)
 					checkBoolean(getPlayer().hasPermission(getPermission() + ".toast"), noPermissionMsg);
 
+				checkBoolean(!MinecraftVersion.olderThan(MinecraftVersion.V.v1_12), "Toast messages are not supported on this server version!");
+
 				Remain.sendToast(target, primaryPart, args[1].equalsIgnoreCase(toastArg) ?
 						findMaterial(args[2], "No such material " + args[2] + " found!") : null);
 				break;
@@ -98,7 +93,7 @@ public class NotificationCommand extends SimpleSubCommand {
 	@Override
 	protected List<String> tabComplete() {
 		if (args.length == 1)
-			return completeLastWord("player_name", "all", bungeeArg);
+			return completeLastWord("player_name", "all");
 		if (args.length == 2)
 			return completeLastWord(messageArg, titleArg, actionbarArg, bossbarArg, toastArg);
 		if (args.length == 3 && args[1].equalsIgnoreCase(toastArg))

@@ -26,11 +26,6 @@ public final class Settings extends SimpleSettings {
 		return true;
 	}
 
-	@Override
-	protected List<String> getUncommentedSections() {
-		return Collections.singletonList(messagePath);
-	}
-
 	@NoArgsConstructor(access = AccessLevel.PRIVATE)
 	public static class BroadcastSettings {
 
@@ -40,16 +35,15 @@ public final class Settings extends SimpleSettings {
 
 		public static final Map<String, Boolean> CENTERED = new HashMap<>();
 
+		public static Map<List<String>, String> BROADCAST_WORLDS = new HashMap<>();
+
 		public static Boolean ENABLE_BROADCASTS;
-		public static Boolean BUNGEECORD;
 		public static Boolean RANDOM_MESSAGE;
 		public static Boolean CENTER_ALL;
 		public static Boolean SEND_ASYNC;
 
 		public static String HEADER;
 		public static String FOOTER;
-
-		public static List<String> BROADCAST_WORLDS = new ArrayList<>();
 
 		public static SimpleTime BROADCAST_DELAY;
 
@@ -61,12 +55,10 @@ public final class Settings extends SimpleSettings {
 
 			pathPrefix("Notifications.Broadcast");
 			ENABLE_BROADCASTS = getBoolean("Enable");
-			BUNGEECORD = getBoolean("Bungeecord");
 			BROADCAST_DELAY = getTime("Delay");
 			RANDOM_MESSAGE = getBoolean("Random_Message");
 			CENTER_ALL = getBoolean("Center_All");
 			SEND_ASYNC = getBoolean("Send_Asynchronously");
-			BROADCAST_WORLDS = getStringList("Worlds");
 			BROADCAST_SOUND = getSound("Sound");
 			HEADER = getString("Header");
 			FOOTER = getString("Footer");
@@ -76,43 +68,48 @@ public final class Settings extends SimpleSettings {
 	@NoArgsConstructor(access = AccessLevel.PRIVATE)
 	public static class WelcomeSettings {
 		public static Boolean ENABLE_JOIN_MOTD;
-		public static Boolean BUNGEECORD;
 
-		public static List<List<String>> JOIN_MOTD = new ArrayList<>();
+		public static List<String> JOIN_MOTD = new ArrayList<>();
 
 		public static SimpleTime MOTD_DELAY;
 
 		public static SimpleSound MOTD_SOUND;
 
 		private static void init() {
-			Objects.requireNonNull(getConfig().getConfigurationSection("Notifications.Welcome.Join_MOTD")).getKeys(false)
-					.forEach(path -> JOIN_MOTD.add(getConfig().getStringList("Notifications.Welcome.Join_MOTD" + "." + path)));
-
 			pathPrefix("Notifications.Welcome");
 			ENABLE_JOIN_MOTD = getBoolean("Enable_MOTD");
-			BUNGEECORD = getBoolean("Bungeecord");
 			MOTD_DELAY = getTime("MOTD_Delay");
 			MOTD_SOUND = getSound("Sound");
+			JOIN_MOTD = getStringList("Join_MOTD");
 		}
 	}
 
 	@NoArgsConstructor(access = AccessLevel.PRIVATE)
 	public static class JoinSettings {
 
+		public static String JOIN_MESSAGE;
+		public static String QUIT_MESSAGE;
+
 		public static Boolean ENABLE_JOIN_MESSAGE;
 		public static Boolean ENABLE_QUIT_MESSAGE;
+		public static Boolean FIREWORK_JOIN;
+		public static Boolean MUTE_IF_VANISHED;
 
 		public static List<String> BROADCAST_WORLDS = new ArrayList<>();
-
-		public static Boolean ENABLE_JOIN_BROADCASTS;
 
 		private static void init() {
 			pathPrefix("Notifications.Join");
 			ENABLE_JOIN_MESSAGE = getBoolean("Enable_Join_Message");
 			ENABLE_QUIT_MESSAGE = getBoolean("Enable_Quit_Message");
 
-			ENABLE_JOIN_BROADCASTS = getBoolean("Enable_First_Join_Broadcast");
+			FIREWORK_JOIN = getBoolean("Firework_On_First_Join");
+
+			MUTE_IF_VANISHED = getBoolean("Mute_If_Vanished");
+
 			BROADCAST_WORLDS = getStringList("Worlds");
+
+			JOIN_MESSAGE = getString("Join_Message");
+			QUIT_MESSAGE = getString("Quit_Message");
 		}
 	}
 
@@ -151,20 +148,19 @@ public final class Settings extends SimpleSettings {
 
 		public static Boolean VAULT;
 		public static Boolean PAPI;
-		public static Boolean MVCORE;
 
 		private static void init() {
 			pathPrefix("Hooks");
 			VAULT = getBoolean("Vault");
 			PAPI = getBoolean("PlaceholderAPI");
-			MVCORE = getBoolean("MultiverseCore");
 		}
 	}
 
 	private static void generateBroadcastSections() {
 		Objects.requireNonNull(getConfig().getConfigurationSection(messagePath)).getKeys(false).forEach(path -> {
 			val permissionPath = messagePath + "." + path + ".Permission";
-			val centerPath = messagePath + "." + path + ".Center";
+			val centerPath = messagePath + "." + path + ".Centered";
+			val worldsPath = messagePath + "." + path + ".Worlds";
 
 			if (!isSet(permissionPath))
 				getConfig().set(permissionPath, "none");
@@ -175,11 +171,16 @@ public final class Settings extends SimpleSettings {
 			if (!isSet(messagePath + "." + path + ".Message"))
 				getConfig().createSection(messagePath + "." + path + ".Message");
 
+			if (!isSet(worldsPath))
+				getConfig().createSection(worldsPath);
+
 			val stringList = getStringList(messagePath + "." + path + ".Message");
+			val worldList = getStringList(worldsPath);
 
 			BroadcastSettings.PERMISSION.put(path, getString(permissionPath));
 			BroadcastSettings.CENTERED.put(centerPath, getBoolean(centerPath));
 			BroadcastSettings.MESSAGE_MAP.put(stringList, path);
+			BroadcastSettings.BROADCAST_WORLDS.put(worldList, worldsPath);
 			try {
 				getConfig().save(new File("plugins/Bubble/settings.yml"));
 			} catch (final IOException e) {

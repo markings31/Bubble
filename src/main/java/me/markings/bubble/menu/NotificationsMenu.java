@@ -17,7 +17,10 @@ public class NotificationsMenu extends Menu {
 	private final Button motdSettingsButton;
 	private final Button mentionsSettingsButton;
 
-	private static final MenuSettings menuSettings = MenuSettings.getInstance();
+	private static final MenuSettings.PreferencesMenuSettings menuSettings = MenuSettings.PreferencesMenuSettings.getInstance();
+	private static final MenuSettings.ChatMenuSettings CHAT_MENU_SETTINGS = MenuSettings.ChatMenuSettings.getInstance();
+	private static final MenuSettings.MOTDMenuSettings MOTD_MENU_SETTINGS = MenuSettings.MOTDMenuSettings.getInstance();
+	private static final MenuSettings.MentionsMenuSettings MENTIONS_MENU_SETTINGS = MenuSettings.MentionsMenuSettings.getInstance();
 
 	public NotificationsMenu() {
 		setTitle(menuSettings.getPrefMenuTitle());
@@ -35,7 +38,7 @@ public class NotificationsMenu extends Menu {
 
 	@Override
 	public ItemStack getItemAt(final int slot) {
-		if (slot == menuSettings.getBroadcastStatusButtonSlot())
+		if (slot == CHAT_MENU_SETTINGS.getBroadcastStatusButtonSlot())
 			return chatSettingsButton.getItem();
 		else if (slot == menuSettings.getMotdSettingsButtonSlot())
 			return motdSettingsButton.getItem();
@@ -61,8 +64,8 @@ public class NotificationsMenu extends Menu {
 		private ChatSettingsMenu() {
 			super(NotificationsMenu.this);
 
-			setTitle(menuSettings.getChatMenuTitle());
-			setSize(menuSettings.getChatMenuSize());
+			setTitle(CHAT_MENU_SETTINGS.getChatMenuTitle());
+			setSize(CHAT_MENU_SETTINGS.getChatMenuSize());
 
 			toggleBroadcastsButton = new Button() {
 				@Override
@@ -75,11 +78,11 @@ public class NotificationsMenu extends Menu {
 				@Override
 				public ItemStack getItem() {
 					val cache = PlayerCache.getCache(getViewer());
-					return ItemCreator.of(cache.isBroadcastStatus() ? menuSettings.getBroadcastsEnabledButtonMaterial()
-									: menuSettings.getBroadcastsDisabledButtonMaterial(),
-							(cache.isBroadcastStatus() ? menuSettings.getBroadcastsEnabledButtonTitle()
-									: menuSettings.getBroadcastsDisabledButtonTitle()),
-							menuSettings.getBroadcastStatusButtonLore()).build().make();
+					return ItemCreator.of(cache.isBroadcastStatus() ? CHAT_MENU_SETTINGS.getBroadcastsEnabledButtonMaterial()
+									: CHAT_MENU_SETTINGS.getBroadcastsDisabledButtonMaterial(),
+							(cache.isBroadcastStatus() ? CHAT_MENU_SETTINGS.getBroadcastsEnabledButtonTitle()
+									: CHAT_MENU_SETTINGS.getBroadcastsDisabledButtonTitle()),
+							CHAT_MENU_SETTINGS.getBroadcastStatusButtonLore()).build().make();
 				}
 			};
 
@@ -94,19 +97,19 @@ public class NotificationsMenu extends Menu {
 				@Override
 				public ItemStack getItem() {
 					val cache = PlayerCache.getCache(getViewer());
-					return ItemCreator.of(menuSettings.getBroadcastSoundButtonMaterial(),
-							(cache.isBroadcastSoundStatus() ? menuSettings.getBroadcastSoundEnabledButtonTitle()
-									: menuSettings.getBroadcastSoundDisabledButtonTitle()),
-							menuSettings.getBroadcastSoundButtonLore()).build().make();
+					return ItemCreator.of(CHAT_MENU_SETTINGS.getBroadcastSoundButtonMaterial(),
+							(cache.isBroadcastSoundStatus() ? CHAT_MENU_SETTINGS.getBroadcastSoundEnabledButtonTitle()
+									: CHAT_MENU_SETTINGS.getBroadcastSoundDisabledButtonTitle()),
+							CHAT_MENU_SETTINGS.getBroadcastSoundButtonLore()).build().make();
 				}
 			};
 		}
 
 		@Override
 		public ItemStack getItemAt(final int slot) {
-			if (slot == menuSettings.getBroadcastStatusButtonSlot())
+			if (slot == CHAT_MENU_SETTINGS.getBroadcastStatusButtonSlot())
 				return toggleBroadcastsButton.getItem();
-			else if (slot == menuSettings.getBroadcastSoundButtonSlot())
+			else if (slot == CHAT_MENU_SETTINGS.getBroadcastSoundButtonSlot())
 				return toggleBroadcastSoundButton.getItem();
 
 			return null;
@@ -120,8 +123,8 @@ public class NotificationsMenu extends Menu {
 		public MOTDSettingsMenu() {
 			super(NotificationsMenu.this);
 
-			setTitle(menuSettings.getMotdMenuTitle());
-			setSize(menuSettings.getMotdMenuSize());
+			setTitle(MOTD_MENU_SETTINGS.getMotdMenuTitle());
+			setSize(MOTD_MENU_SETTINGS.getMotdMenuSize());
 
 			toggleMOTDButton = new Button() {
 				@Override
@@ -134,17 +137,17 @@ public class NotificationsMenu extends Menu {
 				@Override
 				public ItemStack getItem() {
 					val cache = PlayerCache.getCache(getViewer());
-					return ItemCreator.of(menuSettings.getMotdStatusButtonMaterial(),
-							(cache.isMotdStatus() ? menuSettings.getMotdEnabledButtonTitle()
-									: menuSettings.getMotdDisabledButtonTitle()),
-							menuSettings.getMotdStatusButtonLore()).build().make();
+					return ItemCreator.of(MOTD_MENU_SETTINGS.getMotdStatusButtonMaterial(),
+							(cache.isMotdStatus() ? MOTD_MENU_SETTINGS.getMotdEnabledButtonTitle()
+									: MOTD_MENU_SETTINGS.getMotdDisabledButtonTitle()),
+							MOTD_MENU_SETTINGS.getMotdStatusButtonLore()).build().make();
 				}
 			};
 		}
 
 		@Override
 		public ItemStack getItemAt(final int slot) {
-			return slot == menuSettings.getMotdStatusButtonSlot() ? toggleMOTDButton.getItem() : null;
+			return slot == MOTD_MENU_SETTINGS.getMotdStatusButtonSlot() ? toggleMOTDButton.getItem() : null;
 		}
 	}
 
@@ -157,8 +160,8 @@ public class NotificationsMenu extends Menu {
 		public MentionsSettingsMenu() {
 			super(NotificationsMenu.this);
 
-			setTitle(menuSettings.getMentionMenuTitle());
-			setSize(menuSettings.getMentionMenuSize());
+			setTitle(MENTIONS_MENU_SETTINGS.getMentionMenuTitle());
+			setSize(MENTIONS_MENU_SETTINGS.getMentionMenuSize());
 
 			toggleMentionsButton = new Button() {
 				@Override
@@ -171,9 +174,9 @@ public class NotificationsMenu extends Menu {
 				@Override
 				public ItemStack getItem() {
 					val cache = PlayerCache.getCache(getViewer());
-					return ItemCreator.of(menuSettings.getMentionsStatusButtonMaterial(),
-							(cache.isMentionsStatus() ? menuSettings.getMentionsEnabledButtonTitle()
-									: menuSettings.getMentionsDisabledButtonTitle()), menuSettings.getMentionsStatusButtonLore()).build().make();
+					return ItemCreator.of(MENTIONS_MENU_SETTINGS.getMentionsStatusButtonMaterial(),
+							(cache.isMentionsStatus() ? MENTIONS_MENU_SETTINGS.getMentionsEnabledButtonTitle()
+									: MENTIONS_MENU_SETTINGS.getMentionsDisabledButtonTitle()), MENTIONS_MENU_SETTINGS.getMentionsStatusButtonLore()).build().make();
 				}
 			};
 
@@ -188,9 +191,9 @@ public class NotificationsMenu extends Menu {
 				@Override
 				public ItemStack getItem() {
 					val cache = PlayerCache.getCache(getViewer());
-					return ItemCreator.of(menuSettings.getMentionSoundStatusButtonMaterial(),
-							(cache.isMentionSoundStatus() ? menuSettings.getMentionSoundEnabledButtonTitle()
-									: menuSettings.getMentionSoundDisabledButtonTitle()), menuSettings.getBroadcastSoundButtonLore()).build().make();
+					return ItemCreator.of(MENTIONS_MENU_SETTINGS.getMentionSoundStatusButtonMaterial(),
+							(cache.isMentionSoundStatus() ? MENTIONS_MENU_SETTINGS.getMentionSoundEnabledButtonTitle()
+									: MENTIONS_MENU_SETTINGS.getMentionSoundDisabledButtonTitle()), MENTIONS_MENU_SETTINGS.getMentionSoundStatusButtonLore()).build().make();
 				}
 			};
 
@@ -205,21 +208,21 @@ public class NotificationsMenu extends Menu {
 				@Override
 				public ItemStack getItem() {
 					val cache = PlayerCache.getCache(getViewer());
-					return ItemCreator.of(menuSettings.getMentionToastStatusButtonMaterial(),
-							(cache.isMentionToastStatus() ? menuSettings.getMentionToastEnabledButtonTitle()
-									: menuSettings.getMentionToastDisabledButtonTitle()),
-							menuSettings.getMentionToastStatusButtonLore()).build().make();
+					return ItemCreator.of(MENTIONS_MENU_SETTINGS.getMentionToastStatusButtonMaterial(),
+							(cache.isMentionToastStatus() ? MENTIONS_MENU_SETTINGS.getMentionToastEnabledButtonTitle()
+									: MENTIONS_MENU_SETTINGS.getMentionToastDisabledButtonTitle()),
+							MENTIONS_MENU_SETTINGS.getMentionToastStatusButtonLore()).build().make();
 				}
 			};
 		}
 
 		@Override
 		public ItemStack getItemAt(final int slot) {
-			if (slot == menuSettings.getMentionsStatusButtonSlot())
+			if (slot == MENTIONS_MENU_SETTINGS.getMentionsStatusButtonSlot())
 				return toggleMentionsButton.getItem();
-			else if (slot == menuSettings.getMentionSoundStatusButtonSlot())
+			else if (slot == MENTIONS_MENU_SETTINGS.getMentionSoundStatusButtonSlot())
 				return toggleMentionSoundButton.getItem();
-			else if (slot == menuSettings.getMentionToastStatusButtonSlot())
+			else if (slot == MENTIONS_MENU_SETTINGS.getMentionToastStatusButtonSlot())
 				return toggleMentionToastButton.getItem();
 
 			return null;

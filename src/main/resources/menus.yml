@@ -4,22 +4,22 @@ Preferences:
   Preferences_Menu_Size: 27
 
   Chat_Settings_Button:
-    Title_Chat: "&eChat Settings"
-    Material_Chat: PAPER
-    Lore_Chat: [ "", "Click here to access the chat", "settings menu." ]
-    Slot_Chat: 11
+    Chat_Title: "&eChat Settings"
+    Chat_Material: PAPER
+    Chat_Lore: [ "", "Click here to access the chat", "settings menu." ]
+    Chat_Slot: 11
 
   MOTD_Settings_Button:
-    Title_MOTD: "&eMOTD Settings"
-    Material_MOTD: DIAMOND
-    Lore_MOTD: [ "", "Click here to access the MOTD", "settings menu." ]
-    Slot_MOTD: 13
+    MOTD_Title: "&eMOTD Settings"
+    MOTD_Material: DIAMOND
+    MOTD_Lore: [ "", "Click here to access the MOTD", "settings menu." ]
+    MOTD_Slot: 13
 
   Mentions_Settings_Button:
-    Title_Mentions: "&eMentions Settings"
-    Material_Mentions: SUNFLOWER
-    Lore_Mentions: [ "", "Click here to access the mentions", "settings menu." ]
-    Slot_Mentions: 15
+    Mentions_Title: "&eMentions Settings"
+    Mentions_Material: SUNFLOWER
+    Mentions_Lore: [ "", "Click here to access the mentions", "settings menu." ]
+    Mentions_Slot: 15
 
 Chat_Settings:
 
@@ -27,25 +27,25 @@ Chat_Settings:
   Chat_Menu_Size: 27
 
   Toggle_Broadcasts_Button:
-    Title_Broadcasts_Enabled: "&7Broadcasts: &aENABLED"
-    Title_Broadcasts_Disabled: "&7Broadcasts: &cDISABLED"
+    Broadcasts_Enabled_Title: "&7Broadcasts: &aENABLED"
+    Broadcasts_Disabled_Title: "&7Broadcasts: &cDISABLED"
 
-    Material_Broadcasts_Enabled: LIME_DYE
-    Material_Broadcasts_Disabled: GRAY_DYE
+    Broadcasts_Enabled_Material: LIME_DYE
+    Broadcasts_Disabled_Material: GRAY_DYE
 
-    Lore_Broadcasts: [ "", "&eClick this item to toggle on/off", "&ebroadcasts that are displayed to you." ]
+    Broadcasts_Lore: [ "", "&eClick this item to toggle on/off", "&ebroadcasts that are displayed to you." ]
 
-    Slot_Broadcasts: 11
+    Broadcasts_Slot: 11
 
   Toggle_Broadcast_Sound_Button:
-    Title_Broadcast_Sound_Enabled: "&7Broadcast Sound: &aENABLED"
-    Title_Broadcast_Sound_Disabled: "&7Broadcast Sound: &cDISABLED"
+    Broadcast_Sound_Enabled_Title: "&7Broadcast Sound: &aENABLED"
+    Broadcast_Sound_Disabled_Title: "&7Broadcast Sound: &cDISABLED"
 
-    Material_Broadcast_Sound: MUSIC_DISC_13
+    Broadcast_Sound_Material: MUSIC_DISC_13
 
-    Lore_Sound: [ "", "&eClick this item to toggle on/off", "&ethe sound played to you when you", "&ereceive a broadcast message." ]
+    Sound_Lore: [ "", "&eClick this item to toggle on/off", "&ethe sound played to you when you", "&ereceive a broadcast message." ]
 
-    Slot_Sound: 15
+    Sound_Slot: 15
 
 MOTD_Settings:
 
@@ -53,14 +53,14 @@ MOTD_Settings:
   MOTD_Menu_Size: 27
 
   Toggle_MOTD_Button:
-    Title_MOTD_Enabled: "&7Message of the Day: &aENABLED"
-    Title_MOTD_Disabled: "&7Message of the Day: &cDISABLED"
+    MOTD_Enabled_Title: "&7Message of the Day: &aENABLED"
+    MOTD_Disabled_Title: "&7Message of the Day: &cDISABLED"
 
-    Material_MOTD_Status: WRITABLE_BOOK
+    MOTD_Status_Material: WRITABLE_BOOK
 
-    Lore_MOTD_Status: [ "", "&eClick this item to toggle on/off", "&ethe message sent to you when you join", "&ethe server." ]
+    MOTD_Status_Lore: [ "", "&eClick this item to toggle on/off", "&ethe message sent to you when you join", "&ethe server." ]
 
-    Slot_MOTD_Status: 13
+    MOTD_Status_Slot: 13
 
 Mentions_Settings:
 
@@ -68,31 +68,63 @@ Mentions_Settings:
   Mentions_Menu_Size: 27
 
   Toggle_Mentions_Button:
-    Title_Mentions_Enabled: "&7Chat Mentions: &aENABLED"
-    Title_Mentions_Disabled: "&7Chat Mentions: &cDISABLED"
+    Mentions_Enabled_Title: "&7Chat Mentions: &aENABLED"
+    Mentions_Disabled_Title: "&7Chat Mentions: &cDISABLED"
 
-    Material_Mentions_Status: NAME_TAG
+    Mentions_Status_Material: NAME_TAG
 
-    Lore_Mentions_Status: [ "", "&eClick this item to toggle on/off", "&enotifications you receive when your", "&ename is mentioned in the chat." ]
+    Mentions_Status_Lore: [ "", "&eClick this item to toggle on/off", "&enotifications you receive when your", "&ename is mentioned in the chat." ]
 
-    Slot_Mentions_Status: 11
+    Mentions_Status_Slot: 11
 
   Toggle_Mention_Sound_Button:
-    Title_Mention_Sound_Enabled: "&7Mention Sound: &aENABLED"
-    Title_Mention_Sound_Disabled: "&7Mention Sound: &cDISABLED"
+    Mention_Sound_Enabled_Title: "&7Mention Sound: &aENABLED"
+    Mention_Sound_Disabled_Title: "&7Mention Sound: &cDISABLED"
 
-    Material_Mention_Sound_Status: NOTE_BLOCK
+    Mention_Sound_Status_Material: NOTE_BLOCK
 
-    Lore_Mention_Sound_Status: [ "", "&eClick this item to toggle on/off", "&ethe sound played to you when your", "&ename is mentioned in the chat." ]
+    Mention_Sound_Status_Lore: [ "", "&eClick this item to toggle on/off", "&ethe sound played to you when your", "&ename is mentioned in the chat." ]
 
-    Slot_Mention_Sound_Status: 13
+    Mention_Sound_Status_Slot: 13
 
   Toggle_Mention_Toast_Button:
-    Title_Mention_Toast_Enabled: "&7Mention Toast: &aENABLED"
-    Title_Mention_Toast_Disabled: "&7Mention Toast: &cDISABLED"
+    Mention_Toast_Enabled_Title: "&7Mention Toast: &aENABLED"
+    Mention_Toast_Disabled_Title: "&7Mention Toast: &cDISABLED"
 
-    Material_Mention_Toast_Status: BREAD
+    Mention_Toast_Status_Material: BREAD
 
-    Lore_Mention_Toast_Status: [ "", "&eClick this item to toggle on/off", "&ethe sound played to you when your", "&ename is mentioned in the chat." ]
+    Mention_Toast_Status_Lore: [ "", "&eClick this item to toggle on/off", "&ethe sound played to you when your", "&ename is mentioned in the chat." ]
 
-    Slot_Mention_Toast_Status: 15
+    Mention_Toast_Status_Slot: 15
+
+Edit_Settings:
+
+  Edit_Menu_Title: "&9&lEditing Message"
+  Edit_Menu_Size: 27
+
+  Edit_Message_Button:
+    Edit_Message_Title: "&bEdit Message"
+
+    Edit_Message_Material: WRITABLE_BOOK
+
+    Edit_Message_Lore: [ ]
+
+    Edit_Message_Slot: 10
+
+  Center_Message_Button:
+    Center_Message_Title: "&eCenter Message"
+
+    Center_Message_Material: ANVIL
+
+    Center_Message_Lore: [ ]
+
+    Center_Message_Slot: 13
+
+  Change_Permission_Button:
+    Change_Permission_Title: "&dChange Permission"
+
+    Change_Permission_Material: GOLD_INGOT
+
+    Change_Permission_Lore: [ ]
+
+    Change_Permission_Slot: 16

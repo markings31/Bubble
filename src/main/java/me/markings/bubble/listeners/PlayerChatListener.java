@@ -9,7 +9,6 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.player.AsyncPlayerChatEvent;
 import org.mineacademy.fo.Common;
 import org.mineacademy.fo.model.SimpleSound;
-import org.mineacademy.fo.remain.CompMaterial;
 import org.mineacademy.fo.remain.Remain;
 
 public class PlayerChatListener implements Listener {
@@ -19,6 +18,7 @@ public class PlayerChatListener implements Listener {
 		val mentionSound = Settings.ChatSettings.MENTION_SOUND;
 		val eventMessage = event.getMessage();
 		val eventPlayerName = event.getPlayer().getDisplayName();
+		val previousColor = !Common.lastColorLetter(eventMessage).equals("") ? Common.lastColorLetter(eventMessage) : "&f";
 
 		Remain.getOnlinePlayers().forEach(loopPlayer -> {
 
@@ -31,7 +31,7 @@ public class PlayerChatListener implements Listener {
 					&& cache.isMentionsStatus()) {
 
 				Common.tell(loopPlayer, String.format(event.getFormat(), eventPlayerName, eventMessage)
-						.replace("@" + playerName, Settings.ChatSettings.MENTION_COLOR + playerName + "&r"));
+						.replace("@" + playerName, Settings.ChatSettings.MENTION_COLOR + playerName + previousColor));
 
 				if (cache.isMentionToastStatus())
 					Common.dispatchCommand(loopPlayer, "bu notify {player} toast PAPER &e&oYou were mentioned in the chat!");

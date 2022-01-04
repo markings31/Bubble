@@ -4,22 +4,15 @@ import lombok.SneakyThrows;
 import lombok.val;
 import me.markings.bubble.Bubble;
 import me.markings.bubble.command.bubble.EditCommand;
-import org.bukkit.command.CommandSender;
-import org.bukkit.configuration.file.FileConfiguration;
-import org.bukkit.configuration.file.YamlConfiguration;
+import me.markings.bubble.util.ConfigUtil;
 import org.bukkit.conversations.ConversationContext;
 import org.bukkit.conversations.Prompt;
+import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import org.mineacademy.fo.Messenger;
 import org.mineacademy.fo.conversation.SimplePrompt;
 
-import java.io.File;
-
 public class EditConversation extends SimplePrompt {
-
-	final File file = new File("plugins/Bubble/", "settings.yml");
-	final FileConfiguration config = YamlConfiguration.loadConfiguration(file);
 
 	@Override
 	protected String getPrompt(final ConversationContext context) {
@@ -30,6 +23,7 @@ public class EditConversation extends SimplePrompt {
 	@Override
 	@SneakyThrows
 	protected Prompt acceptValidatedInput(@NotNull final ConversationContext context, @NotNull final String input) {
+		val config = Bubble.getInstance().getBubbleSettings();
 		val commandArg = EditCommand.getInput();
 		val inputs = input.split("\\|");
 		val newSection = "Notifications.Broadcast.Messages." + commandArg;
@@ -40,14 +34,12 @@ public class EditConversation extends SimplePrompt {
 		for (final String message : inputs) {
 			section.add(message);
 			config.set(newSection + ".Message", section);
-			config.save(file);
 		}
 
-		Bubble.getInstance().reload();
-
-		Messenger.success((CommandSender) context.getForWhom(),
-				"&aSuccessfully replaced message section " + commandArg + " with line(input) '" + input + "&a'!");
-
+		ConfigUtil.saveConfig((Player) context.getForWhom(),
+				"&aSuccessfully replaced message section " + commandArg + " with line '" + input + "&a'!",
+				"Failed to edit message! Error: ");
+		
 		return Prompt.END_OF_CONVERSATION;
 	}
 }

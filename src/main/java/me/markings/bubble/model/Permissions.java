@@ -12,14 +12,20 @@ public class Permissions extends FoPermissions {
 	@PermissionGroup("Execute main plugin command for /{label}")
 	public static final class Command {
 
+		@Permission("Add a line or section for broadcasts within the main settings file.")
+		public static final String ADD = "bubble.command.add";
+
+		@Permission("Toggle a broadcast message's alignment status.")
+		public static final String CENTER = "bubble.command.center";
+
 		@Permission("Edit broadcasts messages in the configuration.")
 		public static final String EDIT = "bubble.command.edit";
 
 		@Permission("Access the GUI menu for Bubble.")
 		public static final String GUI = "bubble.command.gui";
 
-		@Permission("View a list of the broadcast messages shown in the main settings file.")
-		public static final String LIST = "bubble.command.list";
+		@Permission("View a specific broadcast message and its settings content.")
+		public static final String SHOW = "bubble.command.show";
 
 		@Permission("Notify a player/the server via a command.")
 		public static final String NOTIFY = "bubble.command.notify";
@@ -37,8 +43,14 @@ public class Permissions extends FoPermissions {
 		public static final String PREFS = "bubble.command.prefs";
 
 		@Permission("Toggle the status of your broadcast messages.")
-		public static final String TOGGLE = "bubble.command.toggle";
+		public static final String TOGGLE = "bubble.command.togglebroadcasts";
 
+		@Permission("Set the header that will be used in broadcast messages.")
+		public static final String HEADER = "bubble.command.setheader";
+
+		@Permission("Set the footer that will be used in broadcast messages.")
+		public static final String FOOTER = "bubble.command.setfooter";
+		
 	}
 
 }

@@ -4,13 +4,11 @@ import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.val;
-import me.markings.bubble.bungee.BubbleAction;
 import org.apache.commons.lang.StringUtils;
 import org.bukkit.entity.Player;
-import org.mineacademy.fo.BungeeUtil;
 import org.mineacademy.fo.ChatUtil;
 import org.mineacademy.fo.Common;
-import org.mineacademy.fo.model.SimpleTime;
+import org.mineacademy.fo.model.HookManager;
 import org.mineacademy.fo.model.Variables;
 import org.mineacademy.fo.remain.CompChatColor;
 
@@ -41,30 +39,17 @@ public class MessageUtil {
 	@Getter
 	private static final String toastArg = "toast";
 
-	private static final String bungeeMessagePlaceholder = "<bungee_message>";
-	private static final String bungeeTitlePlaceholder = "<bungee_title>";
-	private static final String bungeeActionBarPlaceholder = "<bungee_actionbar>";
-	private static final String bungeeBossBarPlaceholder = "<bungee_bossbar>";
-
 	private static final String titlePlaceholder = "<title>";
 	private static final String actionbarPlaceholder = "<actionbar>";
 	private static final String bossbarPlaceholder = "<bossbar>";
 	private static final String toastPlaceholder = "<toast>";
 
-	private static final String delayPlaceholder = "<delay:";
-	private static final String delayEndPlaceholder = "</delay>";
+	/*private static final String delayPlaceholder = "<delay:";
+	private static final String delayEndPlaceholder = "</delay>";*/
 
 	public static String format(final String message) {
-		val chatLinePlaceholder = "<chat_line>";
-		val smoothLinePlaceholder = "<smooth_line>";
-		val fancyLinePlaceholder = "<fancy_line>";
-		val centerPlaceholder = "<center>";
-		if (message.contains(chatLinePlaceholder))
-			return message.replace(chatLinePlaceholder, Common.chatLine());
-
-		if (message.contains(smoothLinePlaceholder))
-			return message.replace(smoothLinePlaceholder, Common.chatLineSmooth());
-
+		val fancyLinePlaceholder = "%fancy_line%";
+		val centerPlaceholder = "%center%";
 		if (message.contains(fancyLinePlaceholder))
 			return message.replace(fancyLinePlaceholder, "-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-");
 
@@ -88,26 +73,34 @@ public class MessageUtil {
 		return message;
 	}
 
-	public static void executeWithDelay(final String message) {
+	/*public static void executeWithDelay(final String message) {
 		val delayTime = SimpleTime.from(StringUtils.substringBetween(message, ":", "|"));
 
-	}
+	}*/
 
 	public static void executePlaceholders(final String message, final Player player) {
 		if (message.startsWith(commandPlaceholder))
 			Common.dispatchCommand(player, message.replace(commandPlaceholder, ""));
 
-		if (message.startsWith(bungeeMessagePlaceholder))
-			BungeeUtil.tellBungee(BubbleAction.NOTIFICATION, messageArg, replaceVarsAndGradient(message.replace(bungeeMessagePlaceholder, ""), player));
+		if (message.startsWith(titlePlaceholder))
+			Common.dispatchCommand(player, "bu notify " + player.getName() + " title " + message.replace(titlePlaceholder, ""));
 
-		if (message.startsWith(bungeeTitlePlaceholder))
-			BungeeUtil.tellBungee(BubbleAction.NOTIFICATION, titleArg, Variables.replace(message.replace(bungeeTitlePlaceholder, ""), player));
+		if (message.startsWith(actionbarPlaceholder))
+			Common.dispatchCommand(player, "bu notify " + player.getName() + " actionbar " + message.replace(actionbarPlaceholder, ""));
 
-		if (message.startsWith(bungeeActionBarPlaceholder))
-			BungeeUtil.tellBungee(BubbleAction.NOTIFICATION, actionbarArg, Variables.replace(message.replace(bungeeActionBarPlaceholder, ""), player));
+		if (message.startsWith(bossbarPlaceholder))
+			Common.dispatchCommand(player, "bu notify " + player.getName() + " bossbar " + message.replace(bossbarPlaceholder, ""));
 
-		if (message.startsWith(bungeeBossBarPlaceholder))
-			BungeeUtil.tellBungee(BubbleAction.NOTIFICATION, bossbarArg, Variables.replace(message.replace(bungeeBossBarPlaceholder, ""), player));
+		if (message.startsWith(toastPlaceholder))
+			Common.dispatchCommand(player, "bu notify " + player.getName() + " toast " + message.replace(toastPlaceholder, ""));
+	}
+
+	public static boolean isExecutable(final String message) {
+		return message.contains(titlePlaceholder)
+				|| message.contains(actionbarPlaceholder)
+				|| message.contains(bossbarPlaceholder)
+				|| message.contains(toastPlaceholder)
+				|| message.contains(commandPlaceholder);
 	}
 
 	public static String getPlaceholder(final String message) {
@@ -144,7 +137,7 @@ public class MessageUtil {
 		val strippedMessage = containsGradient(message)
 				? StringUtils.substringBetween(message, ">", getGradientEndPlaceholder())
 				: message;
-		val replacedMessage = Variables.replace(format(strippedMessage), player);
+		val replacedMessage = HookManager.replacePlaceholders(player, Variables.replace(format(strippedMessage), player));
 		return translateGradient(message.replace(strippedMessage, replacedMessage));
 	}
 }

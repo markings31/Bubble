@@ -14,6 +14,9 @@ public class BubbleGroup extends SimpleCommandGroup {
 		registerSubcommand(new GUICommand());
 		registerSubcommand(new EditCommand());
 		registerSubcommand(new ShowCommand());
+		registerSubcommand(new CenterCommand());
+		registerSubcommand(new SetHeaderCommand());
+		registerSubcommand(new SetFooterCommand());
 	}
 
 	@Override

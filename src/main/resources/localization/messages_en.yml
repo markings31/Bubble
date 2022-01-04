@@ -1,14 +1,126 @@
-Welcome:
-  Join_Broadcasts:
-    - "&8[&3&lServerName&8]&7 Player &b{player}&7 has joined for the first time!"
+# !-----------------------------------------------------------------------------------------------!
+#                              Welcome to the localization file.
+# !-----------------------------------------------------------------------------------------------!
+#
+#   The localization/ folder stores various localization files. Use the suggested naming
+#   convention message_LANGUAGE.yml and then the "SimpleLocalization" or the "Lang" class to
+#   use this file.
+#
+#   1) COLOR CODES are supported with the '&' character.
+#      - For usage, see http://minecraftwiki.net/wiki/Formatting_codes
+#   5) JAVASCRIPT NOTICE: Some of our messages are just-in-time compiled with JavaScript.
+#      Those typically have variables such as "self" inside of them. IF YOU CANNOT CODE
+#      in JavaScript, be extra careful and do not remove () brackets or the variables!
+#
+# !----------------------------------------------------------------------------------------------
 
-Join:
-  Join_Message: "&8[&a+&8] &a{player}"
-  Quit_Message: "&8[&c-&8] &c{player}"
-
+# -------------------------------------------------------------------------------------------------
+# Command Messages
+# -------------------------------------------------------------------------------------------------
 Commands:
-  Reload_Success: "{plugin_name} {plugin_version} has been reloaded!"
+  No_Console: "&cYou may only use this command as a player!"
+  Console_Missing_Player_Name: "Please specific the player name when running from the console!"
+  Cooldown_Wait: "&cWait {duration} second(s) before using this command again."
+  Invalid_Argument: "&cUnkown command! Run &6/{label} ? &cfor help."
+  Invalid_Sub_Argument: "&cUnkown command! Run '/{label} {0}' for help."
+  Invalid_Argument_Multiline: "&cUnkown command! Usage:"
+  Invalid_Time: "Expected time such as '3 hours' or '15 minutes', got: '{input}'"
+  Invalid_Number: "The number must be a whole or a decimal number. Got: '{input}'"
+  Label_Authors: "Created by"
+  Label_Description: "&c&lDescription:"
+  Label_Optional_Args: "optional arguments"
+  Label_Required_Args: "required arguments"
+  Label_Usages: "&c&lUsages:"
+  Label_Usage: "&c&lUsage:"
+  Label_Help_For: "Help for /{label}"
+  Label_Subcommand_Description: " &f/{label} {sublabel} {usage+}{dash+}{description}"
+  Help_Tooltip_Description: "&7Description: &f{description}"
+  Help_Tooltip_Permission: "&7Permission: &f{permission}"
+  Help_Tooltip_Usage: "&7Usage: &f"
+  Reload_Description: "Reload the configuration."
+  Reload_Started: "Reloading plugin's data, please wait.."
+  Reload_Success: "&6Bubble {plugin_version} has been reloaded."
   Reload_Fail: "&cReloading failed! Check the console for more information. Error: {error}"
+  Reload_File_Load_Error: "&4There was an error while loading files from your disk! See the console for more information."
+  Debug_Description: "ZIP your settings for reporting bugs."
+  Debug_Preparing: "&6Preparing debug log..."
+  Debug_Success: "&2Successfuly copied {amount} file(s) to debug.zip. Your sensitive MySQL information has been removed from yml files. Please upload it via ufile.io and send it to us for review."
+  Debug_Copy_Fail: "&cCopying files failed on file {file} and it was stopped. See console for more information."
+  Debug_Zip_Fail: "&cCreating a ZIP of your files failed, see console for more information. Please ZIP debug folder and send it to us via ufile.io manually."
+  Perms_Description: "List all permissions the plugin has."
+  Perms_Header: "All Plugin Permissions"
+  Perms_Main: "Main"
+  Perms_Permissions: "Permissions:"
+  Perms_True_By_Default: "&7[true by default]"
+  Perms_Info: "&7Info: &f"
+  Perms_Default: "&7Default? "
+  Perms_Applied: "&7Do you have it? "
+  Perms_Yes: "&2yes"
+  Perms_No: "&cno"
+  Header_No_Subcommands: "&cThere are no arguments for this command."
+  Header_No_Subcommands_Permission: "&cYou don't have permissions to view any subcommands."
+  Header_Color: GOLD
+  Header_Secondary_Color: RED
+  Reloading: "reloading"
+  Disabled: "disabled"
+  Use_While_Null: "&cCannot use this command while the plugin is {state}."
+  Incompatible: "This command requires Minecraft {0} or greater."
+  Toggled_Plugin_Part: "'&7You are ' + (ignoring ? '&2no longer' : '&cnow') + ' &7ignoring {0}.'"
   Error: "&cThe command failed. Check the console and report the error."
+
+# -------------------------------------------------------------------------------------------------
+# Menu Messages
+# -------------------------------------------------------------------------------------------------
+Menu:
+  Cannot_Open_During_Conversation: "&cType 'exit' to quit your conversation before opening menu."
+  Item_Deleted: "&2The {item} has been deleted."
+  Error: "&cThere was an error loading this menu! Please contact the administrator to review the console for details."
+  Page_Previous: "&8<< &fPage {page}"
+  Page_Next: "Page {page} &8>>"
+  Page_First: "&7First Page"
+  Page_Last: "&7Last Page"
+  Title_Tools: "Tools Menu"
+  Tooltip_Info: "&fMenu Information"
+  Button_Return_Title: "&4&lReturn"
+  Button_Return_Lore:
+    - ""
+    - "Return back."
+
+
+# -------------------------------------------------------------------------------------------------
+# Prefixes used throughout the plugin. You can utilize by typing {prefix_<type>}
+# (such as {prefix_info}) in different messages.
+# -------------------------------------------------------------------------------------------------
+Prefix:
+  Info: "&8&l[&9&li&8&l]&7 "
+  Success: "&8&l[&2&l\u2714&8&l]&7 "
+  Warn: "&8&l[&6&l!&8&l]&6 "
+  Error: "&8&l[&4&l\u2715&8&l]&c "
+  Question: "&8&l[&a&l?&l&8]&7 "
+  Announce: "&8&l[&5&l!&l&8]&d "
+
+
+# -------------------------------------------------------------------------------------------------
+# Miscellaneous Messages
+# -------------------------------------------------------------------------------------------------
+None: "None"
+Server_Prefix: "[Server]"
+Console_Name: "Console"
+
+# -------------------------------------------------------------------------------------------------
+# Database Messages
+# -------------------------------------------------------------------------------------------------
+Data_Missing: "&c{name} lacks database information! Please only create {type} in-game! Skipping.."
+Data_Loading: "Database is currently loading data, please wait..."
+
+# -------------------------------------------------------------------------------------------------
+# No Permission Message
+# -------------------------------------------------------------------------------------------------
+No_Permission: "&cYou are lacking permission {permission}"
+
+# -------------------------------------------------------------------------------------------------
+# Player-Only Conversation Message
+# -------------------------------------------------------------------------------------------------
+Conversation_Requires_Player: "Only players may enter this conversation."
 
 Version: 1
