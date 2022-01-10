@@ -1,6 +1,10 @@
 package me.markings.bubble.command.bubble;
 
+import me.markings.bubble.model.Permissions;
 import org.jetbrains.annotations.NotNull;
+import org.mineacademy.fo.command.DebugCommand;
+import org.mineacademy.fo.command.PermsCommand;
+import org.mineacademy.fo.command.ReloadCommand;
 import org.mineacademy.fo.command.SimpleCommandGroup;
 
 public class BubbleGroup extends SimpleCommandGroup {
@@ -17,6 +21,9 @@ public class BubbleGroup extends SimpleCommandGroup {
 		registerSubcommand(new CenterCommand());
 		registerSubcommand(new SetHeaderCommand());
 		registerSubcommand(new SetFooterCommand());
+		registerSubcommand(new SetDelayCommand());
+		registerSubcommand(new DebugCommand());
+		registerSubcommand(new PermsCommand(Permissions.class));
 	}
 
 	@Override

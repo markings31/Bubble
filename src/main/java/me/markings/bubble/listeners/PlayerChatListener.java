@@ -8,6 +8,7 @@ import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.AsyncPlayerChatEvent;
 import org.mineacademy.fo.Common;
+import org.mineacademy.fo.debug.Debugger;
 import org.mineacademy.fo.model.SimpleSound;
 import org.mineacademy.fo.remain.Remain;
 
@@ -19,6 +20,10 @@ public class PlayerChatListener implements Listener {
 		val eventMessage = event.getMessage();
 		val eventPlayerName = event.getPlayer().getDisplayName();
 		val previousColor = !Common.lastColorLetter(eventMessage).equals("") ? Common.lastColorLetter(eventMessage) : "&f";
+
+		Debugger.debug("chat",
+				"Player: " + eventPlayerName +
+						"Message: " + eventMessage);
 
 		Remain.getOnlinePlayers().forEach(loopPlayer -> {
 

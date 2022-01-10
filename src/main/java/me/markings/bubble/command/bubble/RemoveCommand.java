@@ -3,11 +3,12 @@ package me.markings.bubble.command.bubble;
 import lombok.val;
 import me.markings.bubble.Bubble;
 import me.markings.bubble.model.Permissions;
+import me.markings.bubble.util.ConfigUtil;
 import org.apache.commons.lang.math.NumberUtils;
+import org.mineacademy.fo.Common;
 import org.mineacademy.fo.Messenger;
 import org.mineacademy.fo.command.SimpleSubCommand;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
@@ -34,6 +35,8 @@ public class RemoveCommand extends SimpleSubCommand {
 				return;
 			}
 
+			Common.log(newSection);
+
 			config.set(newSection, null);
 		} else if (args[0].equalsIgnoreCase("line")) {
 			val messageList = config.getStringList(newSection + ".Message");
@@ -47,14 +50,7 @@ public class RemoveCommand extends SimpleSubCommand {
 			config.set(newSection + ".Message", messageList);
 		}
 
-		try {
-			config.save(Bubble.settingsFile);
-			Bubble.getInstance().reload();
-			Messenger.success(getPlayer(), "&aSuccessfully removed line/section!");
-		} catch (final IOException e) {
-			e.printStackTrace();
-			Messenger.error(getPlayer(), "&cFailed to remove line/section! Error: " + e);
-		}
+		ConfigUtil.saveConfig(getPlayer(), "&aSuccessfully removed line/section!", "&cFailed to remove line/section! Error: ");
 	}
 
 	@Override

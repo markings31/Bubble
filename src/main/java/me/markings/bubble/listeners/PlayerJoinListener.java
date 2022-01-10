@@ -10,6 +10,7 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.jetbrains.annotations.NotNull;
 import org.mineacademy.fo.Common;
+import org.mineacademy.fo.debug.Debugger;
 import org.mineacademy.fo.model.SimpleSound;
 import org.mineacademy.fo.model.Variables;
 
@@ -19,7 +20,7 @@ public class PlayerJoinListener implements Listener {
 	public void onJoin(final @NotNull PlayerJoinEvent event) {
 		val player = event.getPlayer();
 		event.setJoinMessage(Settings.JoinSettings.ENABLE_JOIN_MESSAGE.equals(Boolean.TRUE) ?
-				Common.colorize(Variables.replace(Settings.JoinSettings.JOIN_MESSAGE, player)) : null);
+				Common.colorize(Variables.replace(Settings.JoinSettings.JOIN_MESSAGE, player)) : event.getJoinMessage());
 
 		val cache = PlayerCache.getCache(player);
 
@@ -27,6 +28,12 @@ public class PlayerJoinListener implements Listener {
 
 		val motdSound = Settings.WelcomeSettings.MOTD_SOUND;
 		val motdDelay = Settings.WelcomeSettings.MOTD_DELAY;
+
+		Debugger.debug("join",
+				"Player: " + player +
+						" Cache: " + cache +
+						"Enable Join Message: " + Settings.JoinSettings.ENABLE_JOIN_MESSAGE +
+						"Enable Join MOTD: " + Settings.WelcomeSettings.ENABLE_JOIN_MOTD);
 
 		if (Settings.WelcomeSettings.ENABLE_JOIN_MOTD.equals(Boolean.TRUE) && cache.isMotdStatus())
 			Common.runLaterAsync(motdDelay.getTimeTicks(), () -> {

@@ -4,7 +4,6 @@ import lombok.val;
 import me.markings.bubble.Bubble;
 import me.markings.bubble.model.Permissions;
 import me.markings.bubble.util.ConfigUtil;
-import org.mineacademy.fo.Messenger;
 import org.mineacademy.fo.command.SimpleSubCommand;
 
 import java.util.ArrayList;
@@ -29,12 +28,16 @@ public class AddCommand extends SimpleSubCommand {
 		val message = config.getStringList(newSection + messagePathSuffix);
 
 		if (args[0].equalsIgnoreCase("section")) {
+			val worldsPath = newSection + ".Worlds";
+			val worldsList = config.getStringList(worldsPath);
 			config.createSection(newSection);
 
 			message.add("Test Message");
+			worldsList.add("world");
 			config.set(newSection + ".Permission", "bubble.vip");
+			config.set(newSection + ".Centered", false);
+			config.set(worldsPath, worldsList);
 			config.set(newSection + messagePathSuffix, message);
-			Messenger.success(getPlayer(), "&aSuccessfully added section " + args[1] + "!");
 		} else if (args[0].equalsIgnoreCase("line")) {
 			val messageLine = joinArgs(2);
 			val section = config.getStringList(newSection + messagePathSuffix);
@@ -44,7 +47,7 @@ public class AddCommand extends SimpleSubCommand {
 		}
 
 		ConfigUtil.saveConfig(getPlayer(),
-				"&aSuccessfully added line '" + message + "' to section " + args[1] + "!",
+				"&aSuccessfully added line/section!",
 				"&cFailed to create line/section! Error: ");
 	}
 

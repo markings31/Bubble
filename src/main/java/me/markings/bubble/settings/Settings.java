@@ -22,6 +22,11 @@ public final class Settings extends SimpleSettings {
 	}
 
 	@Override
+	protected List<String> getUncommentedSections() {
+		return Collections.singletonList(messagePath);
+	}
+
+	@Override
 	protected boolean saveComments() {
 		return true;
 	}

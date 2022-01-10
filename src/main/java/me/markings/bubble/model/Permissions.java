@@ -30,11 +30,11 @@ public class Permissions extends FoPermissions {
 		@Permission("Notify a player/the server via a command.")
 		public static final String NOTIFY = "bubble.command.notify";
 
-		@Permission("Reload the plugin.")
-		public static final String RELOAD = "bubble.command.reload";
-
 		@Permission("Remove a broadcast section or specific lines from the main settings file.")
-		public static final String REMOVE = "bubble.command.reload";
+		public static final String REMOVE = "bubble.command.remove";
+
+		@Permission("Set the delay between each broadcast message.")
+		public static final String DELAY = "bubble.command.setdelay";
 
 		@Permission("Announce a message to all players on the server.")
 		public static final String ANNOUNCE = "bubble.command.announce";
@@ -50,7 +50,7 @@ public class Permissions extends FoPermissions {
 
 		@Permission("Set the footer that will be used in broadcast messages.")
 		public static final String FOOTER = "bubble.command.setfooter";
-		
+
 	}
 
 }

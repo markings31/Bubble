@@ -10,6 +10,7 @@ import org.bukkit.scheduler.BukkitRunnable;
 import org.mineacademy.fo.ChatUtil;
 import org.mineacademy.fo.Common;
 import org.mineacademy.fo.RandomUtil;
+import org.mineacademy.fo.debug.Debugger;
 import org.mineacademy.fo.model.SimpleSound;
 import org.mineacademy.fo.remain.Remain;
 
@@ -18,9 +19,6 @@ import java.util.List;
 import java.util.Map;
 
 public class BroadcastTask extends BukkitRunnable {
-
-	private static final String header = Settings.BroadcastSettings.HEADER;
-	private static final String footer = Settings.BroadcastSettings.FOOTER;
 
 	private static final Map<List<String>, String> messageList = Settings.BroadcastSettings.MESSAGE_MAP;
 	private static final Map<String, String> broadcastPerm = Settings.BroadcastSettings.PERMISSION;
@@ -33,7 +31,13 @@ public class BroadcastTask extends BukkitRunnable {
 
 	@Override
 	public void run() {
-		if (Settings.BroadcastSettings.ENABLE_BROADCASTS.equals(Boolean.TRUE)) {
+		Debugger.debug("broadcasts",
+				"Messages: " + messageList.keySet() +
+						" Worlds: " + worlds.keySet() +
+						" Permissions: " + broadcastPerm.values() +
+						" Sound: " + broadcastSound);
+
+		if (Settings.BroadcastSettings.ENABLE_BROADCASTS.equals(Boolean.TRUE) && !Remain.getOnlinePlayers().isEmpty()) {
 
 			executeTasks();
 
@@ -44,6 +48,7 @@ public class BroadcastTask extends BukkitRunnable {
 	private static void executeTasks() {
 		val messages = Settings.BroadcastSettings.RANDOM_MESSAGE.equals(Boolean.TRUE) ?
 				RandomUtil.nextItem(messageList.keySet()) : new ArrayList<>(messageList.keySet()).get(index);
+
 		worlds.keySet().forEach(world -> Remain.getOnlinePlayers().forEach(player -> {
 			val cache = PlayerCache.getCache(player);
 			if (cache.isBroadcastStatus()) {
@@ -52,7 +57,8 @@ public class BroadcastTask extends BukkitRunnable {
 
 				sendMessages(messages, player);
 
-				new SimpleSound(BroadcastTask.broadcastSound.getSound(), BroadcastTask.broadcastSound.getVolume(), BroadcastTask.broadcastSound.getPitch()).play(player);
+				if (cache.isBroadcastSoundStatus())
+					new SimpleSound(BroadcastTask.broadcastSound.getSound(), BroadcastTask.broadcastSound.getVolume(), BroadcastTask.broadcastSound.getPitch()).play(player);
 			}
 		}));
 	}
@@ -72,6 +78,8 @@ public class BroadcastTask extends BukkitRunnable {
 	}
 
 	private static void sendMessages(final List<String> messages, final Player player) {
+		val header = Settings.BroadcastSettings.HEADER;
+		val footer = Settings.BroadcastSettings.FOOTER;
 		Common.tellNoPrefix(player, MessageUtil.replaceVarsAndGradient(header, player), "&f");
 		messages.forEach(message -> {
 

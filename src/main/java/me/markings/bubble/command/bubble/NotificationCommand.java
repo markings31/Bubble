@@ -5,7 +5,6 @@ import me.markings.bubble.model.Permissions;
 import me.markings.bubble.util.MessageUtil;
 import org.bukkit.entity.Player;
 import org.mineacademy.fo.Common;
-import org.mineacademy.fo.MinecraftVersion;
 import org.mineacademy.fo.command.SimpleSubCommand;
 import org.mineacademy.fo.model.Variables;
 import org.mineacademy.fo.remain.CompMaterial;
@@ -81,7 +80,7 @@ public class NotificationCommand extends SimpleSubCommand {
 				if (getPlayer() != null)
 					checkBoolean(getPlayer().hasPermission(getPermission() + ".toast"), noPermissionMsg);
 
-				checkBoolean(!MinecraftVersion.olderThan(MinecraftVersion.V.v1_12), "Toast messages are not supported on this server version!");
+				checkBoolean(Remain.hasHexColors(), "Toast messages are not supported on this server version!");
 
 				Remain.sendToast(target, primaryPart, args[1].equalsIgnoreCase(toastArg) ?
 						findMaterial(args[2], "No such material " + args[2] + " found!") : null);

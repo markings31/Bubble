@@ -7,8 +7,8 @@ import org.mineacademy.fo.command.SimpleCommand;
 public class PrefsCommand extends SimpleCommand {
 
 	public PrefsCommand() {
-		super("preferences|prefs|pref");
-		
+		super("notifications|notifprefs|alerts");
+
 		setPermission(Permissions.Command.PREFS);
 	}
 

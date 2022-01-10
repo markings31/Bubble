@@ -1,6 +1,7 @@
 package me.markings.bubble.menu;
 
 import lombok.val;
+import me.markings.bubble.Bubble;
 import me.markings.bubble.command.bubble.EditCommand;
 import me.markings.bubble.conversation.EditConversation;
 import me.markings.bubble.conversation.PermissionConversation;
@@ -23,7 +24,8 @@ public class EditMenu extends Menu {
 
 	public EditMenu() {
 		setTitle(editMenuSettings.getEditMenuTitle());
-		setSize(9 * 3);
+		setSize(editMenuSettings.getEditMenuSize());
+
 
 		editMessageButton = new Button() {
 			@Override
@@ -33,7 +35,8 @@ public class EditMenu extends Menu {
 
 			@Override
 			public ItemStack getItem() {
-				return ItemCreator.of(editMenuSettings.getEditMessageButtonMaterial(), editMenuSettings.getEditMessageButtonTitle()).build().make();
+				return ItemCreator.of(editMenuSettings.getEditMessageButtonMaterial(), editMenuSettings.getEditMessageButtonTitle(),
+						editMenuSettings.getEditMessageButtonLore()).build().make();
 			}
 		};
 
@@ -43,12 +46,13 @@ public class EditMenu extends Menu {
 				val path = EditCommand.getInput();
 				val centerPath = "Notifications.Broadcast.Messages." + path + ".Centered";
 				ConfigUtil.toggleCentered(centerPath, player);
-				player.closeInventory();
+				animateTitle(((Bubble.getInstance().getBubbleSettings().getBoolean(centerPath) ? "&a&lENABLED" : "&cDISABLED") + " &7&lcentering!"));
 			}
 
 			@Override
 			public ItemStack getItem() {
-				return ItemCreator.of(editMenuSettings.getCenterMessageButtonMaterial(), editMenuSettings.getCenterMessageButtonTitle()).build().make();
+				return ItemCreator.of(editMenuSettings.getCenterMessageButtonMaterial(), editMenuSettings.getCenterMessageButtonTitle(),
+						editMenuSettings.getCenterMessageButtonLore()).build().make();
 			}
 		};
 
@@ -60,7 +64,8 @@ public class EditMenu extends Menu {
 
 			@Override
 			public ItemStack getItem() {
-				return ItemCreator.of(editMenuSettings.getChangePermissionButtonMaterial(), editMenuSettings.getChangePermissionButtonTitle()).build().make();
+				return ItemCreator.of(editMenuSettings.getChangePermissionButtonMaterial(), editMenuSettings.getChangePermissionButtonTitle(),
+						editMenuSettings.getChangePermissionButtonLore()).build().make();
 			}
 		};
 	}

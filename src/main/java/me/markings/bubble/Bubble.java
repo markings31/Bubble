@@ -21,6 +21,8 @@ import org.mineacademy.fo.Common;
 import org.mineacademy.fo.Messenger;
 import org.mineacademy.fo.Valid;
 import org.mineacademy.fo.command.SimpleCommandGroup;
+import org.mineacademy.fo.constants.FoConstants;
+import org.mineacademy.fo.metrics.Metrics;
 import org.mineacademy.fo.model.HookManager;
 import org.mineacademy.fo.model.Variable;
 import org.mineacademy.fo.model.Variables;
@@ -33,10 +35,7 @@ import java.io.File;
 @Getter
 public final class Bubble extends SimplePlugin {
 
-	private static final String enabledText = "enabled";
-	private static final String disabledText = "disabled";
-
-	public static final File settingsFile = new File("plugins/Bubble/", "settings.yml");
+	public static final File settingsFile = new File("plugins/Bubble/", FoConstants.File.SETTINGS);
 
 	@Getter
 	public FileConfiguration bubbleSettings;
@@ -47,7 +46,7 @@ public final class Bubble extends SimplePlugin {
 
 	@Override
 	protected void onPluginStart() {
-		// All functions can be handled both when the server reloads and when it is first booted (onReloadablesStart())
+		new Metrics(this, 13904);
 	}
 
 	@Override
@@ -68,11 +67,11 @@ public final class Bubble extends SimplePlugin {
 
 	@Override
 	protected void onReloadablesStart() {
-		Common.setTellPrefix(SimpleSettings.PLUGIN_PREFIX);
+		Common.setLogPrefix("[Bubble]");
 
 		val dataFile = DatabaseFile.getInstance();
 
-		if (Boolean.TRUE.equals(Settings.DatabaseSettings.ENABLE_MYSQL))
+		if (Settings.DatabaseSettings.ENABLE_MYSQL.equals(Boolean.TRUE))
 			Common.runLaterAsync(() -> database.connect(
 					dataFile.getHost(),
 					dataFile.getPort(),
@@ -105,15 +104,12 @@ public final class Bubble extends SimplePlugin {
 		registerEventsIf(new PlayerJoinListener(), Settings.WelcomeSettings.ENABLE_JOIN_MOTD.equals(Boolean.TRUE) ||
 				Settings.JoinSettings.FIREWORK_JOIN.equals(Boolean.TRUE));
 
-		registerEventsIf(new PlayerChatListener(), Settings.ChatSettings.ENABLE_MENTIONS);
+		registerEventsIf(new PlayerChatListener(), Settings.ChatSettings.ENABLE_MENTIONS.equals(Boolean.TRUE));
 
 		Messenger.setInfoPrefix(SimpleSettings.PLUGIN_PREFIX);
 
 		if (Settings.BroadcastSettings.ENABLE_BROADCASTS.equals(Boolean.TRUE))
 			new BroadcastTask().runTaskTimerAsynchronously(this, 0,
-					Settings.BroadcastSettings.BROADCAST_DELAY.getTimeTicks());
-		else
-			new BroadcastTask().runTaskTimer(this, 0,
 					Settings.BroadcastSettings.BROADCAST_DELAY.getTimeTicks());
 
 		Remain.getOnlinePlayers().forEach(player ->
@@ -129,16 +125,16 @@ public final class Bubble extends SimplePlugin {
 
 		PlayerCache.clearAllData();
 
-		Common.log(Common.getTellPrefix() + "Bubble has been successfully enabled!");
+		Common.log(Common.getLogPrefix() + " Bubble has been successfully enabled!");
 	}
 
 	private static void registerLocalVariables() {
-		Variables.addVariable("broadcast_status", player -> PlayerCache.getCache((Player) player).isBroadcastStatus() ? enabledText : disabledText);
-		Variables.addVariable("broadcast_sound_status", player -> PlayerCache.getCache((Player) player).isBroadcastSoundStatus() ? enabledText : disabledText);
-		Variables.addVariable("motd_status", player -> PlayerCache.getCache((Player) player).isMotdStatus() ? enabledText : disabledText);
-		Variables.addVariable("mentions_status", player -> PlayerCache.getCache((Player) player).isMentionsStatus() ? enabledText : disabledText);
-		Variables.addVariable("mentions_sound_status", player -> PlayerCache.getCache((Player) player).isMentionSoundStatus() ? enabledText : disabledText);
-		Variables.addVariable("mentions_toast_status", player -> PlayerCache.getCache((Player) player).isMentionToastStatus() ? enabledText : disabledText);
+		Variables.addVariable("broadcasts_enabled", player -> String.valueOf(PlayerCache.getCache((Player) player).isBroadcastStatus()));
+		Variables.addVariable("broadcast_sound_enabled", player -> String.valueOf(PlayerCache.getCache((Player) player).isBroadcastSoundStatus()));
+		Variables.addVariable("motd_enabled", player -> String.valueOf(PlayerCache.getCache((Player) player).isMotdStatus()));
+		Variables.addVariable("mentions_enabled", player -> String.valueOf(PlayerCache.getCache((Player) player).isMentionsStatus()));
+		Variables.addVariable("mentions_sound_enabled", player -> String.valueOf(PlayerCache.getCache((Player) player).isMentionSoundStatus()));
+		Variables.addVariable("mentions_toast_enabled", player -> String.valueOf(PlayerCache.getCache((Player) player).isMentionToastStatus()));
 
 
 		Variables.addVariable("ping", player -> player instanceof Player ? ((Player) player).getPing() + "ms" : "0ms");
@@ -146,12 +142,12 @@ public final class Bubble extends SimplePlugin {
 	}
 
 	private static void registerPAPIVariables() {
-		HookManager.addPlaceholder("broadcast_status", player -> PlayerCache.getCache(player).isBroadcastStatus() ? enabledText : disabledText);
-		HookManager.addPlaceholder("broadcast_sound_status", player -> PlayerCache.getCache(player).isBroadcastSoundStatus() ? enabledText : disabledText);
-		HookManager.addPlaceholder("motd_status", player -> PlayerCache.getCache(player).isMotdStatus() ? enabledText : disabledText);
-		HookManager.addPlaceholder("mentions_status", player -> PlayerCache.getCache(player).isMentionsStatus() ? enabledText : disabledText);
-		HookManager.addPlaceholder("mentions_sound_status", player -> PlayerCache.getCache(player).isMentionSoundStatus() ? enabledText : disabledText);
-		HookManager.addPlaceholder("mentions_toast_status", player -> PlayerCache.getCache(player).isMentionToastStatus() ? enabledText : disabledText);
+		HookManager.addPlaceholder("broadcasts_enabled", player -> String.valueOf(PlayerCache.getCache(player).isBroadcastStatus()));
+		HookManager.addPlaceholder("broadcast_sound_enabled", player -> String.valueOf(PlayerCache.getCache(player).isBroadcastSoundStatus()));
+		HookManager.addPlaceholder("motd_enabled", player -> String.valueOf(PlayerCache.getCache(player).isMotdStatus()));
+		HookManager.addPlaceholder("mentions_enabled", player -> String.valueOf(PlayerCache.getCache(player).isMentionsStatus()));
+		HookManager.addPlaceholder("mentions_sound_enabled", player -> String.valueOf(PlayerCache.getCache(player).isMentionSoundStatus()));
+		HookManager.addPlaceholder("mentions_toast_enabled", player -> String.valueOf(PlayerCache.getCache(player).isMentionToastStatus()));
 	}
 
 	public static Bubble getInstance() {
