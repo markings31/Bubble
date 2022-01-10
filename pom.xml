@@ -75,6 +75,20 @@
             <version>${foundation.version}</version>
         </dependency>
 
+        <dependency>
+            <groupId>org.apache.logging.log4j</groupId>
+            <artifactId>log4j-core</artifactId>
+            <version>2.17.0</version>
+            <scope>provided</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>com.github.cryptolens</groupId>
+            <artifactId>cryptolens-java</artifactId>
+            <version>1.24</version>
+        </dependency>
+
+
         <!-- (Optional) Access the server jar for NMS (groupId, artifactId and version do not matter and you
              can only use it for your own organization purposes, but keep version in artifactId not in version
              if using multiple NMS imports otherwise Maven will fail to import them correctly).
@@ -159,15 +173,11 @@
                  -->
                 <version>2.5.3</version>
                 <dependencies>
-                    <dependency>
+                    <!--<dependency>
                         <groupId>net.sf.proguard</groupId>
                         <artifactId>proguard-base</artifactId>
-                        <!--
-                            Make sure to check for new versions from
-                            https://mvnrepository.com/artifact/net.sf.proguard/proguard-base
-                         -->
                         <version>6.2.2</version>
-                    </dependency>
+                    </dependency>-->
                 </dependencies>
                 <executions>
                     <execution>
