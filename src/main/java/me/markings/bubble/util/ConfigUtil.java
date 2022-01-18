@@ -23,9 +23,11 @@ public class ConfigUtil {
 
 	public static void saveConfig(final Player player, final String successMessage, final String errorMessage) {
 		val config = Bubble.getInstance().getBubbleSettings();
+		val loader = CommentLoader.getSettingsInstance();
 
 		try {
 			config.save(Bubble.settingsFile);
+			//loader.apply(Bubble.settingsFile);
 			Bubble.getInstance().reload();
 			Messenger.success(player, successMessage);
 		} catch (final IOException e) {

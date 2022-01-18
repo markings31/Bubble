@@ -39,11 +39,11 @@ Commands:
   Help_Tooltip_Usage: "&7Usage: &f"
   Reload_Description: "Reload the configuration."
   Reload_Started: "Reloading plugin's data, please wait.."
-  Reload_Success: "&6Bubble {plugin_version} has been reloaded."
+  Reload_Success: "&7Bubble {plugin_version} has been reloaded."
   Reload_Fail: "&cReloading failed! Check the console for more information. Error: {error}"
   Reload_File_Load_Error: "&4There was an error while loading files from your disk! See the console for more information."
   Debug_Description: "ZIP your settings for reporting bugs."
-  Debug_Preparing: "&6Preparing debug log..."
+  Debug_Preparing: "&7Preparing debug log..."
   Debug_Success: "&2Successfuly copied {amount} file(s) to debug.zip. Your sensitive MySQL information has been removed from yml files. Please upload it via ufile.io and send it to us for review."
   Debug_Copy_Fail: "&cCopying files failed on file {file} and it was stopped. See console for more information."
   Debug_Zip_Fail: "&cCreating a ZIP of your files failed, see console for more information. Please ZIP debug folder and send it to us via ufile.io manually."
@@ -59,8 +59,8 @@ Commands:
   Perms_No: "&cno"
   Header_No_Subcommands: "&cThere are no arguments for this command."
   Header_No_Subcommands_Permission: "&cYou don't have permissions to view any subcommands."
-  Header_Color: GOLD
-  Header_Secondary_Color: RED
+  Header_Color: DARK_AQUA
+  Header_Secondary_Color: AQUA
   Reloading: "reloading"
   Disabled: "disabled"
   Use_While_Null: "&cCannot use this command while the plugin is {state}."

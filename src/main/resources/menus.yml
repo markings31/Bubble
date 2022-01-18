@@ -107,7 +107,7 @@ Edit_Settings:
 
     Edit_Message_Material: WRITABLE_BOOK
 
-    Edit_Message_Lore: [ ]
+    Edit_Message_Lore: [ "", "Click here to edit this group's message content!" ]
 
     Edit_Message_Slot: 10
 
@@ -116,7 +116,7 @@ Edit_Settings:
 
     Center_Message_Material: ANVIL
 
-    Center_Message_Lore: [ ]
+    Center_Message_Lore: [ "", "Click here to center the messages in this group!'" ]
 
     Center_Message_Slot: 13
 
@@ -125,6 +125,6 @@ Edit_Settings:
 
     Change_Permission_Material: GOLD_INGOT
 
-    Change_Permission_Lore: [ ]
+    Change_Permission_Lore: [ "", "Click here to change the permission required to", "view the messages in this group!" ]
 
     Change_Permission_Slot: 16

@@ -1,5 +1,6 @@
 package me.markings.bubble.listeners;
 
+import lombok.SneakyThrows;
 import lombok.val;
 import me.markings.bubble.PlayerCache;
 import me.markings.bubble.settings.Settings;
@@ -17,6 +18,7 @@ import org.mineacademy.fo.model.Variables;
 public class PlayerJoinListener implements Listener {
 
 	@EventHandler
+	@SneakyThrows
 	public void onJoin(final @NotNull PlayerJoinEvent event) {
 		val player = event.getPlayer();
 		event.setJoinMessage(Settings.JoinSettings.ENABLE_JOIN_MESSAGE.equals(Boolean.TRUE) ?
@@ -38,7 +40,10 @@ public class PlayerJoinListener implements Listener {
 		if (Settings.WelcomeSettings.ENABLE_JOIN_MOTD.equals(Boolean.TRUE) && cache.isMotdStatus())
 			Common.runLaterAsync(motdDelay.getTimeTicks(), () -> {
 				messages.forEach(message -> {
-					MessageUtil.executePlaceholders(message, player);
+					if (MessageUtil.isExecutable(message)) {
+						MessageUtil.executePlaceholders(message, player);
+						return;
+					}
 					Common.tell(player, MessageUtil.replaceVarsAndGradient(message, player));
 				});
 				new SimpleSound(motdSound.getSound(), motdSound.getVolume(), motdSound.getPitch()).play(player);

@@ -50,7 +50,5 @@ public class Permissions extends FoPermissions {
 
 		@Permission("Set the footer that will be used in broadcast messages.")
 		public static final String FOOTER = "bubble.command.setfooter";
-
 	}
-
 }

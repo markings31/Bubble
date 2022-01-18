@@ -3,8 +3,8 @@ package me.markings.bubble.menu;
 import lombok.val;
 import me.markings.bubble.Bubble;
 import me.markings.bubble.command.bubble.EditCommand;
-import me.markings.bubble.conversation.EditConversation;
-import me.markings.bubble.conversation.PermissionConversation;
+import me.markings.bubble.conversation.EditPrompt;
+import me.markings.bubble.conversation.PermissionPrompt;
 import me.markings.bubble.settings.MenuSettings;
 import me.markings.bubble.util.ConfigUtil;
 import org.bukkit.entity.Player;
@@ -30,7 +30,7 @@ public class EditMenu extends Menu {
 		editMessageButton = new Button() {
 			@Override
 			public void onClickedInMenu(final Player player, final Menu menu, final ClickType click) {
-				new EditConversation().show(player);
+				new EditPrompt().show(player);
 			}
 
 			@Override
@@ -59,7 +59,7 @@ public class EditMenu extends Menu {
 		changePermissionButton = new Button() {
 			@Override
 			public void onClickedInMenu(final Player player, final Menu menu, final ClickType click) {
-				new PermissionConversation().show(player);
+				new PermissionPrompt().show(player);
 			}
 
 			@Override

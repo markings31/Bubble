@@ -112,13 +112,8 @@ public final class PlayerCache extends YamlSectionConfig implements Cache {
 
 	public static PlayerCache getCache(final UUID uuid) {
 		synchronized (cacheMap) {
-			PlayerCache cache = cacheMap.get(uuid);
-
-			if (cache == null) {
-				cache = new PlayerCache(uuid);
-
-				cacheMap.put(uuid, cache);
-			}
+			val cache = new PlayerCache(uuid);
+			cacheMap.putIfAbsent(uuid, cache);
 
 			return cache;
 		}

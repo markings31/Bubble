@@ -27,15 +27,13 @@ public class BroadcastTask extends BukkitRunnable {
 	private static int index;
 	private static String currentPath;
 
-	private static final SimpleSound broadcastSound = Settings.BroadcastSettings.BROADCAST_SOUND;
-
 	@Override
 	public void run() {
 		Debugger.debug("broadcasts",
 				"Messages: " + messageList.keySet() +
 						" Worlds: " + worlds.keySet() +
 						" Permissions: " + broadcastPerm.values() +
-						" Sound: " + broadcastSound);
+						" Sound: " + Settings.BroadcastSettings.BROADCAST_SOUND);
 
 		if (Settings.BroadcastSettings.ENABLE_BROADCASTS.equals(Boolean.TRUE) && !Remain.getOnlinePlayers().isEmpty()) {
 
@@ -48,6 +46,7 @@ public class BroadcastTask extends BukkitRunnable {
 	private static void executeTasks() {
 		val messages = Settings.BroadcastSettings.RANDOM_MESSAGE.equals(Boolean.TRUE) ?
 				RandomUtil.nextItem(messageList.keySet()) : new ArrayList<>(messageList.keySet()).get(index);
+		val broadcastSound = Settings.BroadcastSettings.BROADCAST_SOUND;
 
 		worlds.keySet().forEach(world -> Remain.getOnlinePlayers().forEach(player -> {
 			val cache = PlayerCache.getCache(player);
@@ -58,7 +57,7 @@ public class BroadcastTask extends BukkitRunnable {
 				sendMessages(messages, player);
 
 				if (cache.isBroadcastSoundStatus())
-					new SimpleSound(BroadcastTask.broadcastSound.getSound(), BroadcastTask.broadcastSound.getVolume(), BroadcastTask.broadcastSound.getPitch()).play(player);
+					new SimpleSound(broadcastSound.getSound(), broadcastSound.getVolume(), broadcastSound.getPitch()).play(player);
 			}
 		}));
 	}

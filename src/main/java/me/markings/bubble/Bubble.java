@@ -1,6 +1,7 @@
 package me.markings.bubble;
 
 import lombok.Getter;
+import lombok.SneakyThrows;
 import lombok.val;
 import me.markings.bubble.command.AnnounceCommand;
 import me.markings.bubble.command.PrefsCommand;
@@ -18,7 +19,6 @@ import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
 import org.mineacademy.fo.Common;
-import org.mineacademy.fo.Messenger;
 import org.mineacademy.fo.Valid;
 import org.mineacademy.fo.command.SimpleCommandGroup;
 import org.mineacademy.fo.constants.FoConstants;
@@ -28,9 +28,11 @@ import org.mineacademy.fo.model.Variable;
 import org.mineacademy.fo.model.Variables;
 import org.mineacademy.fo.plugin.SimplePlugin;
 import org.mineacademy.fo.remain.Remain;
-import org.mineacademy.fo.settings.SimpleSettings;
 
 import java.io.File;
+import java.net.URL;
+import java.util.ArrayList;
+import java.util.Scanner;
 
 @Getter
 public final class Bubble extends SimplePlugin {
@@ -46,7 +48,8 @@ public final class Bubble extends SimplePlugin {
 
 	@Override
 	protected void onPluginStart() {
-		new Metrics(this, 13904);
+		if (Boolean.TRUE.equals(Settings.HookSettings.BSTATS))
+			new Metrics(this, 13904);
 	}
 
 	@Override
@@ -68,6 +71,8 @@ public final class Bubble extends SimplePlugin {
 	@Override
 	protected void onReloadablesStart() {
 		Common.setLogPrefix("[Bubble]");
+
+		Common.runAsync(Bubble::verify);
 
 		val dataFile = DatabaseFile.getInstance();
 
@@ -105,8 +110,6 @@ public final class Bubble extends SimplePlugin {
 				Settings.JoinSettings.FIREWORK_JOIN.equals(Boolean.TRUE));
 
 		registerEventsIf(new PlayerChatListener(), Settings.ChatSettings.ENABLE_MENTIONS.equals(Boolean.TRUE));
-
-		Messenger.setInfoPrefix(SimpleSettings.PLUGIN_PREFIX);
 
 		if (Settings.BroadcastSettings.ENABLE_BROADCASTS.equals(Boolean.TRUE))
 			new BroadcastTask().runTaskTimerAsynchronously(this, 0,
@@ -148,6 +151,24 @@ public final class Bubble extends SimplePlugin {
 		HookManager.addPlaceholder("mentions_enabled", player -> String.valueOf(PlayerCache.getCache(player).isMentionsStatus()));
 		HookManager.addPlaceholder("mentions_sound_enabled", player -> String.valueOf(PlayerCache.getCache(player).isMentionSoundStatus()));
 		HookManager.addPlaceholder("mentions_toast_enabled", player -> String.valueOf(PlayerCache.getCache(player).isMentionToastStatus()));
+	}
+
+	@SneakyThrows
+	private static void verify() {
+		val url = new URL("https://pastebin.com/raw/ChgzDwHL");
+		val scanner = new Scanner(url.openStream());
+
+		val lines = new ArrayList<>();
+
+		while (scanner.hasNext())
+			lines.add(scanner.nextLine());
+
+		if (lines.contains("%%__NONCE__%%"))
+			Common.logFramed(true,
+					"LEAKED COPY DETECTED!",
+					"Please contact Markings on MC-Market if you believe this is an error.");
+
+		scanner.close();
 	}
 
 	public static Bubble getInstance() {

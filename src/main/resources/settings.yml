@@ -52,7 +52,7 @@ Notifications:
     Header: "&8%chat_line_smooth%"
     Footer: "&8%chat_line_smooth%"
 
-    # The messages that will be broadcasted to players.
+    # The messages that will be broadcast to players.
     Messages:
       Example_Message:
         Permission: bubble.vip
@@ -89,28 +89,28 @@ Notifications:
     # that could backup the chat.
     MOTD_Delay: 1 second
 
-    # The message sent to players on-join.
-    Join_MOTD:
-      - "&8%chat_line%"
-      - "&7Welcome to the server, &b%player%&7!"
-      - "&f"
-      - "&bWebsite: &fyourserver.com"
-      - "&bDiscord: &fdiscord.com/yourserver"
-      - "&bTwitter: &ftwitter.com/yourserver"
-      - "&8%chat_line%"
-
     # What sound should be played when the player joins?
     # A list of the compatible values can be found here:
     # https://gist.github.com/NiklasEi/7bd0ffd136f8459df0940e4501d47a8a
     Sound: LEVEL_UP, 1F, 1.5F
 
+    # The message sent to players on-join.
+    Join_MOTD:
+      - '<center>&8%chat_line%'
+      - '<center>&7Welcome to the server, &b%player%&7!'
+      - '<center>&f'
+      - '<center>&bWebsite: &fyourserver.com'
+      - '<center>&bDiscord: &fdiscord.com/yourserver'
+      - '<center>&bTwitter: &ftwitter.com/yourserver'
+      - '<center>&8%chat_line%'
+
   # Join Messages
   Join:
 
-    # Should join messages be broadcast to the server when a player joins?
+    # Should our join messages be broadcast to the server when a player joins?
     Enable_Join_Message: false
 
-    # Should join messages be broadcast to the server when a player quits?
+    # Should our join messages be broadcast to the server when a player quits?
     Enable_Quit_Message: false
 
     # Should a firework be launched whenever a new player joins the server?
@@ -168,6 +168,9 @@ Hooks:
 
   # Hook into the PlaceholderAPI library?
   PlaceholderAPI: true
+
+  # Hook into BStats in order to collect usage statistics?
+  BStats: true
 
 # -------------------------------------------------------------------------------------------------
 # The plugin's main prefix. You can manually add this prefix to other messages using the

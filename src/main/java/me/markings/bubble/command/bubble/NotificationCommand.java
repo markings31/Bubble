@@ -3,13 +3,17 @@ package me.markings.bubble.command.bubble;
 import lombok.val;
 import me.markings.bubble.model.Permissions;
 import me.markings.bubble.util.MessageUtil;
+import org.apache.commons.lang.math.NumberUtils;
 import org.bukkit.entity.Player;
 import org.mineacademy.fo.Common;
 import org.mineacademy.fo.command.SimpleSubCommand;
+import org.mineacademy.fo.model.ChatImage;
 import org.mineacademy.fo.model.Variables;
 import org.mineacademy.fo.remain.CompMaterial;
 import org.mineacademy.fo.remain.Remain;
 
+import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -28,7 +32,7 @@ public class NotificationCommand extends SimpleSubCommand {
 
 		setMinArguments(3);
 
-		setUsage("<player_name|all> <message|title|bossbar|actionbar|toast> [<material>] <input|...>");
+		setUsage("<player_name|all> <message|title|bossbar|actionbar|toast> [<image>] [<height>] [<material>] <input|...>");
 		setPermission(Permissions.Command.NOTIFY);
 	}
 
@@ -51,7 +55,16 @@ public class NotificationCommand extends SimpleSubCommand {
 				if (getPlayer() != null)
 					checkBoolean(getPlayer().hasPermission(getPermission() + ".message"), noPermissionMsg);
 
-				Common.tell(target, Common.colorize(primaryPart));
+				if (args[2].contains(".png") || args[2].contains(".jpg")) {
+					checkBoolean(NumberUtils.isNumber(args[3]), "Please provide the height of the image you want to be displayed!");
+					try {
+						ChatImage.fromFile(new File("plugins/Bubble/images/", args[2]), Integer.parseInt(args[3]), ChatImage.Type.MEDIUM_SHADE)
+								.appendText(joinArgs(4).split("\\|"))
+								.sendToPlayer(target);
+					} catch (final IOException e) {
+						e.printStackTrace();
+					}
+				} else Common.tell(target, Common.colorize(primaryPart));
 				break;
 			}
 			case "title": {

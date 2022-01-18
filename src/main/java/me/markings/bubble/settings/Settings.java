@@ -3,11 +3,12 @@ package me.markings.bubble.settings;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
 import lombok.val;
+import me.markings.bubble.Bubble;
+import me.markings.bubble.util.CommentLoader;
 import org.mineacademy.fo.model.SimpleSound;
 import org.mineacademy.fo.model.SimpleTime;
 import org.mineacademy.fo.settings.SimpleSettings;
 
-import java.io.File;
 import java.io.IOException;
 import java.util.*;
 
@@ -153,11 +154,13 @@ public final class Settings extends SimpleSettings {
 
 		public static Boolean VAULT;
 		public static Boolean PAPI;
+		public static Boolean BSTATS;
 
 		private static void init() {
 			pathPrefix("Hooks");
 			VAULT = getBoolean("Vault");
 			PAPI = getBoolean("PlaceholderAPI");
+			BSTATS = getBoolean("BStats");
 		}
 	}
 
@@ -187,11 +190,23 @@ public final class Settings extends SimpleSettings {
 			BroadcastSettings.MESSAGE_MAP.put(stringList, path);
 			BroadcastSettings.BROADCAST_WORLDS.put(worldList, worldsPath);
 			try {
-				getConfig().save(new File("plugins/Bubble/settings.yml"));
+				getConfig().save(Bubble.settingsFile);
 			} catch (final IOException e) {
 				e.printStackTrace();
 			}
 		});
+	}
+
+	@Override
+	protected void beforeLoad() {
+		if (Bubble.settingsFile.exists()) {
+			val header = new ArrayList<>(Arrays.asList(
+					"# !-----------------------------------------------------------------------------------------------!",
+					"#                       Welcome to the main configuration of ${project.name}",
+					"# !-----------------------------------------------------------------------------------------------!"));
+			CommentLoader.getSettingsInstance().load(Bubble.settingsFile);
+			CommentLoader.getSettingsInstance().setHeader(header);
+		}
 	}
 }
 
