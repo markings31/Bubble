@@ -1,5 +1,8 @@
 package me.markings.bubble.conversation;
 
+import lombok.AccessLevel;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.val;
 import me.markings.bubble.Bubble;
 import org.bukkit.command.CommandSender;
@@ -13,9 +16,11 @@ import org.mineacademy.fo.Messenger;
 import org.mineacademy.fo.conversation.SimplePrompt;
 import org.mineacademy.fo.remain.Remain;
 
+@NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class SelectLabelPrompt extends SimplePrompt {
 
-	private String input;
+	@Getter
+	private static final SelectLabelPrompt instance = new SelectLabelPrompt();
 
 	@Override
 	protected String getPrompt(final ConversationContext conversationContext) {
@@ -28,7 +33,6 @@ public class SelectLabelPrompt extends SimplePrompt {
 	protected Prompt acceptValidatedInput(@NotNull final ConversationContext conversationContext, @NotNull final String s) {
 		val config = Bubble.getInstance().getBubbleSettings();
 		val path = "Notifications.Broadcast.Messages." + s;
-		input = s;
 
 		if (!config.isSet(path))
 			Messenger.error((CommandSender) conversationContext.getForWhom(), "&cCould not find message group " + s + "!");

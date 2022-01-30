@@ -1,5 +1,8 @@
 package me.markings.bubble.conversation;
 
+import lombok.AccessLevel;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.val;
 import me.markings.bubble.Bubble;
 import me.markings.bubble.command.bubble.EditCommand;
@@ -12,11 +15,17 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.mineacademy.fo.Messenger;
 import org.mineacademy.fo.conversation.SimplePrompt;
+import org.mineacademy.fo.remain.Remain;
 
+@NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class PermissionPrompt extends SimplePrompt {
+
+	@Getter
+	private static final PermissionPrompt instance = new PermissionPrompt();
 
 	@Override
 	protected String getPrompt(final ConversationContext context) {
+		Remain.sendTitle((Player) context.getForWhom(), "&9Set Permission", "Please type your message in the chat.");
 		return Messenger.getInfoPrefix() + "&eWhat would you like to set the permission to? (write in the chat)\n&7&oNote: Type 'exit' to cancel.";
 	}
 
@@ -27,7 +36,7 @@ public class PermissionPrompt extends SimplePrompt {
 
 	@Override
 	protected String getFailedValidationText(final ConversationContext context, final String invalidInput) {
-		return "Please write the permission as a String text (Example: bubble.vip).";
+		return Messenger.getErrorPrefix() + "Please write the permission as a String text (Example: bubble.vip).";
 	}
 
 	@Nullable

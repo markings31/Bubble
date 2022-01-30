@@ -1,15 +1,16 @@
 package me.markings.bubble;
 
 import lombok.Getter;
-import lombok.SneakyThrows;
 import lombok.val;
 import me.markings.bubble.command.AnnounceCommand;
 import me.markings.bubble.command.PrefsCommand;
 import me.markings.bubble.command.ToggleCommand;
 import me.markings.bubble.command.bubble.BubbleGroup;
+import me.markings.bubble.hook.DiscordSRVHook;
 import me.markings.bubble.listeners.DatabaseListener;
 import me.markings.bubble.listeners.PlayerChatListener;
 import me.markings.bubble.listeners.PlayerJoinListener;
+import me.markings.bubble.model.Placeholders;
 import me.markings.bubble.mysql.BubbleDatabase;
 import me.markings.bubble.settings.DatabaseFile;
 import me.markings.bubble.settings.MenuSettings;
@@ -17,7 +18,6 @@ import me.markings.bubble.settings.Settings;
 import me.markings.bubble.tasks.BroadcastTask;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
-import org.bukkit.entity.Player;
 import org.mineacademy.fo.Common;
 import org.mineacademy.fo.Valid;
 import org.mineacademy.fo.command.SimpleCommandGroup;
@@ -30,9 +30,6 @@ import org.mineacademy.fo.plugin.SimplePlugin;
 import org.mineacademy.fo.remain.Remain;
 
 import java.io.File;
-import java.net.URL;
-import java.util.ArrayList;
-import java.util.Scanner;
 
 @Getter
 public final class Bubble extends SimplePlugin {
@@ -42,7 +39,7 @@ public final class Bubble extends SimplePlugin {
 	@Getter
 	public FileConfiguration bubbleSettings;
 
-	private final SimpleCommandGroup mainCommand = new BubbleGroup();
+	private final SimpleCommandGroup mainCommand = BubbleGroup.getInstance();
 
 	private final BubbleDatabase database = BubbleDatabase.getInstance();
 
@@ -72,8 +69,6 @@ public final class Bubble extends SimplePlugin {
 	protected void onReloadablesStart() {
 		Common.setLogPrefix("[Bubble]");
 
-		Common.runAsync(Bubble::verify);
-
 		val dataFile = DatabaseFile.getInstance();
 
 		if (Settings.DatabaseSettings.ENABLE_MYSQL.equals(Boolean.TRUE))
@@ -89,8 +84,6 @@ public final class Bubble extends SimplePlugin {
 		registerCommand(new ToggleCommand());
 		registerCommand(new PrefsCommand());
 
-		registerEvents(new DatabaseListener());
-
 		if (Settings.HookSettings.VAULT.equals(Boolean.TRUE))
 			Valid.checkBoolean(Common.doesPluginExist("Vault"),
 					"Failed to hook into Vault! Please check if the plugin is installed and restart!");
@@ -101,15 +94,18 @@ public final class Bubble extends SimplePlugin {
 
 		Variable.loadVariables();
 
-		registerLocalVariables();
-		registerPAPIVariables();
+		Variables.addExpansion(Placeholders.getInstance());
 
 		bubbleSettings = YamlConfiguration.loadConfiguration(settingsFile);
 
-		registerEventsIf(new PlayerJoinListener(), Settings.WelcomeSettings.ENABLE_JOIN_MOTD.equals(Boolean.TRUE) ||
+		registerEvents(DatabaseListener.getInstance());
+
+		registerEventsIf(DiscordSRVHook.getInstance(), HookManager.isDiscordSRVLoaded());
+
+		registerEventsIf(PlayerJoinListener.getInstance(), Settings.WelcomeSettings.ENABLE_JOIN_MOTD.equals(Boolean.TRUE) ||
 				Settings.JoinSettings.FIREWORK_JOIN.equals(Boolean.TRUE));
 
-		registerEventsIf(new PlayerChatListener(), Settings.ChatSettings.ENABLE_MENTIONS.equals(Boolean.TRUE));
+		registerEventsIf(PlayerChatListener.getInstance(), Settings.ChatSettings.ENABLE_MENTIONS.equals(Boolean.TRUE));
 
 		if (Settings.BroadcastSettings.ENABLE_BROADCASTS.equals(Boolean.TRUE))
 			new BroadcastTask().runTaskTimerAsynchronously(this, 0,
@@ -128,47 +124,9 @@ public final class Bubble extends SimplePlugin {
 
 		PlayerCache.clearAllData();
 
+		Filter.inject();
+
 		Common.log(Common.getLogPrefix() + " Bubble has been successfully enabled!");
-	}
-
-	private static void registerLocalVariables() {
-		Variables.addVariable("broadcasts_enabled", player -> String.valueOf(PlayerCache.getCache((Player) player).isBroadcastStatus()));
-		Variables.addVariable("broadcast_sound_enabled", player -> String.valueOf(PlayerCache.getCache((Player) player).isBroadcastSoundStatus()));
-		Variables.addVariable("motd_enabled", player -> String.valueOf(PlayerCache.getCache((Player) player).isMotdStatus()));
-		Variables.addVariable("mentions_enabled", player -> String.valueOf(PlayerCache.getCache((Player) player).isMentionsStatus()));
-		Variables.addVariable("mentions_sound_enabled", player -> String.valueOf(PlayerCache.getCache((Player) player).isMentionSoundStatus()));
-		Variables.addVariable("mentions_toast_enabled", player -> String.valueOf(PlayerCache.getCache((Player) player).isMentionToastStatus()));
-
-
-		Variables.addVariable("ping", player -> player instanceof Player ? ((Player) player).getPing() + "ms" : "0ms");
-		Variables.addVariable("tps", sender -> String.valueOf(Remain.getTPS()));
-	}
-
-	private static void registerPAPIVariables() {
-		HookManager.addPlaceholder("broadcasts_enabled", player -> String.valueOf(PlayerCache.getCache(player).isBroadcastStatus()));
-		HookManager.addPlaceholder("broadcast_sound_enabled", player -> String.valueOf(PlayerCache.getCache(player).isBroadcastSoundStatus()));
-		HookManager.addPlaceholder("motd_enabled", player -> String.valueOf(PlayerCache.getCache(player).isMotdStatus()));
-		HookManager.addPlaceholder("mentions_enabled", player -> String.valueOf(PlayerCache.getCache(player).isMentionsStatus()));
-		HookManager.addPlaceholder("mentions_sound_enabled", player -> String.valueOf(PlayerCache.getCache(player).isMentionSoundStatus()));
-		HookManager.addPlaceholder("mentions_toast_enabled", player -> String.valueOf(PlayerCache.getCache(player).isMentionToastStatus()));
-	}
-
-	@SneakyThrows
-	private static void verify() {
-		val url = new URL("https://pastebin.com/raw/ChgzDwHL");
-		val scanner = new Scanner(url.openStream());
-
-		val lines = new ArrayList<>();
-
-		while (scanner.hasNext())
-			lines.add(scanner.nextLine());
-
-		if (lines.contains("%%__NONCE__%%"))
-			Common.logFramed(true,
-					"LEAKED COPY DETECTED!",
-					"Please contact Markings on MC-Market if you believe this is an error.");
-
-		scanner.close();
 	}
 
 	public static Bubble getInstance() {

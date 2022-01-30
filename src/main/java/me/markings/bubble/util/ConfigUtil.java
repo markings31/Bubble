@@ -27,7 +27,6 @@ public class ConfigUtil {
 
 		try {
 			config.save(Bubble.settingsFile);
-			//loader.apply(Bubble.settingsFile);
 			Bubble.getInstance().reload();
 			Messenger.success(player, successMessage);
 		} catch (final IOException e) {

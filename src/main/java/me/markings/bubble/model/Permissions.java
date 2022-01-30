@@ -50,5 +50,8 @@ public class Permissions extends FoPermissions {
 
 		@Permission("Set the footer that will be used in broadcast messages.")
 		public static final String FOOTER = "bubble.command.setfooter";
+
+		@Permission("Send an announcement message to the specified Discord channel")
+		public static final String DISCORD = "bubble.discord.announcement";
 	}
 }

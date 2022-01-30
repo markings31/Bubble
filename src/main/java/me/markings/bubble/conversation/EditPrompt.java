@@ -1,7 +1,6 @@
 package me.markings.bubble.conversation;
 
-import lombok.SneakyThrows;
-import lombok.val;
+import lombok.*;
 import me.markings.bubble.Bubble;
 import me.markings.bubble.command.bubble.EditCommand;
 import me.markings.bubble.util.ConfigUtil;
@@ -10,13 +9,18 @@ import org.bukkit.conversations.Prompt;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import org.mineacademy.fo.Messenger;
 import org.mineacademy.fo.conversation.SimplePrompt;
 
+@NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class EditPrompt extends SimplePrompt {
+
+	@Getter
+	private static final EditPrompt instance = new EditPrompt();
 
 	@Override
 	protected String getPrompt(final ConversationContext context) {
-		return "&8&l[&9&li&8&l] &ePlease write the desired message in the chat.\n&7&oNote: Use the '|' delimiter to add multiple messages.";
+		return Messenger.getInfoPrefix() + "&ePlease write the desired message in the chat.\n&7&oNote: Use the '|' delimiter to add multiple messages.";
 	}
 
 	@Nullable

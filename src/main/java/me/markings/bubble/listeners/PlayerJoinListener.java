@@ -1,7 +1,6 @@
 package me.markings.bubble.listeners;
 
-import lombok.SneakyThrows;
-import lombok.val;
+import lombok.*;
 import me.markings.bubble.PlayerCache;
 import me.markings.bubble.settings.Settings;
 import me.markings.bubble.util.MessageUtil;
@@ -15,7 +14,11 @@ import org.mineacademy.fo.debug.Debugger;
 import org.mineacademy.fo.model.SimpleSound;
 import org.mineacademy.fo.model.Variables;
 
+@NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class PlayerJoinListener implements Listener {
+
+	@Getter
+	private static final PlayerJoinListener instance = new PlayerJoinListener();
 
 	@EventHandler
 	@SneakyThrows

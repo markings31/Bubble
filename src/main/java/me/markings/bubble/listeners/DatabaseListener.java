@@ -1,5 +1,8 @@
 package me.markings.bubble.listeners;
 
+import lombok.AccessLevel;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.val;
 import me.markings.bubble.PlayerCache;
 import me.markings.bubble.mysql.BubbleDatabase;
@@ -11,7 +14,11 @@ import org.bukkit.event.player.AsyncPlayerPreLoginEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 import org.mineacademy.fo.Common;
 
+@NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class DatabaseListener implements Listener {
+
+	@Getter
+	private static final DatabaseListener instance = new DatabaseListener();
 
 	@EventHandler(priority = EventPriority.MONITOR)
 	public void onLogin(final AsyncPlayerPreLoginEvent event) {

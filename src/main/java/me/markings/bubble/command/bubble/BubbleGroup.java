@@ -1,5 +1,8 @@
 package me.markings.bubble.command.bubble;
 
+import lombok.AccessLevel;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
 import me.markings.bubble.model.Permissions;
 import org.jetbrains.annotations.NotNull;
 import org.mineacademy.fo.command.DebugCommand;
@@ -7,7 +10,11 @@ import org.mineacademy.fo.command.PermsCommand;
 import org.mineacademy.fo.command.ReloadCommand;
 import org.mineacademy.fo.command.SimpleCommandGroup;
 
+@NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class BubbleGroup extends SimpleCommandGroup {
+
+	@Getter
+	private static final BubbleGroup instance = new BubbleGroup();
 
 	@Override
 	protected void registerSubcommands() {
@@ -23,7 +30,8 @@ public class BubbleGroup extends SimpleCommandGroup {
 		registerSubcommand(new SetFooterCommand());
 		registerSubcommand(new SetDelayCommand());
 		registerSubcommand(new DebugCommand());
-		registerSubcommand(new PermsCommand(Permissions.class));
+		registerSubcommand(new DiscordCommand());
+		registerSubcommand(new PermsCommand(Permissions.class, "bubble.command.permissions"));
 	}
 
 	@Override

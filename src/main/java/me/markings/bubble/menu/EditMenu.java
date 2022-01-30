@@ -30,7 +30,7 @@ public class EditMenu extends Menu {
 		editMessageButton = new Button() {
 			@Override
 			public void onClickedInMenu(final Player player, final Menu menu, final ClickType click) {
-				new EditPrompt().show(player);
+				EditPrompt.getInstance().show(player);
 			}
 
 			@Override
@@ -59,7 +59,7 @@ public class EditMenu extends Menu {
 		changePermissionButton = new Button() {
 			@Override
 			public void onClickedInMenu(final Player player, final Menu menu, final ClickType click) {
-				new PermissionPrompt().show(player);
+				PermissionPrompt.getInstance().show(player);
 			}
 
 			@Override

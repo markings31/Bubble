@@ -202,7 +202,7 @@ public final class Settings extends SimpleSettings {
 		if (Bubble.settingsFile.exists()) {
 			val header = new ArrayList<>(Arrays.asList(
 					"# !-----------------------------------------------------------------------------------------------!",
-					"#                       Welcome to the main configuration of ${project.name}",
+					"#                       Welcome to the main configuration of Bubble",
 					"# !-----------------------------------------------------------------------------------------------!"));
 			CommentLoader.getSettingsInstance().load(Bubble.settingsFile);
 			CommentLoader.getSettingsInstance().setHeader(header);

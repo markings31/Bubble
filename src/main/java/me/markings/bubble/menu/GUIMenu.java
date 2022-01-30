@@ -4,9 +4,7 @@ import lombok.Getter;
 import lombok.Setter;
 import lombok.val;
 import me.markings.bubble.Bubble;
-import me.markings.bubble.conversation.SelectLabelPrompt;
-import me.markings.bubble.conversation.SetFooterPrompt;
-import me.markings.bubble.conversation.SetHeaderPrompt;
+import me.markings.bubble.conversation.*;
 import me.markings.bubble.settings.Settings;
 import me.markings.bubble.util.ConfigUtil;
 import org.bukkit.entity.Player;
@@ -150,102 +148,123 @@ public class GUIMenu extends Menu {
 				setTitle("&6&lBroadcast Settings");
 				setSize(9 * 5);
 
-				enableBroadcastsButton = Button.makeSimple(
-						ItemCreator.of((MinecraftVersion.atLeast(MinecraftVersion.V.v1_14) ? CompMaterial.BELL : CompMaterial.SUNFLOWER),
+				enableBroadcastsButton = new Button() {
+					@Override
+					public void onClickedInMenu(final Player player, final Menu menu, final ClickType click) {
+						val config = Bubble.getInstance().getBubbleSettings();
+						val path = "Notifications.Broadcast.Enable";
+						config.set(path, !Settings.BroadcastSettings.ENABLE_BROADCASTS);
+						ConfigUtil.saveConfig(player,
+								"&aSuccessfully toggled broadcasts "
+										+ (config.getBoolean(path) ? onText : offText),
+								"&cFailed to toggle broadcasts! Error: ");
+						restartMenu(config.getBoolean(path) ? "&aBroadcasts ENABLED!" : "&cBroadcasts DISABLED!");
+					}
+
+					@Override
+					public ItemStack getItem() {
+						return ItemCreator.of((MinecraftVersion.atLeast(MinecraftVersion.V.v1_14) ? CompMaterial.BELL : CompMaterial.SUNFLOWER),
 								"&eAuto-Broadcasts &7(Click to toggle)",
 								"Status: " + (Settings.BroadcastSettings.ENABLE_BROADCASTS.equals(Boolean.TRUE)
 										? enabledText : disabledText),
 								"",
 								"Automatically send a preset list of",
 								"messages in the chat after a certain",
-								"amount of time."),
-						player -> {
-							val config = Bubble.getInstance().getBubbleSettings();
-							val path = "Notifications.Broadcast.Enable";
-							config.set(path, !Settings.BroadcastSettings.ENABLE_BROADCASTS);
-							ConfigUtil.saveConfig(player,
-									"&aSuccessfully toggled broadcasts "
-											+ (config.getBoolean(path) ? onText : offText),
-									"&cFailed to toggle broadcasts! Error: ");
-							restartMenu(config.getBoolean(path) ? "&aBroadcasts ENABLED!" : "&cBroadcasts DISABLED!");
-						});
-
+								"amount of time.").build().make();
+					}
+				};
 
 				setDelayButton = new ButtonMenu(new SettingsMenu.BroadcastSettingsMenu.DelayMenu(), CompMaterial.WATER_BUCKET, "&cSet Message Delay");
 
+				setRandomButton = new Button() {
+					@Override
+					public void onClickedInMenu(final Player player, final Menu menu, final ClickType click) {
+						val config = Bubble.getInstance().getBubbleSettings();
+						val path = "Notifications.Broadcast.Random_Message";
+						config.set(path, !Settings.BroadcastSettings.RANDOM_MESSAGE);
+						ConfigUtil.saveConfig(player,
+								"&aSuccessfully toggled random messages "
+										+ (config.getBoolean(path) ? onText : offText),
+								"&cFailed to toggle random messages! Error: ");
+						restartMenu(config.getBoolean(path) ? "&aRandom Messages ENABLED!" : "&cRandom Messages DISABLED!");
+					}
 
-				setRandomButton = Button.makeSimple(
-						ItemCreator.of(CompMaterial.BOW,
+					@Override
+					public ItemStack getItem() {
+						return ItemCreator.of(CompMaterial.BOW,
 								"&eRandom Messages &7(Click to toggle)",
 								"Status: " + (Settings.BroadcastSettings.RANDOM_MESSAGE.equals(Boolean.TRUE) ? enabledText : disabledText),
 								"",
 								"&7If auto-broadcasts are enabled, choose",
 								"a random message from the given list",
-								"instead of going in order."),
-						player -> {
-							val config = Bubble.getInstance().getBubbleSettings();
-							val path = "Notifications.Broadcast.Random_Message";
-							config.set(path, !Settings.BroadcastSettings.RANDOM_MESSAGE);
-							ConfigUtil.saveConfig(player,
-									"&aSuccessfully toggled random messages "
-											+ (config.getBoolean(path) ? onText : offText),
-									"&cFailed to toggle random messages! Error: ");
-							restartMenu(config.getBoolean(path) ? "&aRandom Messages ENABLED!" : "&cRandom Messages DISABLED!");
-						});
+								"instead of going in order.").build().make();
+					}
+				};
 
+				centerAllButton = new Button() {
+					@Override
+					public void onClickedInMenu(final Player player, final Menu menu, final ClickType click) {
+						val config = Bubble.getInstance().getBubbleSettings();
+						val path = "Notifications.Broadcast.Center_All";
+						config.set(path, !Settings.BroadcastSettings.CENTER_ALL);
+						ConfigUtil.saveConfig(player,
+								"&aSuccessfully toggled message centering "
+										+ (config.getBoolean(path) ? onText : offText),
+								"&cFailed to toggle message centering! Error: ");
+						restartMenu(config.getBoolean(path) ? "&aCenter Messages ENABLED!" : "&cCenter Messages DISABLED!");
+					}
 
-				centerAllButton = Button.makeSimple(
-						ItemCreator.of(CompMaterial.BOOKSHELF,
+					@Override
+					public ItemStack getItem() {
+						return ItemCreator.of(CompMaterial.BOOKSHELF,
 								"&eCenter Messages &7(Click to toggle)",
 								"Status: " + (Settings.BroadcastSettings.CENTER_ALL.equals(Boolean.TRUE) ? enabledText : disabledText),
 								"",
 								"If auto-broadcasts are enabled, auto-",
 								"matically center the messages along the",
-								"middle of the chat window."),
-						player -> {
-							val config = Bubble.getInstance().getBubbleSettings();
-							val path = "Notifications.Broadcast.Center_All";
-							config.set(path, !Settings.BroadcastSettings.CENTER_ALL);
-							ConfigUtil.saveConfig(player,
-									"&aSuccessfully toggled message centering "
-											+ (config.getBoolean(path) ? onText : offText),
-									"&cFailed to toggle message centering! Error: ");
-							restartMenu(config.getBoolean(path) ? "&aCenter Messages ENABLED!" : "&cCenter Messages DISABLED!");
-						});
+								"middle of the chat window.").build().make();
+					}
+				};
 
-				sendAsyncButton = Button.makeSimple(
-						ItemCreator.of(CompMaterial.COMPARATOR,
+				sendAsyncButton = new Button() {
+					@Override
+					public void onClickedInMenu(final Player player, final Menu menu, final ClickType click) {
+						val config = Bubble.getInstance().getBubbleSettings();
+						val path = "Notifications.Broadcast.Send_Asynchronously";
+						config.set(path, !Settings.BroadcastSettings.SEND_ASYNC);
+						ConfigUtil.saveConfig(player,
+								"&aSuccessfully toggled asynchrounous messaging " + (config.getBoolean(path) ? onText : offText),
+								"&cFailed to toggle asynchrounous messaging! Error: ");
+						restartMenu(config.getBoolean(path) ? "&aAsync Messages ENABLED!" : "&cAsync Messages DISABLED!");
+					}
+
+					@Override
+					public ItemStack getItem() {
+						return ItemCreator.of(CompMaterial.COMPARATOR,
 								"&eAsync Messages &7(Click to toggle)",
 								"Status: " + (Settings.BroadcastSettings.SEND_ASYNC.equals(Boolean.TRUE) ? enabledText : disabledText),
 								"",
 								"If auto-broadcasts are enabled, send",
 								"the messages asynchronously to help",
-								"save performance."),
-						player -> {
-							val config = Bubble.getInstance().getBubbleSettings();
-							val path = "Notifications.Broadcast.Send_Asynchronously";
-							config.set(path, !Settings.BroadcastSettings.SEND_ASYNC);
-							ConfigUtil.saveConfig(player,
-									"&aSuccessfully toggled asynchrounous messaging " + (config.getBoolean(path) ? onText : offText),
-									"&cFailed to toggle asynchrounous messaging! Error: ");
-							restartMenu(config.getBoolean(path) ? "&aAsync Messages ENABLED!" : "&cAsync Messages DISABLED!");
-						});
+								"save performance.").build().make();
+					}
+				};
 
 				setSoundButton = new ButtonMenu(new SettingsMenu.BroadcastSettingsMenu.SoundMenu(), CompMaterial.MUSIC_DISC_13, "&3Change Sound");
 
 				setHeaderButton = Button.makeSimple(ItemCreator.of(CompMaterial.DIAMOND_HELMET, "&aSet Header"), player -> {
 					player.closeInventory();
-					new SetHeaderPrompt().show(player);
+					SetHeaderPrompt.getInstance().show(player);
 				});
 
 				setFooterButton = Button.makeSimple(ItemCreator.of(CompMaterial.DIAMOND_BOOTS, "&9Set Footer"), player -> {
 					player.closeInventory();
-					new SetFooterPrompt().show(player);
+					SetFooterPrompt.getInstance().show(player);
 				});
 
 				editMessagesButton = Button.makeSimple(ItemCreator.of(CompMaterial.WRITABLE_BOOK, "&5Edit Message"), player -> {
 					player.closeInventory();
-					new SelectLabelPrompt().show(player);
+					SelectLabelPrompt.getInstance().show(player);
 				});
 			}
 
@@ -406,19 +425,25 @@ public class GUIMenu extends Menu {
 				setTitle("&2&lMOTD Settings");
 				setSize(9 * 3);
 
-				enableMOTDButton = Button.makeSimple(
-						ItemCreator.of(CompMaterial.EMERALD,
+				enableMOTDButton = new Button() {
+					@Override
+					public void onClickedInMenu(final Player player, final Menu menu, final ClickType click) {
+						val config = Bubble.getInstance().getBubbleSettings();
+						val path = "Notificatins.Welcome.Enable_MOTD";
+
+						config.set(path, !Settings.WelcomeSettings.ENABLE_JOIN_MOTD);
+					}
+
+					@Override
+					public ItemStack getItem() {
+						return ItemCreator.of(CompMaterial.EMERALD,
 								"&eMessage of the Day",
 								"Status: " + (Settings.WelcomeSettings.ENABLE_JOIN_MOTD.equals(Boolean.TRUE) ? enabledText : disabledText),
 								"",
 								"Send a welcome message to the player",
-								"whenever they join the server."),
-						player -> {
-							val config = Bubble.getInstance().getBubbleSettings();
-							val path = "Notificatins.Welcome.Enable_MOTD";
-
-							config.set(path, !Settings.WelcomeSettings.ENABLE_JOIN_MOTD);
-						});
+								"whenever they join the server.").build().make();
+					}
+				};
 
 				setMOTDDelayButton = new ButtonMenu(new SettingsMenu.MOTDSettingsMenu.MOTDDelayMenu(), CompMaterial.FEATHER, "&3Set MOTD Delay");
 
@@ -531,22 +556,30 @@ public class GUIMenu extends Menu {
 							"&cFailed to change MOTD sound! Error: ");
 				}
 			}
+
+			@Override
+			protected String[] getInfo() {
+				return new String[]{
+						"&eAdjust the settings related to the",
+						"&emessage of the day here!"
+				};
+			}
 		}
 
 		private final class JoinSettingsMenu extends Menu {
 
 			private final Button enableJoinMessageButton;
-			/*private final Button enableQuitMessageButton;
+			private final Button enableQuitMessageButton;
 			private final Button enableFireworkJoinButton;
 			private final Button enableMuteVanishedButton;
 			private final Button setJoinWorldsButton;
 			private final Button setJoinMessageButton;
-			private final Button setQuitMessageButton;*/
+			private final Button setQuitMessageButton;
 
 			public JoinSettingsMenu() {
 				super(SettingsMenu.this);
 				setTitle("&a&lJoin Settings");
-				setSize(9 * 5);
+				setSize(9 * 4);
 
 				enableJoinMessageButton = new Button() {
 					@Override
@@ -560,16 +593,107 @@ public class GUIMenu extends Menu {
 					@Override
 					public ItemStack getItem() {
 						return ItemCreator.of(CompMaterial.DIAMOND,
-										"&eJoin Message &7(Click to toggle)",
-										"Status: " + (Settings.JoinSettings.ENABLE_JOIN_MESSAGE.equals(Boolean.TRUE)
-												? BroadcastSettingsMenu.enabledText : BroadcastSettingsMenu.disabledText),
-										"",
-										"When a player joins, broadcast the join",
-										"message specified in the settings file to.")
-								.build()
-								.make();
+								"&eJoin Message &7(Click to toggle)",
+								"Status: " + (Settings.JoinSettings.ENABLE_JOIN_MESSAGE.equals(Boolean.TRUE)
+										? BroadcastSettingsMenu.enabledText : BroadcastSettingsMenu.disabledText),
+								"",
+								"When a player joins, broadcast the join",
+								"message specified in the settings file to.").build().make();
 					}
 				};
+
+				enableQuitMessageButton = new Button() {
+					@Override
+					public void onClickedInMenu(final Player player, final Menu menu, final ClickType click) {
+						val config = Bubble.getInstance().getBubbleSettings();
+						val path = "Notifications.Join.Enable_Quit_Message";
+
+						config.set(path, !Settings.JoinSettings.ENABLE_QUIT_MESSAGE);
+					}
+
+					@Override
+					public ItemStack getItem() {
+						return ItemCreator.of(CompMaterial.REDSTONE,
+								"&eQuit Message &7(Click to toggle)",
+								"Status: " + (Settings.JoinSettings.ENABLE_QUIT_MESSAGE.equals(Boolean.TRUE)
+										? BroadcastSettingsMenu.enabledText : BroadcastSettingsMenu.disabledText),
+								"",
+								"When a player quits, broadcast the quits",
+								"message specified in the settings file to.").build().make();
+					}
+				};
+
+				enableFireworkJoinButton = new Button() {
+					@Override
+					public void onClickedInMenu(final Player player, final Menu menu, final ClickType click) {
+						val config = Bubble.getInstance().getBubbleSettings();
+						val path = "Notifications.Join.Firework_On_First_Join";
+
+						config.set(path, !Settings.JoinSettings.FIREWORK_JOIN);
+					}
+
+					@Override
+					public ItemStack getItem() {
+						return ItemCreator.of(CompMaterial.FIREWORK_ROCKET,
+								"&eFirst-Join Firework &7(Click to toggle)",
+								"Status: " + (Settings.JoinSettings.FIREWORK_JOIN.equals(Boolean.TRUE)
+										? BroadcastSettingsMenu.enabledText : BroadcastSettingsMenu.disabledText),
+								"",
+								"When a player joins for the first time,",
+								"launch a firework into the air.").build().make();
+					}
+				};
+
+				enableMuteVanishedButton = new Button() {
+					@Override
+					public void onClickedInMenu(final Player player, final Menu menu, final ClickType click) {
+						val config = Bubble.getInstance().getBubbleSettings();
+						val path = "Notifications.Join.Firework_On_First_Join";
+
+						config.set(path, !Settings.JoinSettings.MUTE_IF_VANISHED);
+					}
+
+					@Override
+					public ItemStack getItem() {
+						return ItemCreator.of(CompMaterial.ENDER_PEARL,
+								"&eHide if Vanished &7(Click to toggle)",
+								"Status: " + (Settings.JoinSettings.MUTE_IF_VANISHED.equals(Boolean.TRUE)
+										? BroadcastSettingsMenu.enabledText : BroadcastSettingsMenu.disabledText),
+								"",
+								"If a player joins or quits while vanished,",
+								"hide the message.").build().make();
+					}
+				};
+
+				setJoinWorldsButton = Button.makeSimple(ItemCreator.of(CompMaterial.GRASS_BLOCK,
+								"&bSet Worlds",
+								"",
+								"Set the worlds that join broadcasts",
+								"will be sent to."),
+						player -> {
+							player.closeInventory();
+							SetWorldsPrompt.getInstance().show(player);
+						});
+
+				setJoinMessageButton = Button.makeSimple(ItemCreator.of(CompMaterial.FEATHER,
+								"&2Set Join Message",
+								"",
+								"Set the join message that is broadcast",
+								"when a player joins."),
+						player -> {
+							player.closeInventory();
+							SetJoinMessagePrompt.getInstance().show(player);
+						});
+
+				setQuitMessageButton = Button.makeSimple(ItemCreator.of(CompMaterial.MINECART,
+								"&cSet Quit Message",
+								"",
+								"Set the quit message that is broadcast",
+								"when a player joins."),
+						player -> {
+							player.closeInventory();
+							SetQuitMessagePrompt.getInstance().show(player);
+						});
 			}
 
 			@Override
@@ -577,7 +701,33 @@ public class GUIMenu extends Menu {
 				if (slot == 9 * 1 + 1)
 					return enableJoinMessageButton.getItem();
 
-				return null;
+				if (slot == 9 * 1 + 3)
+					return enableQuitMessageButton.getItem();
+
+				if (slot == 9 * 1 + 5)
+					return enableFireworkJoinButton.getItem();
+
+				if (slot == 9 * 1 + 7)
+					return enableMuteVanishedButton.getItem();
+
+				if (slot == 9 * 2 + 2)
+					return setJoinWorldsButton.getItem();
+
+				if (slot == 9 * 2 + 4)
+					return setJoinMessageButton.getItem();
+
+				if (slot == 9 * 2 + 6)
+					return setQuitMessageButton.getItem();
+
+				return ItemCreator.of(CompMaterial.GRAY_STAINED_GLASS_PANE, "").build().make();
+			}
+
+			@Override
+			protected String[] getInfo() {
+				return new String[]{
+						"&eAdjust the settings related to join",
+						"&eand quit messages here!"
+				};
 			}
 		}
 	}

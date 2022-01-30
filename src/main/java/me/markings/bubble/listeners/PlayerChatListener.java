@@ -1,5 +1,8 @@
 package me.markings.bubble.listeners;
 
+import lombok.AccessLevel;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.val;
 import me.markings.bubble.PlayerCache;
 import me.markings.bubble.settings.Settings;
@@ -12,7 +15,11 @@ import org.mineacademy.fo.debug.Debugger;
 import org.mineacademy.fo.model.SimpleSound;
 import org.mineacademy.fo.remain.Remain;
 
+@NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class PlayerChatListener implements Listener {
+
+	@Getter
+	private static final PlayerChatListener instance = new PlayerChatListener();
 
 	@EventHandler(priority = EventPriority.MONITOR)
 	public void onPlayerChat(final AsyncPlayerChatEvent event) {
