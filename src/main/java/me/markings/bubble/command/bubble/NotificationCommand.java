@@ -1,7 +1,10 @@
 package me.markings.bubble.command.bubble;
 
+import github.scarsz.discordsrv.DiscordSRV;
 import lombok.val;
+import me.markings.bubble.hook.DiscordSRVHook;
 import me.markings.bubble.model.Permissions;
+import me.markings.bubble.settings.Settings;
 import me.markings.bubble.util.MessageUtil;
 import org.apache.commons.lang.math.NumberUtils;
 import org.bukkit.entity.Player;
@@ -47,49 +50,52 @@ public class NotificationCommand extends SimpleSubCommand {
 	private void sendNotification(final Player target) {
 		val inputs = joinArgs((args[1].equalsIgnoreCase(toastArg) ? 3 : 2)).split("\\|");
 
-		val primaryPart = Variables.replace(inputs[0], getPlayer());
-		val secondaryPart = Variables.replace(inputs.length == 1 ? "" : inputs[1], getPlayer());
+		val primaryPart = Variables.replace(inputs[0], target);
+		val secondaryPart = Variables.replace(inputs.length == 1 ? "" : inputs[1], target);
 
 		switch (args[1].toLowerCase()) {
-			case "message": {
+			case "message" -> {
 				if (getPlayer() != null)
 					checkBoolean(getPlayer().hasPermission(getPermission() + ".message"), noPermissionMsg);
+
+				if (Boolean.TRUE.equals(Settings.DiscordSettings.SYNCANNOUNCEMENTS))
+					DiscordSRVHook.getInstance().sendAnnouncement(
+							getPlayer(),
+							"Announcement",
+							Common.stripColors(primaryPart),
+							MessageUtil.getColor(Settings.DiscordSettings.ANNOUNCEMENTSCOLOR),
+							DiscordSRV.getAvatarUrl(getPlayer()));
 
 				if (args[2].contains(".png") || args[2].contains(".jpg")) {
 					checkBoolean(NumberUtils.isNumber(args[3]), "Please provide the height of the image you want to be displayed!");
 					try {
-						ChatImage.fromFile(new File("plugins/Bubble/images/", args[2]), Integer.parseInt(args[3]), ChatImage.Type.MEDIUM_SHADE)
+						ChatImage.fromFile(new File("plugins/Bubble/images/", args[2]), Integer.parseInt(args[3]), ChatImage.Type.BLOCK)
 								.appendText(joinArgs(4).split("\\|"))
 								.sendToPlayer(target);
 					} catch (final IOException e) {
 						e.printStackTrace();
 					}
 				} else Common.tell(target, Common.colorize(primaryPart));
-				break;
 			}
-			case "title": {
+			case "title" -> {
 				if (getPlayer() != null)
 					checkBoolean(getPlayer().hasPermission(getPermission() + ".title"), noPermissionMsg);
 
 				Remain.sendTitle(target, primaryPart, secondaryPart);
-				break;
 			}
-			case "actionbar":
-			case "action": {
+			case "actionbar", "action" -> {
 				if (getPlayer() != null)
 					checkBoolean(getPlayer().hasPermission(getPermission() + ".actionbar"), noPermissionMsg);
 
 				Remain.sendActionBar(target, primaryPart);
-				break;
 			}
-			case "bossbar": {
+			case "bossbar" -> {
 				if (getPlayer() != null)
 					checkBoolean(getPlayer().hasPermission(getPermission() + ".bossbar"), noPermissionMsg);
 
 				Remain.sendBossbarPercent(target, primaryPart, 100);
-				break;
 			}
-			case "toast": {
+			case "toast" -> {
 				if (getPlayer() != null)
 					checkBoolean(getPlayer().hasPermission(getPermission() + ".toast"), noPermissionMsg);
 
@@ -97,7 +103,6 @@ public class NotificationCommand extends SimpleSubCommand {
 
 				Remain.sendToast(target, primaryPart, args[1].equalsIgnoreCase(toastArg) ?
 						findMaterial(args[2], "No such material " + args[2] + " found!") : null);
-				break;
 			}
 		}
 	}

@@ -30,7 +30,9 @@ public class BubbleGroup extends SimpleCommandGroup {
 		registerSubcommand(new SetFooterCommand());
 		registerSubcommand(new SetDelayCommand());
 		registerSubcommand(new DebugCommand());
+		registerSubcommand(new TestCommand());
 		registerSubcommand(new DiscordCommand());
+		//registerSubcommand(new ToolCommand());
 		registerSubcommand(new PermsCommand(Permissions.class, "bubble.command.permissions"));
 	}
 

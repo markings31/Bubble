@@ -21,6 +21,7 @@ public class SetDelayCommand extends SimpleSubCommand {
 		val config = Bubble.getInstance().getBubbleSettings();
 		val param = joinArgs(0);
 
+
 		checkBoolean(param.contains("seconds")
 						|| param.contains("minutes")
 						|| param.contains("hours")

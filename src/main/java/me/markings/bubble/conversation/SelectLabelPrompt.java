@@ -5,6 +5,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.val;
 import me.markings.bubble.Bubble;
+import me.markings.bubble.settings.Localization;
 import org.bukkit.command.CommandSender;
 import org.bukkit.conversations.ConversationContext;
 import org.bukkit.conversations.Prompt;
@@ -25,7 +26,7 @@ public class SelectLabelPrompt extends SimplePrompt {
 	@Override
 	protected String getPrompt(final ConversationContext conversationContext) {
 		Remain.sendTitle((Player) conversationContext.getForWhom(), "&9Edit Message", "Please type your message in the chat.");
-		return Messenger.getInfoPrefix() + "&7What message group do you wish to edit?\n&7&oNote: Type 'exit' to cancel.";
+		return Localization.PromptMessages.LABEL_PROMPT_MESSAGE;
 	}
 
 	@Nullable

@@ -3,7 +3,7 @@ package me.markings.bubble.menu;
 import lombok.val;
 import me.markings.bubble.Bubble;
 import me.markings.bubble.command.bubble.EditCommand;
-import me.markings.bubble.conversation.EditPrompt;
+import me.markings.bubble.conversation.EditMessagePrompt;
 import me.markings.bubble.conversation.PermissionPrompt;
 import me.markings.bubble.settings.MenuSettings;
 import me.markings.bubble.util.ConfigUtil;
@@ -30,7 +30,7 @@ public class EditMenu extends Menu {
 		editMessageButton = new Button() {
 			@Override
 			public void onClickedInMenu(final Player player, final Menu menu, final ClickType click) {
-				EditPrompt.getInstance().show(player);
+				EditMessagePrompt.getInstance().show(player);
 			}
 
 			@Override

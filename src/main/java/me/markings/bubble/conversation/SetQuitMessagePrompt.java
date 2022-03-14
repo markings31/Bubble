@@ -5,13 +5,13 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.val;
 import me.markings.bubble.Bubble;
+import me.markings.bubble.settings.Localization;
 import me.markings.bubble.util.ConfigUtil;
 import org.bukkit.conversations.ConversationContext;
 import org.bukkit.conversations.Prompt;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import org.mineacademy.fo.Messenger;
 import org.mineacademy.fo.conversation.SimplePrompt;
 import org.mineacademy.fo.remain.Remain;
 
@@ -24,7 +24,7 @@ public class SetQuitMessagePrompt extends SimplePrompt {
 	@Override
 	protected String getPrompt(final ConversationContext context) {
 		Remain.sendTitle((Player) context.getForWhom(), "&9Set Quit Message", "Please type your message in the chat.");
-		return Messenger.getInfoPrefix() + "Which would you like to change the quit message to?\n&7&oNote: Type 'exit' to cancel.";
+		return Localization.PromptMessages.QUIT_PROMPT_MESSAGE;
 	}
 
 	@Nullable

@@ -3,24 +3,26 @@ package me.markings.bubble.conversation;
 import lombok.*;
 import me.markings.bubble.Bubble;
 import me.markings.bubble.command.bubble.EditCommand;
+import me.markings.bubble.settings.Localization;
 import me.markings.bubble.util.ConfigUtil;
 import org.bukkit.conversations.ConversationContext;
 import org.bukkit.conversations.Prompt;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import org.mineacademy.fo.Messenger;
 import org.mineacademy.fo.conversation.SimplePrompt;
+import org.mineacademy.fo.remain.Remain;
 
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
-public class EditPrompt extends SimplePrompt {
+public class EditMessagePrompt extends SimplePrompt {
 
 	@Getter
-	private static final EditPrompt instance = new EditPrompt();
+	private static final EditMessagePrompt instance = new EditMessagePrompt();
 
 	@Override
 	protected String getPrompt(final ConversationContext context) {
-		return Messenger.getInfoPrefix() + "&ePlease write the desired message in the chat.\n&7&oNote: Use the '|' delimiter to add multiple messages.";
+		Remain.sendTitle((Player) context.getForWhom(), "&9Edit Message", "Please type your message in the chat.");
+		return Localization.PromptMessages.EDIT_PROMPT_MESSAGE;
 	}
 
 	@Nullable

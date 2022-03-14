@@ -84,13 +84,11 @@ public final class Bubble extends SimplePlugin {
 		registerCommand(new ToggleCommand());
 		registerCommand(new PrefsCommand());
 
-		if (Settings.HookSettings.VAULT.equals(Boolean.TRUE))
-			Valid.checkBoolean(Common.doesPluginExist("Vault"),
-					"Failed to hook into Vault! Please check if the plugin is installed and restart!");
+		Valid.checkBoolean(Settings.HookSettings.VAULT.equals(Boolean.TRUE) && HookManager.isVaultLoaded(),
+				"Failed to hook into Vault! Please check if the plugin is installed and restart!");
 
-		if (Settings.HookSettings.PAPI.equals(Boolean.TRUE))
-			Valid.checkBoolean(Common.doesPluginExist("PlaceholderAPI"),
-					"Failed to hook into PlaceholderAPI! Please check if the plugin is installed and restart!");
+		Valid.checkBoolean(Settings.HookSettings.PAPI.equals(Boolean.TRUE) && HookManager.isPlaceholderAPILoaded(),
+				"Failed to hook into PlaceholderAPI! Please check if the plugin is installed and restart!");
 
 		Variable.loadVariables();
 
@@ -100,7 +98,7 @@ public final class Bubble extends SimplePlugin {
 
 		registerEvents(DatabaseListener.getInstance());
 
-		registerEventsIf(DiscordSRVHook.getInstance(), HookManager.isDiscordSRVLoaded());
+		registerEventsIf(DiscordSRVHook.getInstance(), HookManager.isDiscordSRVLoaded() && Settings.HookSettings.DISCORDSRV);
 
 		registerEventsIf(PlayerJoinListener.getInstance(), Settings.WelcomeSettings.ENABLE_JOIN_MOTD.equals(Boolean.TRUE) ||
 				Settings.JoinSettings.FIREWORK_JOIN.equals(Boolean.TRUE));

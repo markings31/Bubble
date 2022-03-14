@@ -169,8 +169,33 @@ Hooks:
   # Hook into the PlaceholderAPI library?
   PlaceholderAPI: true
 
+  # Hook into the DiscordSRV API?
+  DiscordSRV: false
+
   # Hook into BStats in order to collect usage statistics?
   BStats: true
+
+# -------------------------------------------------------------------------------------------------
+# Discord Section
+# -------------------------------------------------------------------------------------------------
+Discord:
+
+  Discord_To_Minecraft:
+    Enable: true
+    Chat_Format: "&8[&9Discord&7/&b%channel%&8] &7%user%: &f%message%"
+
+  Minecraft_To_Discord:
+    Enable: true
+    Use_Webhook: true
+    Sync_Announcements: true
+    Announcements_Color: green
+
+  Announcements_Channel_ID: "000000000000000000"
+  Minecraft_Channel_ID: "000000000000000000"
+
+  Author: "Admin"
+  Thumbnail: "https://minotar.net/avatar/%player%.png"
+  Default_Image: "https://i.ibb.co/3SLSCRR/Smaller-Banner.png"
 
 # -------------------------------------------------------------------------------------------------
 # The plugin's main prefix. You can manually add this prefix to other messages using the

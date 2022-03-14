@@ -5,6 +5,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.val;
 import me.markings.bubble.PlayerCache;
+import me.markings.bubble.settings.Localization;
 import me.markings.bubble.settings.Settings;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
@@ -46,7 +47,7 @@ public class PlayerChatListener implements Listener {
 						.replace("@" + playerName, Settings.ChatSettings.MENTION_COLOR + playerName + previousColor));
 
 				if (cache.isMentionToastStatus())
-					Common.dispatchCommand(loopPlayer, "bu notify {player} toast PAPER &e&oYou were mentioned in the chat!");
+					Common.dispatchCommand(loopPlayer, "bu notify {player} toast PAPER " + Localization.NotificationMessages.MENTIONED_MESSAGE);
 
 				if (cache.isMentionSoundStatus())
 					new SimpleSound(mentionSound.getSound(), mentionSound.getVolume(), mentionSound.getPitch()).play(loopPlayer);

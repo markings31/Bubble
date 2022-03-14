@@ -7,6 +7,7 @@ import me.markings.bubble.Bubble;
 import me.markings.bubble.conversation.*;
 import me.markings.bubble.settings.Settings;
 import me.markings.bubble.util.ConfigUtil;
+import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.ClickType;
 import org.bukkit.inventory.Inventory;
@@ -79,6 +80,7 @@ public class GUIMenu extends Menu {
 		private final Button welcomeSettingsButton;
 		private final Button joinSettingsButton;
 		private final Button chatSettingsButton;
+		private final Button discordSettingsButton;
 		private final Button miscSettingsButton;
 
 		public SettingsMenu() {
@@ -93,6 +95,8 @@ public class GUIMenu extends Menu {
 			joinSettingsButton = new ButtonMenu(new SettingsMenu.JoinSettingsMenu(), CompMaterial.EMERALD, "&dJoin Settings");
 
 			chatSettingsButton = new ButtonMenu(new SettingsMenu.BroadcastSettingsMenu(), CompMaterial.ITEM_FRAME, "&eChat Settings");
+
+			discordSettingsButton = new ButtonMenu(new SettingsMenu.DiscordSettingsMenu(), CompMaterial.MINECART, "&9Discord Settings");
 
 			miscSettingsButton = new ButtonMenu(new SettingsMenu.BroadcastSettingsMenu(), CompMaterial.DIAMOND_SWORD, "&bMisc Settings");
 		}
@@ -111,7 +115,10 @@ public class GUIMenu extends Menu {
 			if (slot == 9 + 7)
 				return chatSettingsButton.getItem();
 
-			if (slot == 9 * 2 + 4)
+			if (slot == 9 * 2 + 2)
+				return discordSettingsButton.getItem();
+
+			if (slot == 9 * 2 + 6)
 				return miscSettingsButton.getItem();
 
 			return ItemCreator.of(CompMaterial.GRAY_STAINED_GLASS_PANE, "").build().make();
@@ -415,7 +422,6 @@ public class GUIMenu extends Menu {
 			private final Button enableMOTDButton;
 			private final Button setMOTDDelayButton;
 			private final Button setMOTDSoundButton;
-			//private final Button editMOTDButton;
 
 			private static final String enabledText = "&aENABLED";
 			private static final String disabledText = "&cDISABLED";
@@ -729,6 +735,187 @@ public class GUIMenu extends Menu {
 						"&eand quit messages here!"
 				};
 			}
+		}
+
+		private final class DiscordSettingsMenu extends Menu {
+
+			private final Button discordMinecraftButton;
+			private final Button minecraftDiscordButton;
+
+			public DiscordSettingsMenu() {
+				super(SettingsMenu.this);
+				setTitle("&9&lDiscord Settings");
+				setSize(9 * 3);
+
+				discordMinecraftButton = new Button() {
+					@Override
+					public void onClickedInMenu(final Player player, final Menu menu, final ClickType click) {
+						if (click.isLeftClick()) {
+							val config = Bubble.getInstance().getBubbleSettings();
+							val path = "Discord.Discord_To_Minecraft.Enable";
+							config.set(path, !Settings.DiscordSettings.DISCORDMINECRAFT);
+							ConfigUtil.saveConfig(player,
+									"&aSuccessfully toggled Discord to Minecraft functionality "
+											+ (config.getBoolean(path) ? "&aON" : "&cOFF"),
+									"&cFailed to toggle Discord to Minecraft functionality! Error: ");
+							restartMenu(config.getBoolean(path) ? "&aDiscord to Minecraft ENABLED!" : "&cDiscord to Minecraft DISABLED!");
+						} else {
+							player.closeInventory();
+							EditFormatPrompt.getInstance().show(player);
+						}
+					}
+
+					@Override
+					public ItemStack getItem() {
+						return ItemCreator.of(CompMaterial.LAPIS_BLOCK, "&bDiscord to Minecraft",
+								"",
+								"- Left-Click to " + (Settings.DiscordSettings.DISCORDMINECRAFT.equals(Boolean.TRUE) ? "&aENABLE" : "&cDISABLE"),
+								"- Right-Click to edit chat formatting.").build().make();
+					}
+				};
+
+				minecraftDiscordButton = new Button() {
+					@Override
+					public void onClickedInMenu(final Player player, final Menu menu, final ClickType click) {
+						if (click.isLeftClick()) {
+							val config = Bubble.getInstance().getBubbleSettings();
+							val path = "Discord.Minecraft_To_Discord.Enable";
+							config.set(path, !Settings.DiscordSettings.MINECRAFTDISCORD);
+							ConfigUtil.saveConfig(player,
+									"&aSuccessfully toggled Minecraft to Discord functionality "
+											+ (config.getBoolean(path) ? "&aON" : "&cOFF"),
+									"&cFailed to Minecraft to Discord functionality! Error: ");
+							restartMenu(config.getBoolean(path) ? "&aMinecraft to Discord ENABLED!" : "&cMinecraft to Discord DISABLED!");
+						} else {
+							player.closeInventory();
+							new MinecraftDiscordMenu().displayTo(player);
+						}
+					}
+
+					@Override
+					public ItemStack getItem() {
+						return ItemCreator.of(CompMaterial.GRASS_BLOCK, "&2Minecraft to Discord",
+								"",
+								"- Left-Click to " + (Settings.DiscordSettings.MINECRAFTDISCORD.equals(Boolean.TRUE) ? "&aENABLE" : "&cDISABLE"),
+								"- Right-Click to edit chat formatting.").build().make();
+					}
+				};
+			}
+
+			@Override
+			public ItemStack getItemAt(final int slot) {
+				if (slot == 9 * 1 + 2)
+					return discordMinecraftButton.getItem();
+
+				if (slot == 9 * 1 + 6)
+					return minecraftDiscordButton.getItem();
+
+				return null;
+			}
+
+			public final class MinecraftDiscordMenu extends Menu {
+
+				private final Button useWebhookButton;
+				private final Button syncAnnouncementsButton;
+				private final Button announcementsColorButton;
+
+				public MinecraftDiscordMenu() {
+					super(DiscordSettingsMenu.this);
+
+					setTitle("&2&lMinecraft to Discord");
+					setSize(9 * 3);
+
+
+					useWebhookButton = new Button() {
+						@Override
+						public void onClickedInMenu(final Player player, final Menu menu, final ClickType click) {
+							val config = Bubble.getInstance().getBubbleSettings();
+							val path = "Discord.Minecraft_To_Discord.Use_Webhook";
+							config.set(path, !Settings.DiscordSettings.USEWEBHOOK);
+							ConfigUtil.saveConfig(player,
+									"&aSuccessfully toggled webhook functionality "
+											+ (config.getBoolean(path) ? "&aENABLED" : "&cDISABLED"),
+									"&cFailed to toggle webhook functionality! Error: ");
+						}
+
+						@Override
+						public ItemStack getItem() {
+							return ItemCreator.of(CompMaterial.TRIPWIRE_HOOK, "&cWebhooks",
+									"",
+									"Status: " + (Settings.DiscordSettings.USEWEBHOOK.equals(Boolean.TRUE)
+											? "&aENABLED" : "&cDISABLED")).build().make();
+						}
+					};
+
+					syncAnnouncementsButton = new Button() {
+						@Override
+						public void onClickedInMenu(final Player player, final Menu menu, final ClickType click) {
+							val config = Bubble.getInstance().getBubbleSettings();
+							val path = "Discord.Minecraft_To_Discord.Sync_Announcements";
+							config.set(path, !Settings.DiscordSettings.SYNCANNOUNCEMENTS);
+							ConfigUtil.saveConfig(player,
+									"&aSuccessfully toggled announcement sync "
+											+ (config.getBoolean(path) ? "&aENABLED" : "&cDISABLED"),
+									"&cFailed to toggle announcement sync! Error: ");
+						}
+
+						@Override
+						public ItemStack getItem() {
+							return ItemCreator.of(CompMaterial.FEATHER, "&6Sync Announcements",
+									"",
+									"Status: " + (Settings.DiscordSettings.SYNCANNOUNCEMENTS.equals(Boolean.TRUE)
+											? "&aENABLED" : "&cDISABLED")).build().make();
+						}
+					};
+
+					announcementsColorButton = new Button() {
+						@Override
+						public void onClickedInMenu(final Player player, final Menu menu, final ClickType click) {
+							player.closeInventory();
+							SetColorPrompt.getInstance().show(player);
+						}
+
+						@Override
+						public ItemStack getItem() {
+							val color = Settings.DiscordSettings.ANNOUNCEMENTSCOLOR;
+							return ItemCreator.of(CompMaterial.FEATHER, "&dSet Announcements Color",
+									"",
+									"Current Color: " + (getColor(color) + ItemUtil.bountifyCapitalized(color))).build().make();
+						}
+					};
+				}
+
+				private static ChatColor getColor(final String color) {
+					return switch (color.toUpperCase()) {
+						case "BLACK" -> ChatColor.BLACK;
+						case "LIGHT_GRAY" -> ChatColor.GRAY;
+						case "DARK_GRAY" -> ChatColor.DARK_GRAY;
+						case "BLUE" -> ChatColor.BLUE;
+						case "GREEN" -> ChatColor.GREEN;
+						case "CYAN" -> ChatColor.AQUA;
+						case "RED" -> ChatColor.RED;
+						case "ORANGE" -> ChatColor.GOLD;
+						case "YELLOW" -> ChatColor.YELLOW;
+						case "PINK" -> ChatColor.LIGHT_PURPLE;
+						default -> null;
+					};
+				}
+
+				@Override
+				public ItemStack getItemAt(final int slot) {
+					if (slot == 9 * 1 + 2)
+						return useWebhookButton.getItem();
+
+					if (slot == 9 * 1 + 4)
+						return syncAnnouncementsButton.getItem();
+
+					if (slot == 9 * 1 + 6)
+						return announcementsColorButton.getItem();
+
+					return ItemCreator.of(CompMaterial.GRAY_STAINED_GLASS_PANE, "").build().make();
+				}
+			}
+
 		}
 	}
 }

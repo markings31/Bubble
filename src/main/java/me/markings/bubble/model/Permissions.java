@@ -9,7 +9,7 @@ import org.mineacademy.fo.constants.FoPermissions;
 public class Permissions extends FoPermissions {
 
 	@NoArgsConstructor(access = AccessLevel.PRIVATE)
-	@PermissionGroup("Execute main plugin command for /{label}")
+	@PermissionGroup("Main Command")
 	public static final class Command {
 
 		@Permission("Add a line or section for broadcasts within the main settings file.")
@@ -51,7 +51,17 @@ public class Permissions extends FoPermissions {
 		@Permission("Set the footer that will be used in broadcast messages.")
 		public static final String FOOTER = "bubble.command.setfooter";
 
-		@Permission("Send an announcement message to the specified Discord channel")
-		public static final String DISCORD = "bubble.discord.announcement";
+		@Permission("Send messages to the conneected Discord server.")
+		public static final String DISCORD_COMMAND = "bubble.discord.command";
+	}
+
+	@NoArgsConstructor(access = AccessLevel.PRIVATE)
+	@PermissionGroup("Discord API")
+	public static final class Discord {
+		@Permission("Send a webhook message to the connected Discord server.")
+		public static final String DISCORD_MESSAGE = "bubble.discord.message";
+
+		@Permission("Send an announcement message to the connected Discord server.")
+		public static final String DISCORD_ANNOUNCEMENT = "bubble.discord.announcement";
 	}
 }

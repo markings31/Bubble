@@ -37,11 +37,11 @@
              IF YOU WANT TO CODE WITH JAVA 16 THERE ARE CHANGES YOU MUST MAKE TO THIS
              FILE, SEE <pluginRepositories> AND VERSION IN THE maven-shade-plugin BELOW.
              -->
-        <java.version>1.8</java.version>
+        <java.version>16</java.version>
 
         <!-- Change to the latest one from https://github.com/kangarko/Foundation/releases
              or change to "LATEST" if you downloaded Foundation to your disk. -->
-        <foundation.version>5.12.5</foundation.version>
+        <foundation.version>5.12.7</foundation.version>
 
         <!-- Leave on "com.github.kangarko" if you use Foundation from GitHub like most people,
              or change to "org.mineacademy" if you downloaded our library to your disk. -->

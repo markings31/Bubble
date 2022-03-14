@@ -44,7 +44,7 @@ public class PlayerJoinListener implements Listener {
 			Common.runLaterAsync(motdDelay.getTimeTicks(), () -> {
 				messages.forEach(message -> {
 					if (MessageUtil.isExecutable(message)) {
-						MessageUtil.executePlaceholders(message, player);
+						MessageUtil.executePlaceholders(Variables.replace(message, player), player);
 						return;
 					}
 					Common.tell(player, MessageUtil.replaceVarsAndGradient(message, player));

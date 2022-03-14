@@ -154,14 +154,55 @@ public final class Settings extends SimpleSettings {
 
 		public static Boolean VAULT;
 		public static Boolean PAPI;
+		public static Boolean DISCORDSRV;
 		public static Boolean BSTATS;
 
 		private static void init() {
 			pathPrefix("Hooks");
 			VAULT = getBoolean("Vault");
 			PAPI = getBoolean("PlaceholderAPI");
+			DISCORDSRV = getBoolean("DiscordSRV");
 			BSTATS = getBoolean("BStats");
 		}
+	}
+
+	@NoArgsConstructor(access = AccessLevel.PRIVATE)
+	public static class DiscordSettings {
+
+		public static Boolean DISCORDMINECRAFT;
+		public static String CHATFORMAT;
+
+		public static Boolean MINECRAFTDISCORD;
+		public static Boolean USEWEBHOOK;
+		public static Boolean SYNCANNOUNCEMENTS;
+
+		public static String ANNOUNCEMENTSID;
+		public static String MINECRAFTID;
+		public static String ANNOUNCEMENTSCOLOR;
+
+		public static String AUTHOR;
+		public static String THUMBNAIL;
+		public static String DEFAULT_IMAGE;
+
+		private static void init() {
+			pathPrefix("Discord.Discord_To_Minecraft");
+			DISCORDMINECRAFT = getBoolean("Enable");
+			CHATFORMAT = getString("Chat_Format");
+
+			pathPrefix("Discord.Minecraft_To_Discord");
+			MINECRAFTDISCORD = getBoolean("Enable");
+			USEWEBHOOK = getBoolean("Use_Webhook");
+			SYNCANNOUNCEMENTS = getBoolean("Sync_Announcements");
+			ANNOUNCEMENTSCOLOR = getString("Announcements_Color");
+
+			pathPrefix("Discord");
+			ANNOUNCEMENTSID = getString("Announcements_Channel_ID");
+			MINECRAFTID = getString("Minecraft_Channel_ID");
+			AUTHOR = getString("Author");
+			THUMBNAIL = getString("Thumbnail");
+			DEFAULT_IMAGE = getString("Default_Image");
+		}
+
 	}
 
 	private static void generateBroadcastSections() {

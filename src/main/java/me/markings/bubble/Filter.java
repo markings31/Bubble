@@ -2,6 +2,7 @@ package me.markings.bubble;
 
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
+import lombok.val;
 import org.apache.logging.log4j.Level;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Marker;
@@ -20,6 +21,7 @@ import java.util.logging.LogRecord;
 /**
  * Represents the console filtering module
  */
+@NoArgsConstructor(access = AccessLevel.PRIVATE)
 public final class Filter {
 
 	/**
@@ -52,14 +54,14 @@ public final class Filter {
 
 		message = Common.stripColors(message);
 
-		if (message.contains("issued server command: /#flp"))
-			return true;
-
 		return message.contains("Reloading plugin Bubble")
 				|| message.contains("______________________________________________________________")
 				|| message.contains("[PlaceholderAPI] Successfully registered expansion: bubble")
 				|| message.contains("[Bubble] Bubble has been successfully enabled!")
-				|| message.contains("  ");
+				|| message.contains("  ")
+				|| message.contains("issued server command: /#flp")
+				|| message.contains("[DiscordSRV] API listener org.mineacademy.fo.model.DiscordListener$DiscordListenerImpl unsubscribed")
+				|| message.contains("[DiscordSRV] API listener org.mineacademy.fo.model.DiscordListener$DiscordListenerImpl subscribed (2 methods)");
 	}
 }
 
@@ -70,7 +72,7 @@ class FilterLegacy implements java.util.logging.Filter {
 
 	@Override
 	public boolean isLoggable(final LogRecord record) {
-		final String message = record.getMessage();
+		val message = record.getMessage();
 
 		return !Filter.isFiltered(message);
 	}
