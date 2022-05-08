@@ -5,6 +5,7 @@ import me.markings.bubble.Bubble;
 import me.markings.bubble.command.bubble.EditCommand;
 import me.markings.bubble.settings.Localization;
 import me.markings.bubble.util.ConfigUtil;
+import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.conversations.ConversationContext;
 import org.bukkit.conversations.Prompt;
 import org.bukkit.entity.Player;
@@ -29,7 +30,7 @@ public class EditMessagePrompt extends SimplePrompt {
 	@Override
 	@SneakyThrows
 	protected Prompt acceptValidatedInput(@NotNull final ConversationContext context, @NotNull final String input) {
-		val config = Bubble.getInstance().getBubbleSettings();
+		val config = YamlConfiguration.loadConfiguration(Bubble.settingsFile);
 		val commandArg = EditCommand.getInput();
 		val inputs = input.split("\\|");
 		val newSection = "Notifications.Broadcast.Messages." + commandArg;
@@ -44,7 +45,7 @@ public class EditMessagePrompt extends SimplePrompt {
 
 		ConfigUtil.saveConfig((Player) context.getForWhom(),
 				"&aSuccessfully replaced message section " + commandArg + " with line '" + input + "&a'!",
-				"Failed to edit message! Error: ");
+				"Failed to edit message! Error: ", config);
 
 		return Prompt.END_OF_CONVERSATION;
 	}

@@ -4,12 +4,11 @@ import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
 import lombok.val;
 import me.markings.bubble.Bubble;
-import me.markings.bubble.util.CommentLoader;
+import org.bukkit.configuration.file.YamlConfiguration;
 import org.mineacademy.fo.model.SimpleSound;
 import org.mineacademy.fo.model.SimpleTime;
 import org.mineacademy.fo.settings.SimpleSettings;
 
-import java.io.IOException;
 import java.util.*;
 
 @SuppressWarnings("unused")
@@ -23,17 +22,17 @@ public final class Settings extends SimpleSettings {
 	}
 
 	@Override
-	protected List<String> getUncommentedSections() {
-		return Collections.singletonList(messagePath);
-	}
-
-	@Override
 	protected boolean saveComments() {
 		return true;
 	}
 
+	@Override
+	protected List<String> getUncommentedSections() {
+		return Collections.singletonList(messagePath);
+	}
+
 	@NoArgsConstructor(access = AccessLevel.PRIVATE)
-	public static class BroadcastSettings {
+	public final static class BroadcastSettings {
 
 		public static final Map<List<String>, String> MESSAGE_MAP = new HashMap<>();
 
@@ -56,10 +55,7 @@ public final class Settings extends SimpleSettings {
 		public static SimpleSound BROADCAST_SOUND;
 
 		private static void init() {
-			pathPrefix(null);
-			generateBroadcastSections();
-
-			pathPrefix("Notifications.Broadcast");
+			setPathPrefix("Notifications.Broadcast");
 			ENABLE_BROADCASTS = getBoolean("Enable");
 			BROADCAST_DELAY = getTime("Delay");
 			RANDOM_MESSAGE = getBoolean("Random_Message");
@@ -72,7 +68,7 @@ public final class Settings extends SimpleSettings {
 	}
 
 	@NoArgsConstructor(access = AccessLevel.PRIVATE)
-	public static class WelcomeSettings {
+	public final static class WelcomeSettings {
 		public static Boolean ENABLE_JOIN_MOTD;
 
 		public static List<String> JOIN_MOTD = new ArrayList<>();
@@ -82,7 +78,7 @@ public final class Settings extends SimpleSettings {
 		public static SimpleSound MOTD_SOUND;
 
 		private static void init() {
-			pathPrefix("Notifications.Welcome");
+			setPathPrefix("Notifications.Welcome");
 			ENABLE_JOIN_MOTD = getBoolean("Enable_MOTD");
 			MOTD_DELAY = getTime("MOTD_Delay");
 			MOTD_SOUND = getSound("Sound");
@@ -91,7 +87,7 @@ public final class Settings extends SimpleSettings {
 	}
 
 	@NoArgsConstructor(access = AccessLevel.PRIVATE)
-	public static class JoinSettings {
+	public final static class JoinSettings {
 
 		public static String JOIN_MESSAGE;
 		public static String QUIT_MESSAGE;
@@ -104,7 +100,7 @@ public final class Settings extends SimpleSettings {
 		public static List<String> BROADCAST_WORLDS = new ArrayList<>();
 
 		private static void init() {
-			pathPrefix("Notifications.Join");
+			setPathPrefix("Notifications.Join");
 			ENABLE_JOIN_MESSAGE = getBoolean("Enable_Join_Message");
 			ENABLE_QUIT_MESSAGE = getBoolean("Enable_Quit_Message");
 
@@ -120,7 +116,7 @@ public final class Settings extends SimpleSettings {
 	}
 
 	@NoArgsConstructor(access = AccessLevel.PRIVATE)
-	public static class ChatSettings {
+	public final static class ChatSettings {
 
 		public static Boolean ENABLE_MENTIONS;
 
@@ -130,7 +126,7 @@ public final class Settings extends SimpleSettings {
 		public static SimpleSound MENTION_SOUND;
 
 		private static void init() {
-			pathPrefix("Chat.Mentions");
+			setPathPrefix("Chat.Mentions");
 			ENABLE_MENTIONS = getBoolean("Enable");
 			MENTION_IGNORE_PERMISSION = getString("Ignore_Permission");
 			MENTION_COLOR = getString("Color");
@@ -138,19 +134,18 @@ public final class Settings extends SimpleSettings {
 		}
 	}
 
-	@NoArgsConstructor(access = AccessLevel.PRIVATE)
-	public static class DatabaseSettings {
+	public final static class DatabaseSettings {
 
 		public static Boolean ENABLE_MYSQL;
 
 		private static void init() {
-			pathPrefix("Database");
+			setPathPrefix("Database");
 			ENABLE_MYSQL = getBoolean("Enable_MySQL");
 		}
 	}
 
 	@NoArgsConstructor(access = AccessLevel.PRIVATE)
-	public static class HookSettings {
+	public final static class HookSettings {
 
 		public static Boolean VAULT;
 		public static Boolean PAPI;
@@ -158,7 +153,7 @@ public final class Settings extends SimpleSettings {
 		public static Boolean BSTATS;
 
 		private static void init() {
-			pathPrefix("Hooks");
+			setPathPrefix("Hooks");
 			VAULT = getBoolean("Vault");
 			PAPI = getBoolean("PlaceholderAPI");
 			DISCORDSRV = getBoolean("DiscordSRV");
@@ -167,7 +162,7 @@ public final class Settings extends SimpleSettings {
 	}
 
 	@NoArgsConstructor(access = AccessLevel.PRIVATE)
-	public static class DiscordSettings {
+	public final static class DiscordSettings {
 
 		public static Boolean DISCORDMINECRAFT;
 		public static String CHATFORMAT;
@@ -185,17 +180,17 @@ public final class Settings extends SimpleSettings {
 		public static String DEFAULT_IMAGE;
 
 		private static void init() {
-			pathPrefix("Discord.Discord_To_Minecraft");
+			setPathPrefix("Discord.Discord_To_Minecraft");
 			DISCORDMINECRAFT = getBoolean("Enable");
 			CHATFORMAT = getString("Chat_Format");
 
-			pathPrefix("Discord.Minecraft_To_Discord");
+			setPathPrefix("Discord.Minecraft_To_Discord");
 			MINECRAFTDISCORD = getBoolean("Enable");
 			USEWEBHOOK = getBoolean("Use_Webhook");
 			SYNCANNOUNCEMENTS = getBoolean("Sync_Announcements");
 			ANNOUNCEMENTSCOLOR = getString("Announcements_Color");
 
-			pathPrefix("Discord");
+			setPathPrefix("Discord");
 			ANNOUNCEMENTSID = getString("Announcements_Channel_ID");
 			MINECRAFTID = getString("Minecraft_Channel_ID");
 			AUTHOR = getString("Author");
@@ -205,49 +200,39 @@ public final class Settings extends SimpleSettings {
 
 	}
 
-	private static void generateBroadcastSections() {
-		Objects.requireNonNull(getConfig().getConfigurationSection(messagePath)).getKeys(false).forEach(path -> {
+	public static void generateBroadcastSections() {
+		val config = YamlConfiguration.loadConfiguration(Bubble.settingsFile);
+		Objects.requireNonNull(config.getConfigurationSection(messagePath)).getKeys(false).forEach(path -> {
 			val permissionPath = messagePath + "." + path + ".Permission";
 			val centerPath = messagePath + "." + path + ".Centered";
 			val worldsPath = messagePath + "." + path + ".Worlds";
 
-			if (!isSet(permissionPath))
-				getConfig().set(permissionPath, "none");
+			if (!config.contains(permissionPath))
+				config.set(permissionPath, "none");
 
-			if (!isSet(centerPath))
-				getConfig().set(centerPath, false);
+			if (!config.contains(centerPath))
+				config.set(centerPath, false);
 
-			if (!isSet(messagePath + "." + path + ".Message"))
-				getConfig().createSection(messagePath + "." + path + ".Message");
+			if (!config.contains(messagePath + "." + path + ".Message"))
+				config.createSection(messagePath + "." + path + ".Message");
 
-			if (!isSet(worldsPath))
-				getConfig().createSection(worldsPath);
+			if (!config.contains(worldsPath))
+				config.createSection(worldsPath);
 
-			val stringList = getStringList(messagePath + "." + path + ".Message");
-			val worldList = getStringList(worldsPath);
+			val stringList = config.getStringList(messagePath + "." + path + ".Message");
+			val worldList = config.getStringList(worldsPath);
 
-			BroadcastSettings.PERMISSION.put(path, getString(permissionPath));
-			BroadcastSettings.CENTERED.put(centerPath, getBoolean(centerPath));
+			BroadcastSettings.PERMISSION.put(path, config.getString(permissionPath));
+			BroadcastSettings.CENTERED.put(centerPath, config.getBoolean(centerPath));
 			BroadcastSettings.MESSAGE_MAP.put(stringList, path);
 			BroadcastSettings.BROADCAST_WORLDS.put(worldList, worldsPath);
-			try {
-				getConfig().save(Bubble.settingsFile);
-			} catch (final IOException e) {
-				e.printStackTrace();
-			}
 		});
 	}
 
 	@Override
 	protected void beforeLoad() {
-		if (Bubble.settingsFile.exists()) {
-			val header = new ArrayList<>(Arrays.asList(
-					"# !-----------------------------------------------------------------------------------------------!",
-					"#                       Welcome to the main configuration of Bubble",
-					"# !-----------------------------------------------------------------------------------------------!"));
-			CommentLoader.getSettingsInstance().load(Bubble.settingsFile);
-			CommentLoader.getSettingsInstance().setHeader(header);
-		}
+		generateBroadcastSections();
+		//CommentLoader.getSettingsInstance().apply(Bubble.settingsFile);
 	}
 }
 

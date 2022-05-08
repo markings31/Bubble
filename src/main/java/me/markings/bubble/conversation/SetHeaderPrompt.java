@@ -6,6 +6,7 @@ import lombok.NoArgsConstructor;
 import me.markings.bubble.Bubble;
 import me.markings.bubble.settings.Localization;
 import me.markings.bubble.util.ConfigUtil;
+import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.conversations.ConversationContext;
 import org.bukkit.conversations.Prompt;
 import org.bukkit.entity.Player;
@@ -29,10 +30,10 @@ public class SetHeaderPrompt extends SimplePrompt {
 	@Nullable
 	@Override
 	protected Prompt acceptValidatedInput(@NotNull final ConversationContext conversationContext, @NotNull final String s) {
-		Bubble.getInstance().getBubbleSettings().set("Notifications.Broadcast.Header", s);
+		YamlConfiguration.loadConfiguration(Bubble.settingsFile).set("Notifications.Broadcast.Header", s);
 		ConfigUtil.saveConfig((Player) conversationContext.getForWhom(),
 				"&aSuccessfully set header to '" + s + "'&a!",
-				"&cFailed to set header! Error: ");
+				"&cFailed to set header! Error: ", YamlConfiguration.loadConfiguration(Bubble.settingsFile));
 
 		return Prompt.END_OF_CONVERSATION;
 	}

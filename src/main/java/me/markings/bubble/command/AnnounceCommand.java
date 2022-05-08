@@ -18,7 +18,8 @@ public class AnnounceCommand extends SimpleCommand {
 		super("announce|an|a");
 
 		setMinArguments(2);
-		setUsage("<message|title|bossbar|actionbar|toast> [<material>] <input|...>");
+		setDescription("Announce the given message to the server.");
+		setUsage("<message/title/bossbar/actionbar/toast> [material] <input|...>");
 		setPermission(Permissions.Command.ANNOUNCE);
 	}
 

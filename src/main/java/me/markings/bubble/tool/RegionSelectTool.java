@@ -16,7 +16,7 @@ import org.mineacademy.fo.remain.CompMaterial;
 import java.util.Objects;
 
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
-public class RegionSelectTool extends Tool {
+public final class RegionSelectTool extends Tool {
 
 	@Getter
 	private static final RegionSelectTool instance = new RegionSelectTool();
@@ -31,7 +31,7 @@ public class RegionSelectTool extends Tool {
 
 	@Override
 	public ItemStack getItem() {
-		return ItemCreator.of(CompMaterial.IRON_AXE, "&bRegion Select Tool").build().make();
+		return ItemCreator.of(CompMaterial.IRON_AXE, "&bRegion Select Tool").make();
 	}
 
 	@Override

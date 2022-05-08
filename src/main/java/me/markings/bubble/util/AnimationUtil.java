@@ -1,9 +1,6 @@
 package me.markings.bubble.util;
 
-import lombok.AccessLevel;
-import lombok.NoArgsConstructor;
-import lombok.NonNull;
-import lombok.RequiredArgsConstructor;
+import lombok.*;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
@@ -11,20 +8,20 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.scheduler.BukkitRunnable;
 import org.bukkit.scheduler.BukkitTask;
+import org.bukkit.util.Vector;
 import org.mineacademy.fo.Common;
+import org.mineacademy.fo.MathUtil;
 import org.mineacademy.fo.PlayerUtil;
 import org.mineacademy.fo.model.SimpleScoreboard;
 import org.mineacademy.fo.plugin.SimplePlugin;
-import org.mineacademy.fo.remain.CompBarColor;
-import org.mineacademy.fo.remain.CompBarStyle;
-import org.mineacademy.fo.remain.CompChatColor;
-import org.mineacademy.fo.remain.Remain;
+import org.mineacademy.fo.remain.*;
 import org.mineacademy.fo.remain.internal.BossBarInternals;
 
 import javax.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.stream.IntStream;
 
 /**
  * Utility class for creating text animations for BossBars, Scoreboards, HUD Titles and Inventories.
@@ -66,6 +63,34 @@ public class AnimationUtil {
 		final CompChatColor middleColorFinal = middleColor != null ? middleColor : firstColor;
 
 		result.add(firstColor + first + middleColorFinal + middle + lastColor + last);
+	}
+
+	// Credit to Matej for the animation!
+	public static void drawCircle(final Player player) {
+		/*final int radius = 3;
+
+		for (double degree = 0; degree <= 360; degree += 10) {
+			final double radians = Math.toRadians(degree);
+
+			final double x = Math.cos(radians) * radius;
+			final double z = Math.sin(radians) * radius;
+
+			CompParticle.VILLAGER_HAPPY.spawn(center.clone().add(x, 0, z));
+		}*/
+
+		val degreeStep = 1;
+		val circleRadius = 3;
+
+		val location = player.getLocation().add(player.getLocation().getDirection().normalize());
+
+		IntStream.range(0, 360).mapToDouble(Math::toRadians).forEachOrdered(radians -> {
+			val x = Math.cos(radians) * circleRadius;
+			val z = Math.sin(radians) * circleRadius;
+			val vector = new Vector(x, 0, z);
+			MathUtil.rotateAroundAxisX(vector, location.getPitch() + 90);
+			MathUtil.rotateAroundAxisY(vector, location.getYaw());
+			CompParticle.VILLAGER_HAPPY.spawn(location.clone().add(vector));
+		});
 	}
 
 	/**

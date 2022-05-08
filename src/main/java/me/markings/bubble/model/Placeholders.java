@@ -4,7 +4,7 @@ import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.NonNull;
-import me.markings.bubble.PlayerCache;
+import me.markings.bubble.PlayerData;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.mineacademy.fo.model.SimpleExpansion;
@@ -24,17 +24,17 @@ public final class Placeholders extends SimpleExpansion {
 
 		switch (identifier) {
 			case "broadcasts_enabled":
-				return String.valueOf(PlayerCache.getCache(player).isBroadcastStatus());
+				return String.valueOf(PlayerData.getCache(player).isBroadcastStatus());
 			case "broadcast_sound_enabled":
-				return String.valueOf(PlayerCache.getCache(player).isBroadcastSoundStatus());
+				return String.valueOf(PlayerData.getCache(player).isBroadcastSoundStatus());
 			case "motd_enabled":
-				return String.valueOf(PlayerCache.getCache(player).isMotdStatus());
+				return String.valueOf(PlayerData.getCache(player).isMotdStatus());
 			case "mentions_enabled":
-				return String.valueOf(PlayerCache.getCache(player).isMentionsStatus());
+				return String.valueOf(PlayerData.getCache(player).isMentionsStatus());
 			case "mentions_sound_enabled":
-				return String.valueOf(PlayerCache.getCache(player).isMentionSoundStatus());
+				return String.valueOf(PlayerData.getCache(player).isMentionSoundStatus());
 			case "mentions_toast_enabled":
-				return String.valueOf(PlayerCache.getCache(player).isMentionToastStatus());
+				return String.valueOf(PlayerData.getCache(player).isMentionToastStatus());
 			case "ping":
 				return player.getPing() + "ms";
 			case "tps":

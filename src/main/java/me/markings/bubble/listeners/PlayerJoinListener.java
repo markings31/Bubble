@@ -1,7 +1,7 @@
 package me.markings.bubble.listeners;
 
 import lombok.*;
-import me.markings.bubble.PlayerCache;
+import me.markings.bubble.PlayerData;
 import me.markings.bubble.settings.Settings;
 import me.markings.bubble.util.MessageUtil;
 import org.bukkit.entity.Firework;
@@ -27,7 +27,7 @@ public class PlayerJoinListener implements Listener {
 		event.setJoinMessage(Settings.JoinSettings.ENABLE_JOIN_MESSAGE.equals(Boolean.TRUE) ?
 				Common.colorize(Variables.replace(Settings.JoinSettings.JOIN_MESSAGE, player)) : event.getJoinMessage());
 
-		val cache = PlayerCache.getCache(player);
+		val cache = PlayerData.getCache(player);
 
 		val messages = Settings.WelcomeSettings.JOIN_MOTD;
 
@@ -47,7 +47,7 @@ public class PlayerJoinListener implements Listener {
 						MessageUtil.executePlaceholders(Variables.replace(message, player), player);
 						return;
 					}
-					Common.tell(player, MessageUtil.replaceVarsAndGradient(message, player));
+					Common.tellNoPrefix(player, MessageUtil.replaceVarsAndGradient(message, player));
 				});
 				new SimpleSound(motdSound.getSound(), motdSound.getVolume(), motdSound.getPitch()).play(player);
 			});

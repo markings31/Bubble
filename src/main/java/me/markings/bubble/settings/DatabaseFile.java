@@ -28,8 +28,7 @@ public class DatabaseFile extends YamlConfig {
 	}
 
 	@Override
-	protected void onLoadFinish() {
-		pathPrefix(null);
+	protected void onLoad() {
 		host = getString("Host");
 		port = getInteger("Port");
 		name = getString("Database_Name");
@@ -39,7 +38,7 @@ public class DatabaseFile extends YamlConfig {
 	}
 
 	@Override
-	protected SerializedMap serialize() {
+	public SerializedMap saveToMap() {
 		return SerializedMap.ofArray(
 				"Host", host,
 				"Port", port,

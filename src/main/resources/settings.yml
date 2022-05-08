@@ -76,7 +76,7 @@ Notifications:
         Worlds:
           - world
         Message:
-          - '#ff3393This is an example of a HEX message!'
+          - '<gradient:#77fc03:#0352fc>This is an example of a HEX message!</gradient>'
 
   # Welcome Messages
   Welcome:
@@ -97,7 +97,7 @@ Notifications:
     # The message sent to players on-join.
     Join_MOTD:
       - '<center>&8%chat_line%'
-      - '<center>&7Welcome to the server, &b%player%&7!'
+      - '<center>&7Welcome to %server_name%, &b%player%&7!'
       - '<center>&f'
       - '<center>&bWebsite: &fyourserver.com'
       - '<center>&bDiscord: &fdiscord.com/yourserver'

@@ -14,7 +14,8 @@ public class DiscordCommand extends SimpleSubCommand {
 		super("discord");
 
 		setMinArguments(2);
-		setUsage("<announcement|message> [<image_url>] <color> <message>");
+		setDescription("Send customizable Discord messages to the connected channels.");
+		setUsage("<announcement/message> [image_url] <color> <message>");
 		setPermission(Permissions.Command.DISCORD_COMMAND);
 	}
 
@@ -42,5 +43,16 @@ public class DiscordCommand extends SimpleSubCommand {
 		}
 
 		tellSuccess("&aSuccessfully sent to Discord!");
+	}
+
+	@Override
+	protected String[] getMultilineUsageMessage() {
+		val commandLabel = "&f/bu " + getSublabel();
+		return new String[]{
+				commandLabel + " announcement [image_url] <color> <message>&7 - Sends an announcement-styled message to the connected channel.",
+				commandLabel + " message <message>&7 - Sends a standard message to the channel.",
+				"&f",
+				"&c&lNOTE:&c You can find more info about Discord usage at our wiki page."
+		};
 	}
 }

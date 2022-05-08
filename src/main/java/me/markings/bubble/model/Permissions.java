@@ -2,11 +2,11 @@ package me.markings.bubble.model;
 
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
-import org.mineacademy.fo.annotation.Permission;
-import org.mineacademy.fo.annotation.PermissionGroup;
-import org.mineacademy.fo.constants.FoPermissions;
+import org.mineacademy.fo.command.annotation.Permission;
+import org.mineacademy.fo.command.annotation.PermissionGroup;
 
-public class Permissions extends FoPermissions {
+@NoArgsConstructor(access = AccessLevel.PRIVATE)
+public class Permissions {
 
 	@NoArgsConstructor(access = AccessLevel.PRIVATE)
 	@PermissionGroup("Main Command")

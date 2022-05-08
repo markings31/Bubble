@@ -4,6 +4,7 @@ import lombok.val;
 import me.markings.bubble.Bubble;
 import me.markings.bubble.model.Permissions;
 import me.markings.bubble.util.ConfigUtil;
+import org.bukkit.configuration.file.YamlConfiguration;
 import org.mineacademy.fo.command.SimpleSubCommand;
 
 import java.util.ArrayList;
@@ -16,13 +17,14 @@ public class CenterCommand extends SimpleSubCommand {
 		super("center");
 
 		setMinArguments(1);
-		setUsage("<broadcast_label|all>");
+		setDescription("Toggle automatic centering for broadcast messages.");
+		setUsage("<label/all>");
 		setPermission(Permissions.Command.CENTER);
 	}
 
 	@Override
 	protected void onCommand() {
-		val config = Bubble.getInstance().getBubbleSettings();
+		val config = YamlConfiguration.loadConfiguration(Bubble.settingsFile);
 		val centerPath = "Notifications.Broadcast.Messages." + args[0] + ".Centered";
 		val centerAllPath = "Notifications.Broadcast.Center_All";
 
@@ -32,7 +34,7 @@ public class CenterCommand extends SimpleSubCommand {
 			ConfigUtil.saveConfig(getPlayer(),
 					"&aSuccessfully toggled centered status of all messages to "
 							+ (config.getBoolean(centerAllPath) ? "&aENABLED" : "&cDISABLED"),
-					"&cFailed to center message! Error: ");
+					"&cFailed to center message! Error: ", config);
 		} else {
 			checkBoolean(config.contains(centerPath), "No configuration section " + args[0] + " found!");
 			ConfigUtil.toggleCentered(centerPath, getPlayer());
@@ -40,10 +42,21 @@ public class CenterCommand extends SimpleSubCommand {
 	}
 
 	@Override
+	protected String[] getMultilineUsageMessage() {
+		val commandLabel = "&f/bu " + getSublabel();
+		return new String[]{
+				commandLabel + " <label>&7 - Centers the messages contained in the 'label' section.",
+				commandLabel + " all&7 - Centers all messages across different sections.",
+				"&f",
+				"&c&lNOTE:&c 'label' refers to the name of the broadcast section."
+		};
+	}
+
+	@Override
 	protected List<String> tabComplete() {
 		if (args.length == 1)
 			return completeLastWord(Objects.requireNonNull(
-					Bubble.getInstance().getBubbleSettings().
+					YamlConfiguration.loadConfiguration(Bubble.settingsFile).
 							getConfigurationSection("Notifications.Broadcast.Messages")).getValues(false).keySet(), "all");
 
 		return new ArrayList<>();

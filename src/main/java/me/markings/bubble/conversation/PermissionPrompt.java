@@ -8,13 +8,14 @@ import me.markings.bubble.Bubble;
 import me.markings.bubble.command.bubble.EditCommand;
 import me.markings.bubble.settings.Localization;
 import me.markings.bubble.util.ConfigUtil;
-import org.apache.commons.lang.math.NumberUtils;
+import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.conversations.ConversationContext;
 import org.bukkit.conversations.Prompt;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.mineacademy.fo.Messenger;
+import org.mineacademy.fo.Valid;
 import org.mineacademy.fo.conversation.SimplePrompt;
 import org.mineacademy.fo.remain.Remain;
 
@@ -32,7 +33,7 @@ public class PermissionPrompt extends SimplePrompt {
 
 	@Override
 	protected boolean isInputValid(final ConversationContext context, final String input) {
-		return NumberUtils.isNumber(input);
+		return Valid.isInteger(input);
 	}
 
 	@Override
@@ -43,14 +44,14 @@ public class PermissionPrompt extends SimplePrompt {
 	@Nullable
 	@Override
 	protected Prompt acceptValidatedInput(@NotNull final ConversationContext context, @NotNull final String input) {
-		val config = Bubble.getInstance().getBubbleSettings();
+		val config = YamlConfiguration.loadConfiguration(Bubble.settingsFile);
 		val commandArg = EditCommand.getInput();
 		val newSection = "Notifications.Broadcast.Messages." + commandArg;
 
 		config.set(newSection + ".Permission", input);
 		ConfigUtil.saveConfig((Player) context.getForWhom(),
 				"&aSuccessfully changed permission in section " + commandArg + " to " + input + "!",
-				"Failed to change permission! Error: ");
+				"Failed to change permission! Error: ", config);
 
 		return Prompt.END_OF_CONVERSATION;
 	}

@@ -17,11 +17,12 @@ import org.bukkit.event.player.AsyncPlayerChatEvent;
 import org.mineacademy.fo.ChatUtil;
 import org.mineacademy.fo.Common;
 import org.mineacademy.fo.model.DiscordListener;
+import org.mineacademy.fo.remain.Remain;
 
 import java.awt.*;
 
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
-public class DiscordSRVHook extends DiscordListener {
+public final class DiscordSRVHook extends DiscordListener {
 
 	@Getter
 	private static final DiscordSRVHook instance = new DiscordSRVHook();
@@ -37,10 +38,10 @@ public class DiscordSRVHook extends DiscordListener {
 
 		if (!displayMessage.trim().isEmpty() && channel.equals(findChannel(Long.parseLong(Settings.DiscordSettings.MINECRAFTID)))
 				&& Boolean.TRUE.equals(Settings.DiscordSettings.DISCORDMINECRAFT))
-			Common.broadcast(Settings.DiscordSettings.CHATFORMAT
+			Remain.getOnlinePlayers().forEach(player -> Common.tellNoPrefix(player, Settings.DiscordSettings.CHATFORMAT
 					.replace("%user%", member.getEffectiveName())
 					.replace("%message%", displayMessage)
-					.replace("%channel%", channel.getName()));
+					.replace("%channel%", channel.getName())));
 	}
 
 	@EventHandler(priority = EventPriority.MONITOR)

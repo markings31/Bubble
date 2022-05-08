@@ -2,9 +2,10 @@ package me.markings.bubble.tasks;
 
 import lombok.val;
 import me.markings.bubble.Bubble;
-import me.markings.bubble.PlayerCache;
+import me.markings.bubble.PlayerData;
 import me.markings.bubble.settings.Settings;
 import me.markings.bubble.util.MessageUtil;
+import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitRunnable;
 import org.mineacademy.fo.ChatUtil;
@@ -49,7 +50,7 @@ public class BroadcastTask extends BukkitRunnable {
 		val broadcastSound = Settings.BroadcastSettings.BROADCAST_SOUND;
 
 		worlds.keySet().forEach(world -> Remain.getOnlinePlayers().forEach(player -> {
-			val cache = PlayerCache.getCache(player);
+			val cache = PlayerData.getCache(player);
 			if (cache.isBroadcastStatus()) {
 
 				playerChecks(player, world);
@@ -89,7 +90,7 @@ public class BroadcastTask extends BukkitRunnable {
 
 			message = Boolean.TRUE.equals(Settings.BroadcastSettings.CENTER_ALL) ? ChatUtil.center(message) : message;
 
-			if (Bubble.getInstance().getBubbleSettings().getBoolean("Notifications.Broadcast.Messages." + currentPath + ".Center"))
+			if (YamlConfiguration.loadConfiguration(Bubble.settingsFile).getBoolean("Notifications.Broadcast.Messages." + currentPath + ".Center"))
 				message = ChatUtil.center(message);
 
 			Common.tellNoPrefix(player, MessageUtil.replaceVarsAndGradient(message, player));

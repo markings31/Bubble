@@ -2,7 +2,7 @@ package me.markings.bubble.api;
 
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
-import me.markings.bubble.PlayerCache;
+import me.markings.bubble.PlayerData;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.mineacademy.fo.remain.CompMaterial;
@@ -21,7 +21,7 @@ public final class BubbleAPI {
 	 * @return the player's cache information
 	 */
 	public static Cache getCache(final Player player) {
-		return PlayerCache.getCache(player);
+		return PlayerData.getCache(player);
 	}
 
 	/**

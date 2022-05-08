@@ -6,6 +6,7 @@ import lombok.NoArgsConstructor;
 import me.markings.bubble.Bubble;
 import me.markings.bubble.settings.Localization;
 import me.markings.bubble.util.ConfigUtil;
+import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.conversations.ConversationContext;
 import org.bukkit.conversations.Prompt;
 import org.bukkit.entity.Player;
@@ -29,10 +30,10 @@ public class SetFooterPrompt extends SimplePrompt {
 	@Nullable
 	@Override
 	protected Prompt acceptValidatedInput(@NotNull final ConversationContext conversationContext, @NotNull final String s) {
-		Bubble.getInstance().getBubbleSettings().set("Notifications.Broadcast.Footer", s);
+		YamlConfiguration.loadConfiguration(Bubble.settingsFile).set("Notifications.Broadcast.Footer", s);
 		ConfigUtil.saveConfig((Player) conversationContext.getForWhom(),
 				"&aSuccessfully set footer to '" + s + "'&a!",
-				"&cFailed to set footer! Error: ");
+				"&cFailed to set footer! Error: ", YamlConfiguration.loadConfiguration(Bubble.settingsFile));
 
 		return Prompt.END_OF_CONVERSATION;
 	}

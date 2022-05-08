@@ -18,7 +18,7 @@ public class Localization extends SimpleLocalization {
 		public static String MENTIONED_MESSAGE;
 
 		private static void init() {
-			pathPrefix("Notifications");
+			setPathPrefix("Notifications");
 			MENTIONED_MESSAGE = getString("Mentioned_Toast");
 		}
 	}
@@ -39,7 +39,7 @@ public class Localization extends SimpleLocalization {
 		public static String COLOR_PROMPT_MESSAGE;
 
 		private static void init() {
-			pathPrefix("Prompt");
+			setPathPrefix("Prompt");
 			EDIT_PROMPT_MESSAGE = getString("Edit_Prompt_Message");
 			PERMISSION_PROMPT_MESSAGE = getString("Permission_Prompt_Message");
 			LABEL_PROMPT_MESSAGE = getString("Label_Prompt_Message");

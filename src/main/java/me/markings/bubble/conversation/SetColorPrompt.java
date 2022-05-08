@@ -7,6 +7,7 @@ import me.markings.bubble.Bubble;
 import me.markings.bubble.settings.Localization;
 import me.markings.bubble.util.ConfigUtil;
 import me.markings.bubble.util.MessageUtil;
+import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.conversations.ConversationContext;
 import org.bukkit.conversations.Prompt;
 import org.bukkit.entity.Player;
@@ -41,10 +42,10 @@ public class SetColorPrompt extends SimplePrompt {
 	@Nullable
 	@Override
 	protected Prompt acceptValidatedInput(@NotNull final ConversationContext conversationContext, @NotNull final String s) {
-		Bubble.getInstance().getBubbleSettings().set("Discord.Minecraft_To_Discord.Announcements_Color", s);
+		YamlConfiguration.loadConfiguration(Bubble.settingsFile).set("Discord.Minecraft_To_Discord.Announcements_Color", s);
 		ConfigUtil.saveConfig((Player) conversationContext.getForWhom(),
 				"&aSuccessfully set announcement color to '" + s + "'&a!",
-				"&cFailed to set announcement color! Error: ");
+				"&cFailed to set announcement color! Error: ", YamlConfiguration.loadConfiguration(Bubble.settingsFile));
 
 		return Prompt.END_OF_CONVERSATION;
 	}

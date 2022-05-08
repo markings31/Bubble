@@ -1,7 +1,7 @@
 package me.markings.bubble.menu;
 
 import lombok.val;
-import me.markings.bubble.PlayerCache;
+import me.markings.bubble.PlayerData;
 import me.markings.bubble.settings.MenuSettings;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.ClickType;
@@ -10,6 +10,7 @@ import org.mineacademy.fo.menu.Menu;
 import org.mineacademy.fo.menu.button.Button;
 import org.mineacademy.fo.menu.button.ButtonMenu;
 import org.mineacademy.fo.menu.model.ItemCreator;
+import org.mineacademy.fo.remain.CompMaterial;
 
 public class NotificationsMenu extends Menu {
 
@@ -45,7 +46,7 @@ public class NotificationsMenu extends Menu {
 		else if (slot == menuSettings.getMentionsSettingsButtonSlot())
 			return mentionsSettingsButton.getItem();
 
-		return null;
+		return ItemCreator.of(CompMaterial.GRAY_STAINED_GLASS_PANE, "").make();
 	}
 
 	@Override
@@ -70,37 +71,37 @@ public class NotificationsMenu extends Menu {
 			toggleBroadcastsButton = new Button() {
 				@Override
 				public void onClickedInMenu(final Player player, final Menu menu, final ClickType click) {
-					val cache = PlayerCache.getCache(getViewer());
+					val cache = PlayerData.getCache(getViewer());
 					cache.setBroadcastStatus(!cache.isBroadcastStatus());
 					restartMenu(cache.isBroadcastStatus() ? "&aBroadcasts ENABLED" : "&cBroadcasts DISABLED");
 				}
 
 				@Override
 				public ItemStack getItem() {
-					val cache = PlayerCache.getCache(getViewer());
+					val cache = PlayerData.getCache(getViewer());
 					return ItemCreator.of(cache.isBroadcastStatus() ? CHAT_MENU_SETTINGS.getBroadcastsEnabledButtonMaterial()
 									: CHAT_MENU_SETTINGS.getBroadcastsDisabledButtonMaterial(),
 							(cache.isBroadcastStatus() ? CHAT_MENU_SETTINGS.getBroadcastsEnabledButtonTitle()
 									: CHAT_MENU_SETTINGS.getBroadcastsDisabledButtonTitle()),
-							CHAT_MENU_SETTINGS.getBroadcastStatusButtonLore()).build().make();
+							CHAT_MENU_SETTINGS.getBroadcastStatusButtonLore()).make();
 				}
 			};
 
 			toggleBroadcastSoundButton = new Button() {
 				@Override
 				public void onClickedInMenu(final Player player, final Menu menu, final ClickType click) {
-					val cache = PlayerCache.getCache(getViewer());
+					val cache = PlayerData.getCache(getViewer());
 					cache.setBroadcastSoundStatus(!cache.isBroadcastSoundStatus());
 					restartMenu(cache.isBroadcastSoundStatus() ? "&aBroadcast Sound ENABLED!" : "&cBroadcast Sound DISABLED!");
 				}
 
 				@Override
 				public ItemStack getItem() {
-					val cache = PlayerCache.getCache(getViewer());
+					val cache = PlayerData.getCache(getViewer());
 					return ItemCreator.of(CHAT_MENU_SETTINGS.getBroadcastSoundButtonMaterial(),
 							(cache.isBroadcastSoundStatus() ? CHAT_MENU_SETTINGS.getBroadcastSoundEnabledButtonTitle()
 									: CHAT_MENU_SETTINGS.getBroadcastSoundDisabledButtonTitle()),
-							CHAT_MENU_SETTINGS.getBroadcastSoundButtonLore()).build().make();
+							CHAT_MENU_SETTINGS.getBroadcastSoundButtonLore()).make();
 				}
 			};
 		}
@@ -112,10 +113,11 @@ public class NotificationsMenu extends Menu {
 			else if (slot == CHAT_MENU_SETTINGS.getBroadcastSoundButtonSlot())
 				return toggleBroadcastSoundButton.getItem();
 
-			return null;
+			return ItemCreator.of(CompMaterial.GRAY_STAINED_GLASS_PANE, "").make();
 		}
 	}
 
+	// TODO: Update MOTD settings options.
 	public class MOTDSettingsMenu extends Menu {
 
 		private final Button toggleMOTDButton;
@@ -129,25 +131,26 @@ public class NotificationsMenu extends Menu {
 			toggleMOTDButton = new Button() {
 				@Override
 				public void onClickedInMenu(final Player player, final Menu menu, final ClickType click) {
-					val cache = PlayerCache.getCache(getViewer());
+					val cache = PlayerData.getCache(getViewer());
 					cache.setMotdStatus(!cache.isMotdStatus());
 					restartMenu(cache.isMotdStatus() ? "&aMOTD ENABLED!" : "&cMOTD DISABLED!");
 				}
 
 				@Override
 				public ItemStack getItem() {
-					val cache = PlayerCache.getCache(getViewer());
+					val cache = PlayerData.getCache(getViewer());
 					return ItemCreator.of(MOTD_MENU_SETTINGS.getMotdStatusButtonMaterial(),
 							(cache.isMotdStatus() ? MOTD_MENU_SETTINGS.getMotdEnabledButtonTitle()
 									: MOTD_MENU_SETTINGS.getMotdDisabledButtonTitle()),
-							MOTD_MENU_SETTINGS.getMotdStatusButtonLore()).build().make();
+							MOTD_MENU_SETTINGS.getMotdStatusButtonLore()).make();
 				}
 			};
 		}
 
 		@Override
 		public ItemStack getItemAt(final int slot) {
-			return slot == MOTD_MENU_SETTINGS.getMotdStatusButtonSlot() ? toggleMOTDButton.getItem() : null;
+			return slot == MOTD_MENU_SETTINGS.getMotdStatusButtonSlot() ? toggleMOTDButton.getItem() : ItemCreator.of(CompMaterial.GRAY_STAINED_GLASS_PANE, "").make();
+
 		}
 	}
 
@@ -166,52 +169,52 @@ public class NotificationsMenu extends Menu {
 			toggleMentionsButton = new Button() {
 				@Override
 				public void onClickedInMenu(final Player player, final Menu menu, final ClickType click) {
-					val cache = PlayerCache.getCache(getViewer());
+					val cache = PlayerData.getCache(getViewer());
 					cache.setMentionsStatus(!cache.isMentionsStatus());
 					restartMenu(cache.isMentionsStatus() ? "&aMentions ENABLED!" : "&cMentions DISABLED!");
 				}
 
 				@Override
 				public ItemStack getItem() {
-					val cache = PlayerCache.getCache(getViewer());
+					val cache = PlayerData.getCache(getViewer());
 					return ItemCreator.of(MENTIONS_MENU_SETTINGS.getMentionsStatusButtonMaterial(),
 							(cache.isMentionsStatus() ? MENTIONS_MENU_SETTINGS.getMentionsEnabledButtonTitle()
-									: MENTIONS_MENU_SETTINGS.getMentionsDisabledButtonTitle()), MENTIONS_MENU_SETTINGS.getMentionsStatusButtonLore()).build().make();
+									: MENTIONS_MENU_SETTINGS.getMentionsDisabledButtonTitle()), MENTIONS_MENU_SETTINGS.getMentionsStatusButtonLore()).make();
 				}
 			};
 
 			toggleMentionSoundButton = new Button() {
 				@Override
 				public void onClickedInMenu(final Player player, final Menu menu, final ClickType click) {
-					val cache = PlayerCache.getCache(getViewer());
+					val cache = PlayerData.getCache(getViewer());
 					cache.setMentionSoundStatus(!cache.isMentionSoundStatus());
 					restartMenu(cache.isMentionSoundStatus() ? "&aMentions ENABLED!" : "&cMentions DISABLED!");
 				}
 
 				@Override
 				public ItemStack getItem() {
-					val cache = PlayerCache.getCache(getViewer());
+					val cache = PlayerData.getCache(getViewer());
 					return ItemCreator.of(MENTIONS_MENU_SETTINGS.getMentionSoundStatusButtonMaterial(),
 							(cache.isMentionSoundStatus() ? MENTIONS_MENU_SETTINGS.getMentionSoundEnabledButtonTitle()
-									: MENTIONS_MENU_SETTINGS.getMentionSoundDisabledButtonTitle()), MENTIONS_MENU_SETTINGS.getMentionSoundStatusButtonLore()).build().make();
+									: MENTIONS_MENU_SETTINGS.getMentionSoundDisabledButtonTitle()), MENTIONS_MENU_SETTINGS.getMentionSoundStatusButtonLore()).make();
 				}
 			};
 
 			toggleMentionToastButton = new Button() {
 				@Override
 				public void onClickedInMenu(final Player player, final Menu menu, final ClickType click) {
-					val cache = PlayerCache.getCache(getViewer());
+					val cache = PlayerData.getCache(getViewer());
 					cache.setMentionToastStatus(!cache.isMentionToastStatus());
 					restartMenu(cache.isMentionToastStatus() ? "&aMention Toast ENABLED!" : "&cMention Toast DISABLED!");
 				}
 
 				@Override
 				public ItemStack getItem() {
-					val cache = PlayerCache.getCache(getViewer());
+					val cache = PlayerData.getCache(getViewer());
 					return ItemCreator.of(MENTIONS_MENU_SETTINGS.getMentionToastStatusButtonMaterial(),
 							(cache.isMentionToastStatus() ? MENTIONS_MENU_SETTINGS.getMentionToastEnabledButtonTitle()
 									: MENTIONS_MENU_SETTINGS.getMentionToastDisabledButtonTitle()),
-							MENTIONS_MENU_SETTINGS.getMentionToastStatusButtonLore()).build().make();
+							MENTIONS_MENU_SETTINGS.getMentionToastStatusButtonLore()).make();
 				}
 			};
 		}
@@ -225,7 +228,7 @@ public class NotificationsMenu extends Menu {
 			else if (slot == MENTIONS_MENU_SETTINGS.getMentionToastStatusButtonSlot())
 				return toggleMentionToastButton.getItem();
 
-			return null;
+			return ItemCreator.of(CompMaterial.GRAY_STAINED_GLASS_PANE, "").make();
 		}
 	}
 }

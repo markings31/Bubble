@@ -5,19 +5,19 @@ import lombok.val;
 import me.markings.bubble.api.Cache;
 import org.bukkit.entity.Player;
 import org.mineacademy.fo.collection.expiringmap.ExpiringMap;
-import org.mineacademy.fo.constants.FoConstants;
 import org.mineacademy.fo.remain.Remain;
-import org.mineacademy.fo.settings.YamlSectionConfig;
+import org.mineacademy.fo.settings.YamlConfig;
 
 import javax.annotation.Nullable;
 import java.util.UUID;
 import java.util.concurrent.TimeUnit;
 
 @Getter
-public final class PlayerCache extends YamlSectionConfig implements Cache {
+public final class PlayerData extends YamlConfig implements Cache {
 
-	private static final ExpiringMap<UUID, PlayerCache> cacheMap = ExpiringMap.builder().expiration(30, TimeUnit.MINUTES).build();
+	private static final ExpiringMap<UUID, PlayerData> cacheMap = ExpiringMap.builder().expiration(30, TimeUnit.MINUTES).build();
 
+	private final String playerName;
 	private final UUID uuid;
 
 	private boolean broadcastStatus;
@@ -29,16 +29,16 @@ public final class PlayerCache extends YamlSectionConfig implements Cache {
 	private boolean mentionSoundStatus;
 	private boolean mentionToastStatus;
 
-	private PlayerCache(final UUID uuid) {
-		super("Players." + uuid.toString());
-
+	private PlayerData(final String playerName, final UUID uuid) {
+		this.playerName = playerName;
 		this.uuid = uuid;
 
-		loadConfiguration(NO_DEFAULT, FoConstants.File.DATA);
+		this.loadConfiguration(NO_DEFAULT, "players/" + uuid + ".yml");
+		this.save();
 	}
 
 	@Override
-	protected void onLoadFinish() {
+	protected void onLoad() {
 		broadcastStatus = getBoolean("Receive_Broadcasts", true);
 		broadcastSoundStatus = getBoolean("Receive_Broadcast_Sound", true);
 
@@ -50,45 +50,55 @@ public final class PlayerCache extends YamlSectionConfig implements Cache {
 	}
 
 	@Override
+	protected void onSave() {
+		set("Receive_Broadcasts", this.broadcastStatus);
+		set("Receive_Broadcast_Sound", this.broadcastSoundStatus);
+		set("Receive_MOTD", motdStatus);
+		set("Receive_Mentions", mentionsStatus);
+		set("Receive_Mention_Sound", mentionSoundStatus);
+		set("Receive_Mentions_Toast", mentionToastStatus);
+	}
+
+	@Override
 	public void setBroadcastStatus(final boolean broadcastStatus) {
 		this.broadcastStatus = broadcastStatus;
 
-		save("Receive_Broadcasts", broadcastStatus);
+		set("Receive_Broadcasts", broadcastStatus);
 	}
 
 	@Override
 	public void setBroadcastSoundStatus(final boolean broadcastSoundStatus) {
 		this.broadcastSoundStatus = broadcastSoundStatus;
 
-		save("Receive_Broadcast_Sound", broadcastSoundStatus);
+		set("Receive_Broadcast_Sound", broadcastSoundStatus);
 	}
 
 	@Override
 	public void setMotdStatus(final boolean motdStatus) {
 		this.motdStatus = motdStatus;
 
-		save("Receive_MOTD", motdStatus);
+		set("Receive_MOTD", motdStatus);
 	}
 
 	@Override
 	public void setMentionsStatus(final boolean mentionsStatus) {
 		this.mentionsStatus = mentionsStatus;
 
-		save("Receive_Mentions", mentionsStatus);
+		set("Receive_Mentions", mentionsStatus);
 	}
 
 	@Override
 	public void setMentionSoundStatus(final boolean mentionSoundStatus) {
 		this.mentionSoundStatus = mentionSoundStatus;
 
-		save("Receive_Mention_Sound", mentionSoundStatus);
+		set("Receive_Mention_Sound", mentionSoundStatus);
 	}
 
 	@Override
 	public void setMentionToastStatus(final boolean mentionToastStatus) {
 		this.mentionToastStatus = mentionToastStatus;
 
-		save("Receive_Mentions_Toast", mentionToastStatus);
+		set("Receive_Mentions_Toast", mentionToastStatus);
 	}
 
 	/* ------------------------------------------------------------------------------- */
@@ -106,17 +116,20 @@ public final class PlayerCache extends YamlSectionConfig implements Cache {
 	// Static Methods
 	// --------------------------------------------------------------------------------------------------------------
 
-	public static PlayerCache getCache(final Player player) {
-		return getCache(player.getUniqueId());
+	public static PlayerData getCache(final UUID uuid) {
+		return getCache(Remain.getPlayerByUUID(uuid));
 	}
 
-	public static PlayerCache getCache(final UUID uuid) {
-		synchronized (cacheMap) {
-			val cache = new PlayerCache(uuid);
-			cacheMap.putIfAbsent(uuid, cache);
+	public static PlayerData getCache(final Player player) {
+		final UUID uuid = player.getUniqueId();
+		PlayerData data = cacheMap.get(uuid);
 
-			return cache;
+		if (data == null) {
+			data = new PlayerData(player.getName(), uuid);
+			cacheMap.put(uuid, data);
 		}
+
+		return data;
 	}
 
 	public void removeFromMemory() {

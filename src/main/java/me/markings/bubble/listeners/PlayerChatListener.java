@@ -4,7 +4,7 @@ import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.val;
-import me.markings.bubble.PlayerCache;
+import me.markings.bubble.PlayerData;
 import me.markings.bubble.settings.Localization;
 import me.markings.bubble.settings.Settings;
 import org.bukkit.event.EventHandler;
@@ -35,7 +35,7 @@ public class PlayerChatListener implements Listener {
 
 		Remain.getOnlinePlayers().forEach(loopPlayer -> {
 
-			val cache = PlayerCache.getCache(loopPlayer);
+			val cache = PlayerData.getCache(loopPlayer);
 			val playerName = loopPlayer.getName();
 
 			event.setCancelled(true);
@@ -43,8 +43,10 @@ public class PlayerChatListener implements Listener {
 					&& !loopPlayer.hasPermission(Settings.ChatSettings.MENTION_IGNORE_PERMISSION)
 					&& cache.isMentionsStatus()) {
 
-				Common.tell(loopPlayer, String.format(event.getFormat(), eventPlayerName, eventMessage)
+				Common.tellNoPrefix(loopPlayer, String.format(event.getFormat(), eventPlayerName, eventMessage)
 						.replace("@" + playerName, Settings.ChatSettings.MENTION_COLOR + playerName + previousColor));
+
+				Common.log(previousColor);
 
 				if (cache.isMentionToastStatus())
 					Common.dispatchCommand(loopPlayer, "bu notify {player} toast PAPER " + Localization.NotificationMessages.MENTIONED_MESSAGE);
@@ -55,7 +57,7 @@ public class PlayerChatListener implements Listener {
 				return;
 			}
 
-			Common.tell(loopPlayer, String.format(event.getFormat(), eventPlayerName, eventMessage));
+			Common.tellNoPrefix(loopPlayer, String.format(event.getFormat(), eventPlayerName, eventMessage));
 
 		});
 	}

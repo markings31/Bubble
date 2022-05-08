@@ -5,6 +5,7 @@ import me.markings.bubble.Bubble;
 import me.markings.bubble.settings.Localization;
 import me.markings.bubble.util.ConfigUtil;
 import org.bukkit.Bukkit;
+import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.conversations.ConversationContext;
 import org.bukkit.conversations.Prompt;
 import org.bukkit.entity.Player;
@@ -46,7 +47,7 @@ public class SetWorldsPrompt extends SimplePrompt {
 	@Nullable
 	@Override
 	protected Prompt acceptValidatedInput(@NotNull final ConversationContext conversationContext, @NotNull final String s) {
-		val config = Bubble.getInstance().getBubbleSettings();
+		val config = YamlConfiguration.loadConfiguration(Bubble.settingsFile);
 		val inputs = s.contains(" ") ? s.split(", ") : s.split(",");
 		val newSection = "Notifications.Join.Worlds";
 
@@ -60,7 +61,7 @@ public class SetWorldsPrompt extends SimplePrompt {
 
 		ConfigUtil.saveConfig((Player) conversationContext.getForWhom(),
 				"&aSuccessfully set worlds to '" + s + "'&a!",
-				"&cFailed to set worlds! Error: ");
+				"&cFailed to set worlds! Error: ", config);
 
 		return Prompt.END_OF_CONVERSATION;
 	}

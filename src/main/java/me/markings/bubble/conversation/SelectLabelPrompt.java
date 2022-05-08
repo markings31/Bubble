@@ -7,6 +7,7 @@ import lombok.val;
 import me.markings.bubble.Bubble;
 import me.markings.bubble.settings.Localization;
 import org.bukkit.command.CommandSender;
+import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.conversations.ConversationContext;
 import org.bukkit.conversations.Prompt;
 import org.bukkit.entity.Player;
@@ -32,7 +33,7 @@ public class SelectLabelPrompt extends SimplePrompt {
 	@Nullable
 	@Override
 	protected Prompt acceptValidatedInput(@NotNull final ConversationContext conversationContext, @NotNull final String s) {
-		val config = Bubble.getInstance().getBubbleSettings();
+		val config = YamlConfiguration.loadConfiguration(Bubble.settingsFile);
 		val path = "Notifications.Broadcast.Messages." + s;
 
 		if (!config.isSet(path))

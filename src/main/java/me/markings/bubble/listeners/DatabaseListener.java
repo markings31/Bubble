@@ -4,7 +4,7 @@ import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.val;
-import me.markings.bubble.PlayerCache;
+import me.markings.bubble.PlayerData;
 import me.markings.bubble.mysql.BubbleDatabase;
 import me.markings.bubble.settings.Settings;
 import org.bukkit.event.EventHandler;
@@ -26,7 +26,7 @@ public class DatabaseListener implements Listener {
 			val uuid = event.getUniqueId();
 
 			if (event.getLoginResult() == AsyncPlayerPreLoginEvent.Result.ALLOWED) {
-				val cache = PlayerCache.getCache(uuid);
+				val cache = PlayerData.getCache(uuid);
 
 				BubbleDatabase.getInstance().load(uuid, cache);
 			}
@@ -37,7 +37,7 @@ public class DatabaseListener implements Listener {
 	public void onQuit(final PlayerQuitEvent event) {
 		if (Boolean.TRUE.equals(Settings.DatabaseSettings.ENABLE_MYSQL)) {
 			val player = event.getPlayer();
-			val cache = PlayerCache.getCache(player);
+			val cache = PlayerData.getCache(player);
 
 			Common.runLaterAsync(() -> BubbleDatabase.getInstance().save(player.getName(), player.getUniqueId(), cache));
 		}

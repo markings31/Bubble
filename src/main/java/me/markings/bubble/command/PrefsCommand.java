@@ -9,6 +9,7 @@ public class PrefsCommand extends SimpleCommand {
 	public PrefsCommand() {
 		super("notifications|notifprefs|alerts");
 
+		setDescription("Customize your notification preferences.");
 		setPermission(Permissions.Command.PREFS);
 	}
 

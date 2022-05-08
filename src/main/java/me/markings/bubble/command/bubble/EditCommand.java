@@ -5,6 +5,7 @@ import lombok.val;
 import me.markings.bubble.Bubble;
 import me.markings.bubble.menu.EditMenu;
 import me.markings.bubble.model.Permissions;
+import org.bukkit.configuration.file.YamlConfiguration;
 import org.mineacademy.fo.command.SimpleSubCommand;
 
 import java.util.ArrayList;
@@ -20,7 +21,8 @@ public class EditCommand extends SimpleSubCommand {
 		super("edit");
 
 		setMinArguments(1);
-		setUsage("<broadcast_label>");
+		setDescription("Edit the contents of each broadcast message.");
+		setUsage("<label>");
 		setPermission(Permissions.Command.EDIT);
 	}
 
@@ -30,7 +32,7 @@ public class EditCommand extends SimpleSubCommand {
 
 		input = args[0];
 
-		checkBoolean(Bubble.getInstance().getBubbleSettings().isSet(newSection), "&cNo such section " + args[0] + " found!");
+		checkBoolean(YamlConfiguration.loadConfiguration(Bubble.settingsFile).isSet(newSection), "&cNo such section " + args[0] + " found!");
 
 		new EditMenu().displayTo(getPlayer());
 	}
@@ -39,7 +41,7 @@ public class EditCommand extends SimpleSubCommand {
 	protected List<String> tabComplete() {
 		if (args.length == 1)
 			return completeLastWord(Objects.requireNonNull(
-					Bubble.getInstance().getBubbleSettings().getConfigurationSection("Notifications.Broadcast.Messages")).getValues(false).keySet());
+					YamlConfiguration.loadConfiguration(Bubble.settingsFile).getConfigurationSection("Notifications.Broadcast.Messages")).getValues(false).keySet());
 
 		return new ArrayList<>();
 	}

@@ -9,6 +9,7 @@ public class GUICommand extends SimpleSubCommand {
 	protected GUICommand() {
 		super("gui");
 
+		setDescription("Open the Bubble GUI.");
 		setPermission(Permissions.Command.GUI);
 	}
 

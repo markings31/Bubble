@@ -1,6 +1,6 @@
 Preferences:
 
-  Preferences_Menu_Title: "&6Notification Preferences"
+  Preferences_Menu_Title: "&6&lNotifications"
   Preferences_Menu_Size: 27
 
   Chat_Settings_Button:
@@ -21,110 +21,78 @@ Preferences:
     Mentions_Lore: [ "", "Click here to access the mentions", "settings menu." ]
     Mentions_Slot: 15
 
-Chat_Settings:
+  Chat_Settings:
 
-  Chat_Menu_Title: "&eChat Settings"
-  Chat_Menu_Size: 27
+    Chat_Menu_Title: "&e&lChat Settings"
+    Chat_Menu_Size: 27
 
-  Toggle_Broadcasts_Button:
-    Broadcasts_Enabled_Title: "&7Broadcasts: &aENABLED"
-    Broadcasts_Disabled_Title: "&7Broadcasts: &cDISABLED"
+    Toggle_Broadcasts_Button:
+      Broadcasts_Enabled_Title: "&7Broadcasts: &aENABLED"
+      Broadcasts_Disabled_Title: "&7Broadcasts: &cDISABLED"
 
-    Broadcasts_Enabled_Material: LIME_DYE
-    Broadcasts_Disabled_Material: GRAY_DYE
+      Broadcasts_Enabled_Material: LIME_DYE
+      Broadcasts_Disabled_Material: GRAY_DYE
 
-    Broadcasts_Lore: [ "", "&eClick this item to toggle on/off", "&ebroadcasts that are displayed to you." ]
+      Broadcasts_Lore: [ "", "&eClick this item to toggle on/off", "&ebroadcasts that are displayed to you." ]
 
-    Broadcasts_Slot: 11
+      Broadcasts_Slot: 11
 
-  Toggle_Broadcast_Sound_Button:
-    Broadcast_Sound_Enabled_Title: "&7Broadcast Sound: &aENABLED"
-    Broadcast_Sound_Disabled_Title: "&7Broadcast Sound: &cDISABLED"
+    Toggle_Broadcast_Sound_Button:
+      Broadcast_Sound_Enabled_Title: "&7Broadcast Sound: &aENABLED"
+      Broadcast_Sound_Disabled_Title: "&7Broadcast Sound: &cDISABLED"
 
-    Broadcast_Sound_Material: MUSIC_DISC_13
+      Broadcast_Sound_Material: MUSIC_DISC_13
 
-    Sound_Lore: [ "", "&eClick this item to toggle on/off", "&ethe sound played to you when you", "&ereceive a broadcast message." ]
+      Sound_Lore: [ "", "&eClick this item to toggle on/off", "&ethe sound played to you when you", "&ereceive a broadcast message." ]
 
-    Sound_Slot: 15
+      Sound_Slot: 15
 
-MOTD_Settings:
+  MOTD_Settings:
 
-  MOTD_Menu_Title: "&dMOTD Settings"
-  MOTD_Menu_Size: 27
+    MOTD_Menu_Title: "&d&lMOTD Settings"
+    MOTD_Menu_Size: 27
 
-  Toggle_MOTD_Button:
-    MOTD_Enabled_Title: "&7Message of the Day: &aENABLED"
-    MOTD_Disabled_Title: "&7Message of the Day: &cDISABLED"
+    Toggle_MOTD_Button:
+      MOTD_Enabled_Title: "&7Message of the Day: &aENABLED"
+      MOTD_Disabled_Title: "&7Message of the Day: &cDISABLED"
 
-    MOTD_Status_Material: WRITABLE_BOOK
+      MOTD_Status_Material: WRITABLE_BOOK
 
-    MOTD_Status_Lore: [ "", "&eClick this item to toggle on/off", "&ethe message sent to you when you join", "&ethe server." ]
+      MOTD_Status_Lore: [ "", "&eClick this item to toggle on/off", "&ethe message sent to you when you join", "&ethe server." ]
 
-    MOTD_Status_Slot: 13
+      MOTD_Status_Slot: 13
 
-Mentions_Settings:
+  Mentions_Settings:
 
-  Mentions_Menu_Title: "&2Mentions Settings"
-  Mentions_Menu_Size: 27
+    Mentions_Menu_Title: "&2&lMentions Settings"
+    Mentions_Menu_Size: 27
 
-  Toggle_Mentions_Button:
-    Mentions_Enabled_Title: "&7Chat Mentions: &aENABLED"
-    Mentions_Disabled_Title: "&7Chat Mentions: &cDISABLED"
+    Toggle_Mentions_Button:
+      Mentions_Enabled_Title: "&7Chat Mentions: &aENABLED"
+      Mentions_Disabled_Title: "&7Chat Mentions: &cDISABLED"
 
-    Mentions_Status_Material: NAME_TAG
+      Mentions_Status_Material: NAME_TAG
 
-    Mentions_Status_Lore: [ "", "&eClick this item to toggle on/off", "&enotifications you receive when your", "&ename is mentioned in the chat." ]
+      Mentions_Status_Lore: [ "", "&eClick this item to toggle on/off", "&enotifications you receive when your", "&ename is mentioned in the chat." ]
 
-    Mentions_Status_Slot: 11
+      Mentions_Status_Slot: 11
 
-  Toggle_Mention_Sound_Button:
-    Mention_Sound_Enabled_Title: "&7Mention Sound: &aENABLED"
-    Mention_Sound_Disabled_Title: "&7Mention Sound: &cDISABLED"
+    Toggle_Mention_Sound_Button:
+      Mention_Sound_Enabled_Title: "&7Mention Sound: &aENABLED"
+      Mention_Sound_Disabled_Title: "&7Mention Sound: &cDISABLED"
 
-    Mention_Sound_Status_Material: NOTE_BLOCK
+      Mention_Sound_Status_Material: NOTE_BLOCK
 
-    Mention_Sound_Status_Lore: [ "", "&eClick this item to toggle on/off", "&ethe sound played to you when your", "&ename is mentioned in the chat." ]
+      Mention_Sound_Status_Lore: [ "", "&eClick this item to toggle on/off", "&ethe sound played to you when your", "&ename is mentioned in the chat." ]
 
-    Mention_Sound_Status_Slot: 13
+      Mention_Sound_Status_Slot: 13
 
-  Toggle_Mention_Toast_Button:
-    Mention_Toast_Enabled_Title: "&7Mention Toast: &aENABLED"
-    Mention_Toast_Disabled_Title: "&7Mention Toast: &cDISABLED"
+    Toggle_Mention_Toast_Button:
+      Mention_Toast_Enabled_Title: "&7Mention Toast: &aENABLED"
+      Mention_Toast_Disabled_Title: "&7Mention Toast: &cDISABLED"
 
-    Mention_Toast_Status_Material: BREAD
+      Mention_Toast_Status_Material: BREAD
 
-    Mention_Toast_Status_Lore: [ "", "&eClick this item to toggle on/off", "&ethe sound played to you when your", "&ename is mentioned in the chat." ]
+      Mention_Toast_Status_Lore: [ "", "&eClick this item to toggle on/off", "&ethe sound played to you when your", "&ename is mentioned in the chat." ]
 
-    Mention_Toast_Status_Slot: 15
-
-Edit_Settings:
-
-  Edit_Menu_Title: "&9&lEditing Message"
-  Edit_Menu_Size: 27
-
-  Edit_Message_Button:
-    Edit_Message_Title: "&bEdit Message"
-
-    Edit_Message_Material: WRITABLE_BOOK
-
-    Edit_Message_Lore: [ "", "Click here to edit this group's message content!" ]
-
-    Edit_Message_Slot: 10
-
-  Center_Message_Button:
-    Center_Message_Title: "&eCenter Message"
-
-    Center_Message_Material: ANVIL
-
-    Center_Message_Lore: [ "", "Click here to center the messages in this group!'" ]
-
-    Center_Message_Slot: 13
-
-  Change_Permission_Button:
-    Change_Permission_Title: "&dChange Permission"
-
-    Change_Permission_Material: GOLD_INGOT
-
-    Change_Permission_Lore: [ "", "Click here to change the permission required to", "view the messages in this group!" ]
-
-    Change_Permission_Slot: 16
+      Mention_Toast_Status_Slot: 15

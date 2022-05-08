@@ -37,15 +37,15 @@
              IF YOU WANT TO CODE WITH JAVA 16 THERE ARE CHANGES YOU MUST MAKE TO THIS
              FILE, SEE <pluginRepositories> AND VERSION IN THE maven-shade-plugin BELOW.
              -->
-        <java.version>16</java.version>
+        <java.version>1.8</java.version>
 
         <!-- Change to the latest one from https://github.com/kangarko/Foundation/releases
              or change to "LATEST" if you downloaded Foundation to your disk. -->
-        <foundation.version>5.12.7</foundation.version>
+        <foundation.version>LATEST</foundation.version>
 
         <!-- Leave on "com.github.kangarko" if you use Foundation from GitHub like most people,
              or change to "org.mineacademy" if you downloaded our library to your disk. -->
-        <foundation.path>com.github.kangarko</foundation.path>
+        <foundation.path>org.mineacademy</foundation.path>
 
         <!-- DO NOT EDIT. -->
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -57,9 +57,13 @@
             <id>jitpack.io</id>
             <url>https://jitpack.io</url>
         </repository>
+
+        <repository>
+            <id>Maven Central</id>
+            <url>https://repo1.maven.org/maven2/</url>
+        </repository>
     </repositories>
 
-    <!-- UNCOMMENT ONLY IF YOUR java.version IS SET TO JAVA 16 OR HIGHER. -->
     <!--<pluginRepositories>
         <pluginRepository>
             <id>maven-snapshots</id>
@@ -88,7 +92,6 @@
             <version>1.24</version>
         </dependency>
 
-
         <!-- (Optional) Access the server jar for NMS (groupId, artifactId and version do not matter and you
              can only use it for your own organization purposes, but keep version in artifactId not in version
              if using multiple NMS imports otherwise Maven will fail to import them correctly).
@@ -106,7 +109,6 @@
         </dependency>-->
     </dependencies>
 
-    <!-- DO NOT EDIT unless instructed to do so or you know what you're doing. -->
     <build>
         <finalName>${project.name}-${project.version}</finalName>
         <plugins>
@@ -116,7 +118,7 @@
 
                 <!-- Change version to the latest one from
                      https://mvnrepository.com/artifact/org.apache.maven.plugins/maven-jar-plugin -->
-                <version>3.2.0</version>
+                <version>3.2.2</version>
             </plugin>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
@@ -124,10 +126,40 @@
 
                 <!-- Change version to the latest one from
                      https://mvnrepository.com/artifact/org.apache.maven.plugins/maven-compiler-plugin -->
-                <version>3.8.1</version>
+                <version>3.10.1</version>
                 <configuration>
                     <source>${java.version}</source>
                     <target>${java.version}</target>
+                </configuration>
+            </plugin>
+            <plugin>
+                <groupId>com.github.wvengen</groupId>
+                <artifactId>proguard-maven-plugin</artifactId>
+                <!--
+                    Make sure to check for new versions from
+                    https://mvnrepository.com/artifact/com.github.wvengen/proguard-maven-plugin
+                 -->
+                <version>2.5.3</version>
+                <dependencies>
+                    <!--<dependency>
+                        <groupId>net.sf.proguard</groupId>
+                        <artifactId>proguard-base</artifactId>
+                        <version>6.2.2</version>
+                    </dependency>-->
+                </dependencies>
+                <executions>
+                    <execution>
+                        <phase>package</phase>
+                        <goals>
+                            <goal>proguard</goal>
+                        </goals>
+                    </execution>
+                </executions>
+                <configuration>
+                    <libs>
+                        <lib>${java.home}/lib/rt.jar</lib>
+                        <lib>${java.home}/lib/jce.jar</lib>
+                    </libs>
                 </configuration>
             </plugin>
             <plugin>
@@ -162,36 +194,15 @@
                             <shadedPattern>${project.groupId}.${project.artifactId}.lib</shadedPattern>
                         </relocation>
                     </relocations>
-                </configuration>
-            </plugin>
-            <plugin>
-                <groupId>com.github.wvengen</groupId>
-                <artifactId>proguard-maven-plugin</artifactId>
-                <!--
-                    Make sure to check for new versions from
-                    https://mvnrepository.com/artifact/com.github.wvengen/proguard-maven-plugin
-                 -->
-                <version>2.5.3</version>
-                <dependencies>
-                    <!--<dependency>
-                        <groupId>net.sf.proguard</groupId>
-                        <artifactId>proguard-base</artifactId>
-                        <version>6.2.2</version>
-                    </dependency>-->
-                </dependencies>
-                <executions>
-                    <execution>
-                        <phase>package</phase>
-                        <goals>
-                            <goal>proguard</goal>
-                        </goals>
-                    </execution>
-                </executions>
-                <configuration>
-                    <libs>
-                        <lib>${java.home}/lib/rt.jar</lib>
-                        <lib>${java.home}/lib/jce.jar</lib>
-                    </libs>
+                    <filters>
+                        <filter>
+                            <artifact>com.elmakers.mine.bukkit:*</artifact>
+                            <excludes>
+                                <exclude>*.yml</exclude>
+                                <exclude>*.php</exclude>
+                            </excludes>
+                        </filter>
+                    </filters>
                 </configuration>
             </plugin>
         </plugins>

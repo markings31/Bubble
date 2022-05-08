@@ -3,7 +3,9 @@ package me.markings.bubble.command.bubble;
 import lombok.val;
 import me.markings.bubble.Bubble;
 import me.markings.bubble.model.Permissions;
+import me.markings.bubble.settings.Settings;
 import me.markings.bubble.util.ConfigUtil;
+import org.bukkit.configuration.file.YamlConfiguration;
 import org.mineacademy.fo.command.SimpleSubCommand;
 
 import java.util.ArrayList;
@@ -16,13 +18,14 @@ public class AddCommand extends SimpleSubCommand {
 		super("add");
 
 		setMinArguments(2);
-		setUsage("<section|line> <broadcast_label> [<message>]");
+		setDescription("Add a line or section to the given broadcast label.");
+		setUsage("<section/line> <label> [message]");
 		setPermission(Permissions.Command.ADD);
 	}
 
 	@Override
 	protected void onCommand() {
-		val config = Bubble.getInstance().getBubbleSettings();
+		val config = YamlConfiguration.loadConfiguration(Bubble.settingsFile);
 		val newSection = "Notifications.Broadcast.Messages." + args[1];
 		val messagePathSuffix = ".Message";
 		val message = config.getStringList(newSection + messagePathSuffix);
@@ -37,6 +40,7 @@ public class AddCommand extends SimpleSubCommand {
 			config.set(newSection + ".Permission", "bubble.vip");
 			config.set(newSection + ".Centered", false);
 			config.set(worldsPath, worldsList);
+			Settings.generateBroadcastSections();
 			config.set(newSection + messagePathSuffix, message);
 		} else if (args[0].equalsIgnoreCase("line")) {
 			val messageLine = joinArgs(2);
@@ -44,11 +48,11 @@ public class AddCommand extends SimpleSubCommand {
 
 			section.add(messageLine);
 			config.set(newSection + messagePathSuffix, section);
-		}
+		} else returnInvalidArgs();
 
 		ConfigUtil.saveConfig(getPlayer(),
 				"&aSuccessfully added line/section!",
-				"&cFailed to create line/section! Error: ");
+				"&cFailed to create line/section! Error: ", config);
 	}
 
 	@Override
@@ -57,7 +61,7 @@ public class AddCommand extends SimpleSubCommand {
 			return completeLastWord("section", "line");
 		if (args.length == 2 && args[0].equalsIgnoreCase("line"))
 			return completeLastWord(Objects.requireNonNull(
-					Bubble.getInstance().getBubbleSettings().getConfigurationSection("Notifications.Broadcast.Messages")).getValues(false).keySet());
+					YamlConfiguration.loadConfiguration(Bubble.settingsFile).getConfigurationSection("Notifications.Broadcast.Messages")).getValues(false).keySet());
 
 		return new ArrayList<>();
 	}

@@ -5,7 +5,6 @@ import lombok.val;
 import me.markings.bubble.command.AnnounceCommand;
 import me.markings.bubble.command.PrefsCommand;
 import me.markings.bubble.command.ToggleCommand;
-import me.markings.bubble.command.bubble.BubbleGroup;
 import me.markings.bubble.hook.DiscordSRVHook;
 import me.markings.bubble.listeners.DatabaseListener;
 import me.markings.bubble.listeners.PlayerChatListener;
@@ -16,11 +15,8 @@ import me.markings.bubble.settings.DatabaseFile;
 import me.markings.bubble.settings.MenuSettings;
 import me.markings.bubble.settings.Settings;
 import me.markings.bubble.tasks.BroadcastTask;
-import org.bukkit.configuration.file.FileConfiguration;
-import org.bukkit.configuration.file.YamlConfiguration;
 import org.mineacademy.fo.Common;
 import org.mineacademy.fo.Valid;
-import org.mineacademy.fo.command.SimpleCommandGroup;
 import org.mineacademy.fo.constants.FoConstants;
 import org.mineacademy.fo.metrics.Metrics;
 import org.mineacademy.fo.model.HookManager;
@@ -30,16 +26,14 @@ import org.mineacademy.fo.plugin.SimplePlugin;
 import org.mineacademy.fo.remain.Remain;
 
 import java.io.File;
+import java.util.Arrays;
+import java.util.HashSet;
+import java.util.Set;
 
 @Getter
 public final class Bubble extends SimplePlugin {
 
 	public static final File settingsFile = new File("plugins/Bubble/", FoConstants.File.SETTINGS);
-
-	@Getter
-	public FileConfiguration bubbleSettings;
-
-	private final SimpleCommandGroup mainCommand = BubbleGroup.getInstance();
 
 	private final BubbleDatabase database = BubbleDatabase.getInstance();
 
@@ -47,6 +41,8 @@ public final class Bubble extends SimplePlugin {
 	protected void onPluginStart() {
 		if (Boolean.TRUE.equals(Settings.HookSettings.BSTATS))
 			new Metrics(this, 13904);
+
+		Common.log(Common.getLogPrefix() + " Bubble has been successfully enabled!");
 	}
 
 	@Override
@@ -60,14 +56,11 @@ public final class Bubble extends SimplePlugin {
 		MenuSettings.ChatMenuSettings.getInstance().reload();
 		MenuSettings.MOTDMenuSettings.getInstance().reload();
 		MenuSettings.MentionsMenuSettings.getInstance().reload();
-		MenuSettings.EditMenuSettings.getInstance().reload();
-
-		SimplePlugin.getInstance().getSettings();
 	}
 
 	@Override
 	protected void onReloadablesStart() {
-		Common.setLogPrefix("[Bubble]");
+		Common.setLogPrefix("&8[&bBubble&8]&f");
 
 		val dataFile = DatabaseFile.getInstance();
 
@@ -94,37 +87,51 @@ public final class Bubble extends SimplePlugin {
 
 		Variables.addExpansion(Placeholders.getInstance());
 
-		bubbleSettings = YamlConfiguration.loadConfiguration(settingsFile);
-
 		registerEvents(DatabaseListener.getInstance());
 
-		registerEventsIf(DiscordSRVHook.getInstance(), HookManager.isDiscordSRVLoaded() && Settings.HookSettings.DISCORDSRV);
+		if (HookManager.isDiscordSRVLoaded() && Boolean.TRUE.equals(Settings.HookSettings.DISCORDSRV))
+			registerEvents(DiscordSRVHook.getInstance());
 
-		registerEventsIf(PlayerJoinListener.getInstance(), Settings.WelcomeSettings.ENABLE_JOIN_MOTD.equals(Boolean.TRUE) ||
-				Settings.JoinSettings.FIREWORK_JOIN.equals(Boolean.TRUE));
+		if (Settings.WelcomeSettings.ENABLE_JOIN_MOTD.equals(Boolean.TRUE) ||
+				Settings.JoinSettings.FIREWORK_JOIN.equals(Boolean.TRUE))
+			registerEvents(PlayerJoinListener.getInstance());
 
-		registerEventsIf(PlayerChatListener.getInstance(), Settings.ChatSettings.ENABLE_MENTIONS.equals(Boolean.TRUE));
+		if (Settings.ChatSettings.ENABLE_MENTIONS.equals(Boolean.TRUE))
+			registerEvents(PlayerChatListener.getInstance());
 
 		if (Settings.BroadcastSettings.ENABLE_BROADCASTS.equals(Boolean.TRUE))
 			new BroadcastTask().runTaskTimerAsynchronously(this, 0,
 					Settings.BroadcastSettings.BROADCAST_DELAY.getTimeTicks());
 
 		Remain.getOnlinePlayers().forEach(player ->
-				database.save(player.getName(), player.getUniqueId(), PlayerCache.getCache(player)));
+				database.save(player.getName(), player.getUniqueId(), PlayerData.getCache(player)));
 
-		DatabaseFile.getInstance().save();
+		DatabaseFile.getInstance().saveToMap();
 
 		MenuSettings.PreferencesMenuSettings.getInstance().save();
 		MenuSettings.ChatMenuSettings.getInstance().save();
 		MenuSettings.MOTDMenuSettings.getInstance().save();
 		MenuSettings.MentionsMenuSettings.getInstance().save();
-		MenuSettings.EditMenuSettings.getInstance().save();
 
-		PlayerCache.clearAllData();
+		PlayerData.clearAllData();
+	}
 
-		Filter.inject();
+	@Override
+	public Set<String> getConsoleFilter() {
+		return new HashSet<>(Arrays.asList(
+				"Reloading plugin Bubble",
+				"______________________________________________________________",
+				"[PlaceholderAPI] Successfully registered expansion: bubble",
+				"[Bubble] Bubble has been successfully enabled!",
+				"  ",
+				"issued server command: /#flp",
+				"[DiscordSRV] API listener org.mineacademy.fo.model.DiscordListener$DiscordListenerImpl unsubscribed",
+				"[DiscordSRV] API listener org.mineacademy.fo.model.DiscordListener$DiscordListenerImpl subscribed (2 methods)"));
+	}
 
-		Common.log(Common.getLogPrefix() + " Bubble has been successfully enabled!");
+	@Override
+	public int getFoundedYear() {
+		return 2022;
 	}
 
 	public static Bubble getInstance() {

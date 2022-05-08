@@ -4,9 +4,10 @@ import lombok.val;
 import me.markings.bubble.Bubble;
 import me.markings.bubble.model.Permissions;
 import me.markings.bubble.util.ConfigUtil;
-import org.apache.commons.lang.math.NumberUtils;
+import org.bukkit.configuration.file.YamlConfiguration;
 import org.mineacademy.fo.Common;
 import org.mineacademy.fo.Messenger;
+import org.mineacademy.fo.Valid;
 import org.mineacademy.fo.command.SimpleSubCommand;
 
 import java.util.ArrayList;
@@ -19,13 +20,14 @@ public class RemoveCommand extends SimpleSubCommand {
 		super("remove");
 
 		setMinArguments(2);
-		setUsage("<section|line> <broadcast_label> [<line_number>]");
+		setDescription("Remove a broadcast section or message.");
+		setUsage("<section/line> <label> [line_number]");
 		setPermission(Permissions.Command.REMOVE);
 	}
 
 	@Override
 	protected void onCommand() {
-		val config = Bubble.getInstance().getBubbleSettings();
+		val config = YamlConfiguration.loadConfiguration(Bubble.settingsFile);
 		val newSection = "Notifications.Broadcast.Messages." + args[1];
 
 		if (args[0].equalsIgnoreCase("section")) {
@@ -41,7 +43,7 @@ public class RemoveCommand extends SimpleSubCommand {
 		} else if (args[0].equalsIgnoreCase("line")) {
 			val messageList = config.getStringList(newSection + ".Message");
 
-			if (!NumberUtils.isNumber(args[2])) {
+			if (!Valid.isInteger(args[2])) {
 				Messenger.error(getPlayer(), "&cCould not find message located at index " + args[2] + "!");
 				return;
 			}
@@ -50,7 +52,7 @@ public class RemoveCommand extends SimpleSubCommand {
 			config.set(newSection + ".Message", messageList);
 		}
 
-		ConfigUtil.saveConfig(getPlayer(), "&aSuccessfully removed line/section!", "&cFailed to remove line/section! Error: ");
+		ConfigUtil.saveConfig(getPlayer(), "&aSuccessfully removed line/section!", "&cFailed to remove line/section! Error: ", config);
 	}
 
 	@Override
@@ -59,7 +61,7 @@ public class RemoveCommand extends SimpleSubCommand {
 			return completeLastWord("section", "line");
 		if (args.length == 2)
 			return completeLastWord(Objects.requireNonNull(
-					Bubble.getInstance().getBubbleSettings().getConfigurationSection("Notifications.Broadcast.Messages")).getValues(false).keySet());
+					YamlConfiguration.loadConfiguration(Bubble.settingsFile).getConfigurationSection("Notifications.Broadcast.Messages")).getValues(false).keySet());
 
 		return new ArrayList<>();
 	}

@@ -4,11 +4,10 @@ import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.val;
-import org.apache.commons.lang.StringUtils;
-import org.apache.commons.lang.math.NumberUtils;
 import org.bukkit.entity.Player;
 import org.mineacademy.fo.ChatUtil;
 import org.mineacademy.fo.Common;
+import org.mineacademy.fo.Valid;
 import org.mineacademy.fo.model.HookManager;
 import org.mineacademy.fo.model.Variables;
 import org.mineacademy.fo.remain.CompChatColor;
@@ -17,15 +16,11 @@ import java.awt.*;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.stream.Collectors;
+import java.util.stream.IntStream;
 
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class MessageUtil {
-
-	@Getter
-	static final String gradientPlaceholder = "<gradient:";
-
-	@Getter
-	static final String gradientEndPlaceholder = "</gradient>";
 
 	@Getter
 	private static final String commandPlaceholder = "<command>";
@@ -54,31 +49,30 @@ public class MessageUtil {
 	private static final String flashPlaceholder = "{flash:";
 	//private static final String scrollingGradientPlaceholder = "{g:";
 
+	private static final String gradientPattern = "\\B#([a-z0-9]{2,})(?![~!@#$%^&*()=+_`\\-\\|\\/'\\[\\]\\{\\}]|[?.,]*\\w):#(?:[a-f\\d]{3}){1,2}\\b";
+
 	public static String format(final String message) {
 		val fancyLinePlaceholder = "%fancy_line%";
-		val centerPlaceholder = "%center%";
 		if (message.contains(fancyLinePlaceholder))
 			return message.replace(fancyLinePlaceholder, "-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-");
-
-		if (message.contains(centerPlaceholder))
-			return ChatUtil.center(message.replace(centerPlaceholder, ""));
 
 		return message;
 	}
 
 	public static List<String> getTitleFrames(final String message) {
 		final char[] msgArray = message.toCharArray();
-		final ArrayList<String> frames = new ArrayList<>();
-		final ArrayList<Integer> indicies = new ArrayList<>();
+		final ArrayList<String> frames;
+		final ArrayList<Integer> indicies;
 		val hasPeriod = getPeriod(message) != -1;
-		for (int i = 0; i < msgArray.length; i++)
-			if (msgArray[i] == ':' && msgArray[i - 1] != 't')
-				indicies.add(i);
+		indicies = IntStream
+				.range(0, msgArray.length).filter(i -> msgArray[i] == ':' && msgArray[i - 1] != 't')
+				.boxed()
+				.collect(Collectors.toCollection(ArrayList::new));
 
-		for (int i = 0; i < (hasPeriod ? indicies.size() - 1 : indicies.size()); i++) {
-			final String substring = message.substring(indicies.get(i) + 1, i == indicies.size() - 1 ? message.indexOf('}') : indicies.get(i + 1));
-			frames.add(substring);
-		}
+		frames = IntStream
+				.range(0, (hasPeriod ? indicies.size() - 1 : indicies.size())).
+				mapToObj(i -> message.substring(indicies.get(i) + 1, i == indicies.size() - 1 ? message.indexOf('}') : indicies.get(i + 1)))
+				.collect(Collectors.toCollection(ArrayList::new));
 
 		return frames;
 	}
@@ -97,30 +91,29 @@ public class MessageUtil {
 		for (int i = message.length() - 1; i > 0; i--)
 			if (msgArray[i] == ':') {
 				val period = message.substring(i + 1, message.indexOf('}'));
-				return NumberUtils.isNumber(period) ? Integer.parseInt(period) : -1;
+				return Valid.isInteger(period) ? Integer.parseInt(period) : -1;
 			}
 
 		return 10;
 	}
 
-	public static List<CompChatColor> getScrollColors(final String message) {
+	public static List<CompChatColor> getColors(final String message) {
 		val msgArray = message.toCharArray();
-		final ArrayList<Integer> indicies = new ArrayList<>();
+		final ArrayList<Integer> indicies;
 		final ArrayList<CompChatColor> colors = new ArrayList<>();
-		for (int i = 0; i < msgArray.length; i++)
-			if (msgArray[i] == ':')
-				indicies.add(i);
+		indicies = IntStream.range(0, msgArray.length).filter(i -> msgArray[i] == ':').boxed().collect(Collectors.toCollection(ArrayList::new));
 
-		colors.add(CompChatColor.of(message.substring(indicies.get(0) + 1, indicies.get(1))));
-		colors.add(CompChatColor.of(message.substring(indicies.get(1) + 1, indicies.get(2))));
-		colors.add(CompChatColor.of(message.substring(indicies.get(2) + 1, indicies.get(3))));
+		IntStream.range(0, 3).forEachOrdered(i -> {
+			val getIndex = i + 1;
+			colors.add(CompChatColor.of(message.substring(indicies.get(i) + 1, indicies.get(getIndex))));
+		});
 
 		return colors;
 	}
 
 	public static String getLastMessage(final String message) {
 		val msgArray = message.toCharArray();
-		final ArrayList<Integer> indicies = new ArrayList<>();
+		final List<Integer> indicies = new ArrayList<>();
 		for (int i = message.length() - 1; i > 0; i--)
 			if (msgArray[i] == ':')
 				indicies.add(i);
@@ -129,17 +122,14 @@ public class MessageUtil {
 	}
 
 	public static String translateGradient(final String message) {
+		val blankList = new ArrayList<>(Arrays.asList(CompChatColor.of("&f"), CompChatColor.of("&f")));
+		val colors = containsGradient(message) ? getColors(message) : blankList;
 		val newMessage = stripPlaceholders(message.replace("§", "&"));
-		val firstColor = StringUtils.substringBetween(newMessage, ":", "|");
-		val secondColor = StringUtils.substringBetween(newMessage, "|", ">");
+		val firstColor = colors.get(0);
+		val secondColor = colors.get(1);
+		val fullGradientPrefix = firstColor + ":" + secondColor;
 
-		val fullGradientPrefix = gradientPlaceholder + firstColor + "|" + secondColor + ">";
-
-		if (newMessage.contains(gradientPlaceholder) && newMessage.contains(gradientEndPlaceholder))
-			return getPlaceholder(message) + ChatUtil.generateGradient(newMessage.replace(fullGradientPrefix, "")
-					.replace(gradientEndPlaceholder, ""), CompChatColor.of(firstColor), CompChatColor.of(secondColor));
-
-		return message;
+		return getPlaceholder(message) + ChatUtil.generateGradient(newMessage.replace(fullGradientPrefix, ""), firstColor, secondColor);
 	}
 
 	public static Color getColor(final String color) {
@@ -152,11 +142,15 @@ public class MessageUtil {
 	}
 
 	public static void executePlaceholders(final String message, final Player player) {
-		val colors = getScrollColors(message);
-		val period = getPeriod(message) != -1 ? getPeriod(message) : 10;
-		val colorArr = colors.toArray(CompChatColor[]::new);
+		List<CompChatColor> colors = new ArrayList<>();
+		int period = 0;
+		CompChatColor[] colorArr = new CompChatColor[3];
 
-		Common.log(Arrays.toString(colorArr));
+		if (message.startsWith(animatePlaceholder) || message.startsWith(scrollPlaceholder) || message.startsWith(flashPlaceholder)) {
+			colors = getColors(message);
+			period = getPeriod(message) != -1 ? getPeriod(message) : 10;
+			colorArr = colors.toArray(colorArr);
+		}
 
 		if (message.startsWith(animatePlaceholder))
 			AnimationUtil.animateTitle(player, getTitleFrames(message), null, period);
@@ -227,13 +221,11 @@ public class MessageUtil {
 	}
 
 	public static boolean containsGradient(final String message) {
-		return message.contains(gradientPlaceholder) && message.contains(gradientEndPlaceholder);
+		return message.matches(gradientPattern);
 	}
 
 	public static String replaceVarsAndGradient(final String message, final Player player) {
-		val strippedMessage = containsGradient(message)
-				? StringUtils.substringBetween(message, ">", getGradientEndPlaceholder())
-				: message;
+		val strippedMessage = message.substring(message.indexOf("#"));
 		val replacedMessage = HookManager.replacePlaceholders(player, Variables.replace(format(strippedMessage), player));
 		return translateGradient(message.replace(strippedMessage, replacedMessage));
 	}
