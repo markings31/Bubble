@@ -1,6 +1,5 @@
 package me.markings.bubble.util;
 
-import github.scarsz.discordsrv.dependencies.commons.io.FileUtils;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
 import lombok.val;
@@ -10,13 +9,9 @@ import org.bukkit.entity.Player;
 import org.mineacademy.fo.Common;
 import org.mineacademy.fo.Messenger;
 
-import java.io.File;
 import java.io.IOException;
-import java.net.URL;
 import java.util.ArrayList;
 import java.util.Arrays;
-
-import static com.massivecraft.massivecore.util.WebUtil.CONNECT_TIMEOUT;
 
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class ConfigUtil {
@@ -56,13 +51,5 @@ public class ConfigUtil {
 			else
 				Common.log(errorMessage);
 		}
-	}
-
-	public static void saveFromURL(final Player player) throws IOException {
-		FileUtils.copyURLToFile(
-				new URL("https://minotar.net/avatar/" + player.getName()),
-				new File("plugins/Bubble/images/" + player.getUniqueId() + ".png"),
-				CONNECT_TIMEOUT,
-				600000);
 	}
 }

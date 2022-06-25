@@ -3,14 +3,11 @@ package me.markings.bubble.command.bubble;
 import lombok.val;
 import me.markings.bubble.Bubble;
 import me.markings.bubble.model.Permissions;
-import me.markings.bubble.settings.Settings;
 import me.markings.bubble.util.ConfigUtil;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.mineacademy.fo.command.SimpleSubCommand;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Objects;
+import java.util.*;
 
 public class AddCommand extends SimpleSubCommand {
 
@@ -26,21 +23,31 @@ public class AddCommand extends SimpleSubCommand {
 	@Override
 	protected void onCommand() {
 		val config = YamlConfiguration.loadConfiguration(Bubble.settingsFile);
-		val newSection = "Notifications.Broadcast.Messages." + args[1];
+		val newSection = "Messages." + args[1];
 		val messagePathSuffix = ".Message";
 		val message = config.getStringList(newSection + messagePathSuffix);
+		val permissionPath = newSection + ".Permission";
+		val centeredPath = newSection + ".Centered";
+		val worldsPath = newSection + ".Worlds";
+
+		final Map<List<String>, String> messages = new HashMap<>();
+		final Map<String, String> permissions = new HashMap<>();
+		final Map<String, Boolean> centered = new HashMap<>();
+		final Map<List<String>, String> worlds = new HashMap<>();
+		messages.put(message, newSection);
+		permissions.put(permissionPath, config.getString(permissionPath));
+		centered.put(centeredPath, config.getBoolean(centeredPath));
+		worlds.put(config.getStringList(worldsPath), worldsPath);
 
 		if (args[0].equalsIgnoreCase("section")) {
-			val worldsPath = newSection + ".Worlds";
 			val worldsList = config.getStringList(worldsPath);
 			config.createSection(newSection);
 
 			message.add("Test Message");
 			worldsList.add("world");
-			config.set(newSection + ".Permission", "bubble.vip");
-			config.set(newSection + ".Centered", false);
+			config.set(permissionPath, "bubble.vip");
+			config.set(centeredPath, false);
 			config.set(worldsPath, worldsList);
-			Settings.generateBroadcastSections();
 			config.set(newSection + messagePathSuffix, message);
 		} else if (args[0].equalsIgnoreCase("line")) {
 			val messageLine = joinArgs(2);

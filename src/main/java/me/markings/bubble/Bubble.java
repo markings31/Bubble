@@ -2,15 +2,11 @@ package me.markings.bubble;
 
 import lombok.Getter;
 import lombok.val;
-import me.markings.bubble.command.AnnounceCommand;
-import me.markings.bubble.command.PrefsCommand;
-import me.markings.bubble.command.ToggleCommand;
-import me.markings.bubble.hook.DiscordSRVHook;
-import me.markings.bubble.listeners.DatabaseListener;
 import me.markings.bubble.listeners.PlayerChatListener;
 import me.markings.bubble.listeners.PlayerJoinListener;
 import me.markings.bubble.model.Placeholders;
 import me.markings.bubble.mysql.BubbleDatabase;
+import me.markings.bubble.settings.Broadcasts;
 import me.markings.bubble.settings.DatabaseFile;
 import me.markings.bubble.settings.MenuSettings;
 import me.markings.bubble.settings.Settings;
@@ -18,7 +14,6 @@ import me.markings.bubble.tasks.BroadcastTask;
 import org.mineacademy.fo.Common;
 import org.mineacademy.fo.Valid;
 import org.mineacademy.fo.constants.FoConstants;
-import org.mineacademy.fo.metrics.Metrics;
 import org.mineacademy.fo.model.HookManager;
 import org.mineacademy.fo.model.Variable;
 import org.mineacademy.fo.model.Variables;
@@ -39,15 +34,12 @@ public final class Bubble extends SimplePlugin {
 
 	@Override
 	protected void onPluginStart() {
-		if (Boolean.TRUE.equals(Settings.HookSettings.BSTATS))
-			new Metrics(this, 13904);
-
-		Common.log(Common.getLogPrefix() + " Bubble has been successfully enabled!");
+		// Nothing to see here.
 	}
 
 	@Override
 	protected void onPluginPreReload() {
-		Settings.BroadcastSettings.MESSAGE_MAP.clear();
+		//Broadcasts.setMessages(null);
 		Settings.WelcomeSettings.JOIN_MOTD.clear();
 
 		DatabaseFile.getInstance().reload();
@@ -73,10 +65,6 @@ public final class Bubble extends SimplePlugin {
 					dataFile.getPassword(),
 					dataFile.getTableName()));
 
-		registerCommand(new AnnounceCommand());
-		registerCommand(new ToggleCommand());
-		registerCommand(new PrefsCommand());
-
 		Valid.checkBoolean(Settings.HookSettings.VAULT.equals(Boolean.TRUE) && HookManager.isVaultLoaded(),
 				"Failed to hook into Vault! Please check if the plugin is installed and restart!");
 
@@ -86,11 +74,6 @@ public final class Bubble extends SimplePlugin {
 		Variable.loadVariables();
 
 		Variables.addExpansion(Placeholders.getInstance());
-
-		registerEvents(DatabaseListener.getInstance());
-
-		if (HookManager.isDiscordSRVLoaded() && Boolean.TRUE.equals(Settings.HookSettings.DISCORDSRV))
-			registerEvents(DiscordSRVHook.getInstance());
 
 		if (Settings.WelcomeSettings.ENABLE_JOIN_MOTD.equals(Boolean.TRUE) ||
 				Settings.JoinSettings.FIREWORK_JOIN.equals(Boolean.TRUE))
@@ -107,13 +90,12 @@ public final class Bubble extends SimplePlugin {
 				database.save(player.getName(), player.getUniqueId(), PlayerData.getCache(player)));
 
 		DatabaseFile.getInstance().saveToMap();
+		Broadcasts.loadBroadcasts();
 
 		MenuSettings.PreferencesMenuSettings.getInstance().save();
 		MenuSettings.ChatMenuSettings.getInstance().save();
 		MenuSettings.MOTDMenuSettings.getInstance().save();
 		MenuSettings.MentionsMenuSettings.getInstance().save();
-
-		PlayerData.clearAllData();
 	}
 
 	@Override
@@ -124,9 +106,15 @@ public final class Bubble extends SimplePlugin {
 				"[PlaceholderAPI] Successfully registered expansion: bubble",
 				"[Bubble] Bubble has been successfully enabled!",
 				"  ",
-				"issued server command: /#flp",
-				"[DiscordSRV] API listener org.mineacademy.fo.model.DiscordListener$DiscordListenerImpl unsubscribed",
-				"[DiscordSRV] API listener org.mineacademy.fo.model.DiscordListener$DiscordListenerImpl subscribed (2 methods)"));
+				"issued server command: /#flp"));
+	}
+
+	@Override
+	public int getMetricsPluginId() {
+		if (Boolean.TRUE.equals(Settings.HookSettings.BSTATS))
+			return 13904;
+
+		return 0;
 	}
 
 	@Override

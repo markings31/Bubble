@@ -51,17 +51,7 @@ public class Permissions {
 		@Permission("Set the footer that will be used in broadcast messages.")
 		public static final String FOOTER = "bubble.command.setfooter";
 
-		@Permission("Send messages to the conneected Discord server.")
-		public static final String DISCORD_COMMAND = "bubble.discord.command";
-	}
-
-	@NoArgsConstructor(access = AccessLevel.PRIVATE)
-	@PermissionGroup("Discord API")
-	public static final class Discord {
-		@Permission("Send a webhook message to the connected Discord server.")
-		public static final String DISCORD_MESSAGE = "bubble.discord.message";
-
-		@Permission("Send an announcement message to the connected Discord server.")
-		public static final String DISCORD_ANNOUNCEMENT = "bubble.discord.announcement";
+		@Permission("Force the next broadcast message to be displayed in the sequence.")
+		public static final String FORCE_COMMAND = "bubble.command.force";
 	}
 }

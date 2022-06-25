@@ -4,6 +4,7 @@ import lombok.val;
 import me.markings.bubble.model.Permissions;
 import me.markings.bubble.util.MessageUtil;
 import org.mineacademy.fo.Common;
+import org.mineacademy.fo.annotation.AutoRegister;
 import org.mineacademy.fo.command.SimpleCommand;
 import org.mineacademy.fo.remain.CompMaterial;
 
@@ -12,7 +13,8 @@ import java.util.List;
 
 import static org.mineacademy.fo.Common.joinRange;
 
-public class AnnounceCommand extends SimpleCommand {
+@AutoRegister
+public final class AnnounceCommand extends SimpleCommand {
 
 	public AnnounceCommand() {
 		super("announce|an|a");

@@ -1,0 +1,7 @@
+Permission: bubble.vip
+Centered: false
+Worlds:
+  - world
+Message:
+  - '&6This is an example message!'
+  - '<title>&6This is a title!|&eThis is a subtitle!'

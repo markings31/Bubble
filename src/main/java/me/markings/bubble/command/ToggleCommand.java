@@ -4,9 +4,11 @@ import lombok.val;
 import me.markings.bubble.PlayerData;
 import me.markings.bubble.model.Permissions;
 import org.mineacademy.fo.Messenger;
+import org.mineacademy.fo.annotation.AutoRegister;
 import org.mineacademy.fo.command.SimpleCommand;
 
-public class ToggleCommand extends SimpleCommand {
+@AutoRegister
+public final class ToggleCommand extends SimpleCommand {
 
 	public ToggleCommand() {
 		super("togglebroadcasts|tb");

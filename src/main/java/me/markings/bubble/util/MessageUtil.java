@@ -14,13 +14,18 @@ import org.mineacademy.fo.remain.CompChatColor;
 
 import java.awt.*;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class MessageUtil {
+
+
+	@Getter
+	static final String gradientPlaceholder = "<gradient:";
+	@Getter
+	static final String gradientEndPlaceholder = "</gradient>";
 
 	@Getter
 	private static final String commandPlaceholder = "<command>";
@@ -49,7 +54,7 @@ public class MessageUtil {
 	private static final String flashPlaceholder = "{flash:";
 	//private static final String scrollingGradientPlaceholder = "{g:";
 
-	private static final String gradientPattern = "\\B#([a-z0-9]{2,})(?![~!@#$%^&*()=+_`\\-\\|\\/'\\[\\]\\{\\}]|[?.,]*\\w):#(?:[a-f\\d]{3}){1,2}\\b";
+	private static final String gradientPattern = "^#(([0-9a-fA-F]{2}){3}|([0-9a-fA-F]){3})$:^#(([0-9a-fA-F]{2}){3}|([0-9a-fA-F]){3})$";
 
 	public static String format(final String message) {
 		val fancyLinePlaceholder = "%fancy_line%";
@@ -98,15 +103,13 @@ public class MessageUtil {
 	}
 
 	public static List<CompChatColor> getColors(final String message) {
-		val msgArray = message.toCharArray();
-		final ArrayList<Integer> indicies;
 		final ArrayList<CompChatColor> colors = new ArrayList<>();
-		indicies = IntStream.range(0, msgArray.length).filter(i -> msgArray[i] == ':').boxed().collect(Collectors.toCollection(ArrayList::new));
+		val colonIndex = message.indexOf(':');
 
-		IntStream.range(0, 3).forEachOrdered(i -> {
-			val getIndex = i + 1;
-			colors.add(CompChatColor.of(message.substring(indicies.get(i) + 1, indicies.get(getIndex))));
-		});
+		colors.add(CompChatColor.of(message.substring(colonIndex - 7, colonIndex - 1)));
+		colors.add(CompChatColor.of(message.substring(colonIndex + 1, colonIndex + 7)));
+
+		Common.broadcast("test");
 
 		return colors;
 	}
@@ -122,14 +125,17 @@ public class MessageUtil {
 	}
 
 	public static String translateGradient(final String message) {
-		val blankList = new ArrayList<>(Arrays.asList(CompChatColor.of("&f"), CompChatColor.of("&f")));
-		val colors = containsGradient(message) ? getColors(message) : blankList;
 		val newMessage = stripPlaceholders(message.replace("§", "&"));
-		val firstColor = colors.get(0);
-		val secondColor = colors.get(1);
-		val fullGradientPrefix = firstColor + ":" + secondColor;
 
-		return getPlaceholder(message) + ChatUtil.generateGradient(newMessage.replace(fullGradientPrefix, ""), firstColor, secondColor);
+		if (newMessage.contains(gradientPlaceholder) && newMessage.contains(gradientEndPlaceholder)) {
+			val firstColor = newMessage.substring(newMessage.indexOf(":") + 1, newMessage.indexOf("|"));
+			val secondColor = newMessage.substring(newMessage.indexOf("|") + 1, newMessage.indexOf(">"));
+			val fullGradientPrefix = gradientPlaceholder + firstColor + "|" + secondColor + ">";
+			return getPlaceholder(message) + ChatUtil.generateGradient(newMessage.replace(fullGradientPrefix, "")
+					.replace(gradientEndPlaceholder, ""), CompChatColor.of(firstColor), CompChatColor.of(secondColor)) + "&r";
+		}
+		
+		return message;
 	}
 
 	public static Color getColor(final String color) {
@@ -221,12 +227,15 @@ public class MessageUtil {
 	}
 
 	public static boolean containsGradient(final String message) {
-		return message.matches(gradientPattern);
+		return message.contains(gradientPlaceholder) && message.contains(gradientEndPlaceholder);
 	}
 
 	public static String replaceVarsAndGradient(final String message, final Player player) {
-		val strippedMessage = message.substring(message.indexOf("#"));
+		val translatedSegment = containsGradient(message) ? message.substring(message.indexOf("<"), message.lastIndexOf('>') + 1) : message;
+		val strippedMessage = containsGradient(message)
+				? message.substring(message.indexOf('<') + 1, message.indexOf(getGradientEndPlaceholder()))
+				: message;
 		val replacedMessage = HookManager.replacePlaceholders(player, Variables.replace(format(strippedMessage), player));
-		return translateGradient(message.replace(strippedMessage, replacedMessage));
+		return message.replace(translatedSegment, translateGradient(translatedSegment.replace(strippedMessage, replacedMessage)));
 	}
 }

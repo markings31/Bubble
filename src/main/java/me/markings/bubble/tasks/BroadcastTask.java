@@ -1,11 +1,10 @@
 package me.markings.bubble.tasks;
 
 import lombok.val;
-import me.markings.bubble.Bubble;
 import me.markings.bubble.PlayerData;
+import me.markings.bubble.settings.Broadcasts;
 import me.markings.bubble.settings.Settings;
 import me.markings.bubble.util.MessageUtil;
-import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitRunnable;
 import org.mineacademy.fo.ChatUtil;
@@ -15,41 +14,46 @@ import org.mineacademy.fo.debug.Debugger;
 import org.mineacademy.fo.model.SimpleSound;
 import org.mineacademy.fo.remain.Remain;
 
-import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
+import java.util.Objects;
 
 public class BroadcastTask extends BukkitRunnable {
 
-	private static final Map<List<String>, String> messageList = Settings.BroadcastSettings.MESSAGE_MAP;
-	private static final Map<String, String> broadcastPerm = Settings.BroadcastSettings.PERMISSION;
-	private static final Map<List<String>, String> worlds = Settings.BroadcastSettings.BROADCAST_WORLDS;
+	private static List<List<String>> messageList;
+	private static List<String> worlds;
 
 	private static int index;
-	private static String currentPath;
 
 	@Override
 	public void run() {
+		nextCycle();
+	}
+
+	public static void nextCycle() {
+		messageList = Broadcasts.getAllMessages();
+		val broadcastPerm = Broadcasts.getAllPermissions();
+		worlds = Broadcasts.getAllWorlds();
+
 		Debugger.debug("broadcasts",
-				"Messages: " + messageList.keySet() +
-						" Worlds: " + worlds.keySet() +
-						" Permissions: " + broadcastPerm.values() +
+				"Messages: " + messageList +
+						" Worlds: " + worlds +
+						" Permissions: " + broadcastPerm +
 						" Sound: " + Settings.BroadcastSettings.BROADCAST_SOUND);
 
 		if (Settings.BroadcastSettings.ENABLE_BROADCASTS.equals(Boolean.TRUE) && !Remain.getOnlinePlayers().isEmpty()) {
 
 			executeTasks();
 
-			updateIndex(new ArrayList<>(messageList.keySet()));
+			updateIndex();
 		}
 	}
 
-	private static void executeTasks() {
+	public static void executeTasks() {
 		val messages = Settings.BroadcastSettings.RANDOM_MESSAGE.equals(Boolean.TRUE) ?
-				RandomUtil.nextItem(messageList.keySet()) : new ArrayList<>(messageList.keySet()).get(index);
+				RandomUtil.nextItem(messageList) : messageList.get(index);
 		val broadcastSound = Settings.BroadcastSettings.BROADCAST_SOUND;
 
-		worlds.keySet().forEach(world -> Remain.getOnlinePlayers().forEach(player -> {
+		worlds.forEach(world -> Remain.getOnlinePlayers().forEach(player -> {
 			val cache = PlayerData.getCache(player);
 			if (cache.isBroadcastStatus()) {
 
@@ -63,18 +67,15 @@ public class BroadcastTask extends BukkitRunnable {
 		}));
 	}
 
-	private static void playerChecks(final Player player, final List<String> worlds) {
-		worlds.forEach(world -> {
-			if (player.getWorld().getName().equals(world)) {
-				val currentMessages = Settings.BroadcastSettings.RANDOM_MESSAGE.equals(Boolean.TRUE) ?
-						RandomUtil.nextItem(messageList.keySet()) : new ArrayList<>(messageList.keySet()).get(index);
-				currentPath = broadcastPerm.keySet().stream().filter(path
-						-> path.equals(messageList.get(currentMessages))).findFirst().orElse(currentPath);
-			}
+	// path --> broadcastName
+	private static void playerChecks(final Player player, final String world) {
+		if (player.getWorld().getName().equals(world)) {
+			val currentMessages = Settings.BroadcastSettings.RANDOM_MESSAGE.equals(Boolean.TRUE) ?
+					RandomUtil.nextItem(messageList) : messageList.get(index);
 
-			if (!player.hasPermission(broadcastPerm.get(currentPath)))
-				updateIndex(new ArrayList<>(messageList.keySet()));
-		});
+			if (!player.hasPermission(Objects.requireNonNull(Broadcasts.getPermissionFromMessage(currentMessages))))
+				updateIndex();
+		}
 	}
 
 	private static void sendMessages(final List<String> messages, final Player player) {
@@ -90,7 +91,7 @@ public class BroadcastTask extends BukkitRunnable {
 
 			message = Boolean.TRUE.equals(Settings.BroadcastSettings.CENTER_ALL) ? ChatUtil.center(message) : message;
 
-			if (YamlConfiguration.loadConfiguration(Bubble.settingsFile).getBoolean("Notifications.Broadcast.Messages." + currentPath + ".Center"))
+			if (Boolean.TRUE.equals(Broadcasts.getCenteredFromMessage(messages)))
 				message = ChatUtil.center(message);
 
 			Common.tellNoPrefix(player, MessageUtil.replaceVarsAndGradient(message, player));
@@ -98,7 +99,7 @@ public class BroadcastTask extends BukkitRunnable {
 		Common.tellNoPrefix(player, "&f", MessageUtil.replaceVarsAndGradient(footer, player));
 	}
 
-	private static void updateIndex(final List<List<String>> messages) {
-		index = ++index == messages.size() ? 0 : index;
+	private static void updateIndex() {
+		index = ++index == BroadcastTask.messageList.size() ? 0 : index;
 	}
 }

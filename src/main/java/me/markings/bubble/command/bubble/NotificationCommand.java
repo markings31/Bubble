@@ -1,22 +1,15 @@
 package me.markings.bubble.command.bubble;
 
-import github.scarsz.discordsrv.DiscordSRV;
 import lombok.val;
-import me.markings.bubble.hook.DiscordSRVHook;
 import me.markings.bubble.model.Permissions;
-import me.markings.bubble.settings.Settings;
-import me.markings.bubble.util.ChatImageUtil;
 import me.markings.bubble.util.MessageUtil;
 import org.bukkit.entity.Player;
 import org.mineacademy.fo.Common;
-import org.mineacademy.fo.Valid;
 import org.mineacademy.fo.command.SimpleSubCommand;
 import org.mineacademy.fo.model.Variables;
 import org.mineacademy.fo.remain.CompMaterial;
 import org.mineacademy.fo.remain.Remain;
 
-import java.io.File;
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -56,31 +49,9 @@ public class NotificationCommand extends SimpleSubCommand {
 
 		switch (args[1].toLowerCase()) {
 			case "message":
-				val hasImage = args[2].contains(".png") || args[2].contains(".jpg");
 				if (getPlayer() != null)
 					checkBoolean(getPlayer().hasPermission(getPermission() + ".message"), noPermissionMsg);
-				if (Boolean.TRUE.equals(Settings.DiscordSettings.SYNCANNOUNCEMENTS) && !hasImage)
-					DiscordSRVHook.getInstance().sendAnnouncement(
-							getPlayer(),
-							"Announcement",
-							Common.stripColors(primaryPart),
-							MessageUtil.getColor(Settings.DiscordSettings.ANNOUNCEMENTSCOLOR),
-							DiscordSRV.getAvatarUrl(getPlayer()));
-				if (hasImage) {
-					checkBoolean(Valid.isInteger(args[3]), "Please provide the height of the image you want to be displayed!");
-					try {
-						if (allInputs.toLowerCase().contains("-c"))
-							ChatImageUtil.fromFile(new File("plugins/Bubble/images/", args[2]), Integer.parseInt(args[3]), ChatImageUtil.Type.BLOCK)
-									.appendCenteredText(joinArgs(4).replace("-c", "").split("\\|"))
-									.sendToPlayer(target);
-						else
-							ChatImageUtil.fromFile(new File("plugins/Bubble/images/", args[2]), Integer.parseInt(args[3]), ChatImageUtil.Type.BLOCK)
-									.appendText(joinArgs(4).split("\\|"))
-									.sendToPlayer(target);
-					} catch (final IOException e) {
-						e.printStackTrace();
-					}
-				} else Common.tell(target, Common.colorize(primaryPart));
+				Common.tell(target, Common.colorize(primaryPart));
 				break;
 			case "title":
 				if (getPlayer() != null)

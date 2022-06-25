@@ -8,6 +8,7 @@ import org.bukkit.entity.Firework;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerJoinEvent;
+import org.bukkit.event.player.PlayerQuitEvent;
 import org.jetbrains.annotations.NotNull;
 import org.mineacademy.fo.Common;
 import org.mineacademy.fo.debug.Debugger;
@@ -57,4 +58,8 @@ public class PlayerJoinListener implements Listener {
 
 	}
 
+	@EventHandler
+	public void onQuit(final PlayerQuitEvent event) {
+		PlayerData.remove(event.getPlayer());
+	}
 }

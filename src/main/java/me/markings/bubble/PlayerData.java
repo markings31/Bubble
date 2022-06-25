@@ -4,18 +4,19 @@ import lombok.Getter;
 import lombok.val;
 import me.markings.bubble.api.Cache;
 import org.bukkit.entity.Player;
-import org.mineacademy.fo.collection.expiringmap.ExpiringMap;
 import org.mineacademy.fo.remain.Remain;
 import org.mineacademy.fo.settings.YamlConfig;
 
 import javax.annotation.Nullable;
+import java.io.File;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.UUID;
-import java.util.concurrent.TimeUnit;
 
 @Getter
 public final class PlayerData extends YamlConfig implements Cache {
 
-	private static final ExpiringMap<UUID, PlayerData> cacheMap = ExpiringMap.builder().expiration(30, TimeUnit.MINUTES).build();
+	private static final Map<UUID, PlayerData> playerData = new HashMap<>();
 
 	private final String playerName;
 	private final UUID uuid;
@@ -63,42 +64,52 @@ public final class PlayerData extends YamlConfig implements Cache {
 	public void setBroadcastStatus(final boolean broadcastStatus) {
 		this.broadcastStatus = broadcastStatus;
 
-		set("Receive_Broadcasts", broadcastStatus);
+		save();
 	}
 
 	@Override
 	public void setBroadcastSoundStatus(final boolean broadcastSoundStatus) {
 		this.broadcastSoundStatus = broadcastSoundStatus;
 
-		set("Receive_Broadcast_Sound", broadcastSoundStatus);
+		save();
 	}
 
 	@Override
 	public void setMotdStatus(final boolean motdStatus) {
 		this.motdStatus = motdStatus;
 
-		set("Receive_MOTD", motdStatus);
+		save();
 	}
 
 	@Override
 	public void setMentionsStatus(final boolean mentionsStatus) {
 		this.mentionsStatus = mentionsStatus;
 
-		set("Receive_Mentions", mentionsStatus);
+		save();
 	}
 
 	@Override
 	public void setMentionSoundStatus(final boolean mentionSoundStatus) {
 		this.mentionSoundStatus = mentionSoundStatus;
 
-		set("Receive_Mention_Sound", mentionSoundStatus);
+		save();
 	}
 
 	@Override
 	public void setMentionToastStatus(final boolean mentionToastStatus) {
 		this.mentionToastStatus = mentionToastStatus;
 
-		set("Receive_Mentions_Toast", mentionToastStatus);
+		save();
+	}
+
+	@Override
+	public int hashCode() {
+		return this.uuid.hashCode();
+	}
+
+	@Override
+	public boolean equals(final Object obj) {
+		return obj instanceof PlayerData && ((PlayerData) obj).uuid.equals(this.uuid);
 	}
 
 	/* ------------------------------------------------------------------------------- */
@@ -122,26 +133,31 @@ public final class PlayerData extends YamlConfig implements Cache {
 
 	public static PlayerData getCache(final Player player) {
 		final UUID uuid = player.getUniqueId();
-		PlayerData data = cacheMap.get(uuid);
+		PlayerData data = playerData.get(uuid);
 
 		if (data == null) {
 			data = new PlayerData(player.getName(), uuid);
-			cacheMap.put(uuid, data);
+
+			playerData.put(uuid, data);
 		}
 
 		return data;
 	}
 
-	public void removeFromMemory() {
-		synchronized (cacheMap) {
-			cacheMap.remove(this.uuid);
-		}
+	public static PlayerData fromPlayerFile(final File file) {
+		return fromPlayerFile(UUID.fromString(file.getName().replace(".yml", "")));
 	}
 
+	public static PlayerData fromPlayerFile(final UUID uuid) {
+		PlayerData data = playerData.get(uuid);
 
-	public static void clearAllData() {
-		synchronized (cacheMap) {
-			cacheMap.clear();
-		}
+		if (data == null)
+			data = new PlayerData(null, uuid);
+
+		return data;
+	}
+
+	public static void remove(final Player player) {
+		playerData.remove(player.getUniqueId());
 	}
 }

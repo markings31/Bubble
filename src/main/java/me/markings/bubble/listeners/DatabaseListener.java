@@ -13,9 +13,11 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.player.AsyncPlayerPreLoginEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 import org.mineacademy.fo.Common;
+import org.mineacademy.fo.annotation.AutoRegister;
 
+@AutoRegister
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
-public class DatabaseListener implements Listener {
+public final class DatabaseListener implements Listener {
 
 	@Getter
 	private static final DatabaseListener instance = new DatabaseListener();
