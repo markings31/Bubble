@@ -1,0 +1,101 @@
+Preferences:
+  Title: "&6&lNotifications"
+  Size: "9 * 3"
+  Empty_Slot_Material: GRAY_STAINED_GLASS_PANE
+  Buttons:
+    Chat_Settings:
+      Title: "&eChat Settings"
+      Material: PAPER
+      Slot: "9 + 2"
+      Lore:
+        - ""
+        - "Click here to access the chat"
+        - "settings menu."
+      Click:
+        Menu: Chat_Settings
+
+    MOTD_Settings:
+      Title: "&eMessage of the Day"
+      Material: DIAMOND
+      Slot: "9 + 4"
+      Lore:
+        - ""
+        - "Click this item to toggle on/off"
+        - "the message sent to you when you join"
+        - "the server."
+      Click:
+        Menu: MOTD_Settings
+        Animate: "MOTD {motd_status}!"
+        Toggle_MOTD: true
+
+    Mentions_Settings:
+      Title: "&eMentions Settings"
+      Material: SUNFLOWER
+      Slot: "9 + 6"
+      Lore:
+        - ""
+        - "Click here to access the mentions"
+        - "settings menu."
+      Click:
+        Menu: Mentions_Settings
+
+Chat_Settings:
+  Title: "&e&lChat Settings"
+  Size: "9 * 3"
+  Empty_Slot_Material: GRAY_STAINED_GLASS_PANE
+  Buttons:
+    Toggle_Broadcasts:
+      Title: "&6Toggle Broadcasts"
+      Material: YELLOW_DYE
+      Slot: "9 + 2"
+      Lore:
+        - ""
+        - "&eClick this item to toggle on/off"
+        - "&ebroadcasts that are displayed to you."
+      Click:
+        Animate: "Broadcasts {bc_status}!"
+        Toggle_Broadcasts: true
+
+    Toggle_Broadcast_Sound:
+      Title: "&2Toggle Broadcast Sound"
+      Material: MUSIC_DISC_13
+      Slot: "9 + 6"
+      Lore:
+        - ""
+        - "&eClick this item to toggle on/off"
+        - "&ethe sound played to you when you"
+        - "&ereceive a broadcast message."
+      Click:
+        Animate: "Broadcast sound {bc_sound_status}!"
+        Toggle_Broadcast_Sound: true
+
+Mentions_Settings:
+  Title: "&2&lMentions Settings"
+  Size: "9 * 3"
+  Empty_Slot_Material: GRAY_STAINED_GLASS_PANE
+  Buttons:
+    Toggle_Mention_Sound:
+      Title: "&cToggle Mention Sound"
+      Material: NOTE_BLOCK
+      Slot: "9 + 2"
+      Lore:
+        - ""
+        - "&eClick this item to toggle on/off"
+        - "&ethe sound played to you when your"
+        - "&ename is mentioned in the chat."
+      Click:
+        Animate: "Mention sound {mention_sound_status}!"
+        Toggle_Mention_Sound: true
+
+    Toggle_Mention_Toast:
+      Title: "&bToggle Mention Toast"
+      Material: BREAD
+      Slot: "9 + 6"
+      Lore:
+        - ""
+        - "&eClick this item to toggle on/off"
+        - "&ethe sound played to you when your"
+        - "&ename is mentioned in the chat."
+      Click:
+        Animate: "Mention toast {mention_toast_status}!"
+        Toggle_Mention_Toast: true

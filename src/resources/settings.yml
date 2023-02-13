@@ -25,13 +25,13 @@
 # -------------------------------------------------------------------------------------------------
 Notifications:
 
-  # Broadcast Messages
+  # Global Broadcast Settings
   Broadcast:
 
     # Enable broadcast messages?
     Enable: true
 
-    # The delay between each broadcast message.
+    # Delay between broadcasts.
     Delay: 90 seconds
 
     # Should the broadcast messages be outputted randomly?
@@ -43,14 +43,6 @@ Notifications:
 
     # Do you want messages to be sent asynchronously? (may improve performance)
     Send_Asynchronously: true
-
-    # What sound should be played when a message is broadcast?
-    # A list of the compatible values can be found here:
-    # https://gist.github.com/NiklasEi/7bd0ffd136f8459df0940e4501d47a8a
-    Sound: NOTE_PLING, 1F, 1.5F
-
-    Header: "&8%chat_line_smooth%"
-    Footer: "&8%chat_line_smooth%"
 
   # Welcome Messages
   Welcome:
@@ -70,36 +62,24 @@ Notifications:
 
     # The message sent to players on-join.
     Join_MOTD:
-      - '<center>&8%chat_line%'
-      - '<center>&7Welcome to %server_name%, &b%player%&7!'
+      - '<center>&8{chat_line}'
+      - '<center>&7Welcome to the server, &b{player}&7!'
       - '<center>&f'
       - '<center>&bWebsite: &fyourserver.com'
       - '<center>&bDiscord: &fdiscord.com/yourserver'
       - '<center>&bTwitter: &ftwitter.com/yourserver'
-      - '<center>&8%chat_line%'
+      - '<center>&8{chat_line}'
 
-  # Join Messages
-  Join:
+  # Send notifications to your devices using Pushover. Sent using the '/bu pushover' command.
+  # Documentation on this section can be found on the plugin's GitHub page.
+  Pushover:
 
-    # Should our join messages be broadcast to the server when a player joins?
-    Enable_Join_Message: false
+    # The token of the application you're using Pushover notifications for.
+    Application_Token: "TOKEN"
 
-    # Should our join messages be broadcast to the server when a player quits?
-    Enable_Quit_Message: false
+    # The key of the Pushover account user. This is found on the dashboard page.
+    User_Key: "KEY"
 
-    # Should a firework be launched whenever a new player joins the server?
-    Firework_On_First_Join: false
-
-    # Should join/quit messages be silenced if a player is vanished?
-    Mute_If_Vanished: true
-
-    # If the above option is enabled, the message will only be broadcast to these worlds.
-    Worlds:
-      - 'world'
-
-    Join_Message: "&8[&a+&8] &a%player%"
-
-    Quit_Message: "&8[&c-&8] &c%player%"
 
 # -------------------------------------------------------------------------------------------------
 # Chat Section
@@ -124,15 +104,6 @@ Chat:
     Sound: ORB_PICKUP
 
 # -------------------------------------------------------------------------------------------------
-# Database Section
-# -------------------------------------------------------------------------------------------------
-Database:
-
-  # Should we connect to the MySQL database upon plugin startup?
-  # Note: MySQL credentials can be found in the mysql.yml file.
-  Enable_MySQL: false
-
-# -------------------------------------------------------------------------------------------------
 # Hooks Section
 # -------------------------------------------------------------------------------------------------
 Hooks:
@@ -150,7 +121,7 @@ Hooks:
 # The plugin's main prefix. You can manually add this prefix to other messages using the
 # {plugin_prefix} placeholder.
 # -------------------------------------------------------------------------------------------------
-Prefix: "&8[&b&l${project.name}&8]&7 "
+Prefix: "&b&l${project.name} &8&l»&r "
 
 # -------------------------------------------------------------------------------------------------
 # The language used for plugin messages. If the given language is available, the plugin will

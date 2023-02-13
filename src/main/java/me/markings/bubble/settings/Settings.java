@@ -12,129 +12,112 @@ import java.util.List;
 @SuppressWarnings("unused")
 public final class Settings extends SimpleSettings {
 
-	@Override
-	protected int getConfigVersion() {
-		return 1;
-	}
+    @Override
+    protected int getConfigVersion() {
+        return 1;
+    }
 
-	@NoArgsConstructor(access = AccessLevel.PRIVATE)
-	public final static class BroadcastSettings {
+    @NoArgsConstructor(access = AccessLevel.PRIVATE)
+    public final static class NotificationSettings {
 
-		public static Boolean ENABLE_BROADCASTS;
-		public static Boolean RANDOM_MESSAGE;
-		public static Boolean CENTER_ALL;
-		public static Boolean SEND_ASYNC;
+        /**
+         * Broadcast Settings
+         */
+        public static Boolean ENABLE_BROADCASTS;
+        public static Boolean RANDOM_MESSAGE;
+        public static Boolean CENTER_ALL;
+        public static Boolean SEND_ASYNC;
 
-		public static String HEADER;
-		public static String FOOTER;
+        public static SimpleTime BROADCAST_DELAY;
 
-		public static SimpleTime BROADCAST_DELAY;
+        /**
+         * PushOver Settings
+         */
+        public static String APPLICATION_TOKEN;
 
-		public static SimpleSound BROADCAST_SOUND;
+        public static String USER_KEY;
 
-		private static void init() {
-			setPathPrefix("Notifications.Broadcast");
-			ENABLE_BROADCASTS = getBoolean("Enable");
-			BROADCAST_DELAY = getTime("Delay");
-			RANDOM_MESSAGE = getBoolean("Random_Message");
-			CENTER_ALL = getBoolean("Center_All");
-			SEND_ASYNC = getBoolean("Send_Asynchronously");
-			BROADCAST_SOUND = getSound("Sound");
-			HEADER = getString("Header");
-			FOOTER = getString("Footer");
-		}
-	}
+        private static void init() {
+            setPathPrefix("Notifications.Broadcast");
+            ENABLE_BROADCASTS = getBoolean("Enable");
+            BROADCAST_DELAY = getTime("Delay");
+            RANDOM_MESSAGE = getBoolean("Random_Message");
+            CENTER_ALL = getBoolean("Center_All");
+            SEND_ASYNC = getBoolean("Send_Asynchronously");
 
-	@NoArgsConstructor(access = AccessLevel.PRIVATE)
-	public final static class WelcomeSettings {
-		public static Boolean ENABLE_JOIN_MOTD;
+            setPathPrefix("Notifications.Pushover");
+            APPLICATION_TOKEN = getString("Application_Token");
+            USER_KEY = getString("User_Key");
+        }
+    }
 
-		public static List<String> JOIN_MOTD = new ArrayList<>();
+    @NoArgsConstructor(access = AccessLevel.PRIVATE)
+    public final static class WelcomeSettings {
 
-		public static SimpleTime MOTD_DELAY;
+        /**
+         * MOTD Settings
+         */
+        public static Boolean ENABLE_JOIN_MOTD;
 
-		public static SimpleSound MOTD_SOUND;
+        public static List<String> JOIN_MOTD = new ArrayList<>();
 
-		private static void init() {
-			setPathPrefix("Notifications.Welcome");
-			ENABLE_JOIN_MOTD = getBoolean("Enable_MOTD");
-			MOTD_DELAY = getTime("MOTD_Delay");
-			MOTD_SOUND = getSound("Sound");
-			JOIN_MOTD = getStringList("Join_MOTD");
-		}
-	}
+        public static SimpleTime MOTD_DELAY;
 
-	@NoArgsConstructor(access = AccessLevel.PRIVATE)
-	public final static class JoinSettings {
+        public static SimpleSound MOTD_SOUND;
 
-		public static String JOIN_MESSAGE;
-		public static String QUIT_MESSAGE;
+        private static void init() {
+            setPathPrefix("Notifications.Welcome");
+            ENABLE_JOIN_MOTD = getBoolean("Enable_MOTD");
+            MOTD_DELAY = getTime("MOTD_Delay");
+            MOTD_SOUND = getSound("Sound");
+            JOIN_MOTD = getStringList("Join_MOTD");
+        }
+    }
 
-		public static Boolean ENABLE_JOIN_MESSAGE;
-		public static Boolean ENABLE_QUIT_MESSAGE;
-		public static Boolean FIREWORK_JOIN;
-		public static Boolean MUTE_IF_VANISHED;
+    @NoArgsConstructor(access = AccessLevel.PRIVATE)
+    public final static class ChatSettings {
 
-		public static List<String> BROADCAST_WORLDS = new ArrayList<>();
+        /**
+         * Mention Settings
+         */
+        public static Boolean ENABLE_MENTIONS;
 
-		private static void init() {
-			setPathPrefix("Notifications.Join");
-			ENABLE_JOIN_MESSAGE = getBoolean("Enable_Join_Message");
-			ENABLE_QUIT_MESSAGE = getBoolean("Enable_Quit_Message");
+        public static String MENTION_COLOR;
+        public static String MENTION_IGNORE_PERMISSION;
 
-			FIREWORK_JOIN = getBoolean("Firework_On_First_Join");
+        public static SimpleSound MENTION_SOUND;
 
-			MUTE_IF_VANISHED = getBoolean("Mute_If_Vanished");
+        private static void init() {
+            setPathPrefix("Chat.Mentions");
+            ENABLE_MENTIONS = getBoolean("Enable");
+            MENTION_IGNORE_PERMISSION = getString("Ignore_Permission");
+            MENTION_COLOR = getString("Color");
+            MENTION_SOUND = getSound("Sound");
+        }
+    }
 
-			BROADCAST_WORLDS = getStringList("Worlds");
+    public final static class DatabaseSettings {
 
-			JOIN_MESSAGE = getString("Join_Message");
-			QUIT_MESSAGE = getString("Quit_Message");
-		}
-	}
+        /**
+         * MySQL Settings
+         */
 
-	@NoArgsConstructor(access = AccessLevel.PRIVATE)
-	public final static class ChatSettings {
+        private static void init() {
+        }
+    }
 
-		public static Boolean ENABLE_MENTIONS;
+    @NoArgsConstructor(access = AccessLevel.PRIVATE)
+    public final static class HookSettings {
 
-		public static String MENTION_COLOR;
-		public static String MENTION_IGNORE_PERMISSION;
+        public static Boolean VAULT;
+        public static Boolean PAPI;
+        public static Boolean BSTATS;
 
-		public static SimpleSound MENTION_SOUND;
-
-		private static void init() {
-			setPathPrefix("Chat.Mentions");
-			ENABLE_MENTIONS = getBoolean("Enable");
-			MENTION_IGNORE_PERMISSION = getString("Ignore_Permission");
-			MENTION_COLOR = getString("Color");
-			MENTION_SOUND = getSound("Sound");
-		}
-	}
-
-	public final static class DatabaseSettings {
-
-		public static Boolean ENABLE_MYSQL;
-
-		private static void init() {
-			setPathPrefix("Database");
-			ENABLE_MYSQL = getBoolean("Enable_MySQL");
-		}
-	}
-
-	@NoArgsConstructor(access = AccessLevel.PRIVATE)
-	public final static class HookSettings {
-
-		public static Boolean VAULT;
-		public static Boolean PAPI;
-		public static Boolean BSTATS;
-
-		private static void init() {
-			setPathPrefix("Hooks");
-			VAULT = getBoolean("Vault");
-			PAPI = getBoolean("PlaceholderAPI");
-			BSTATS = getBoolean("BStats");
-		}
-	}
+        private static void init() {
+            setPathPrefix("Hooks");
+            VAULT = getBoolean("Vault");
+            PAPI = getBoolean("PlaceholderAPI");
+            BSTATS = getBoolean("BStats");
+        }
+    }
 }
-

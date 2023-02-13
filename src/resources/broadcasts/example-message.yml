@@ -1,0 +1,20 @@
+# -------------------------------------------------------------------------------------------
+# Broadcast Settings
+# -------------------------------------------------------------------------------------------
+
+Header: '&8-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-'
+Footer: '&8-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-'
+Permission: bubble.example
+Sound: BLOCK_NOTE_BLOCK_PLING 1.0 1.0
+Centered: true
+Worlds:
+  - world
+  - world_nether
+Message:
+  - '&f'
+  - '&6&lAnnouncement'
+  - '&f'
+  - '&7Every rank is &e&l20% OFF&7 for a limited time!'
+  - '&7Check it out at &f&nstore.servername.com&r&f!'
+  - <title>&6&l20% Off LIMITED SALE|&fstore.servername.com
+  - '&f'

@@ -1,18 +1,23 @@
 package me.markings.bubble.conversation;
 
-import lombok.*;
-import me.markings.bubble.Bubble;
+import lombok.AccessLevel;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.SneakyThrows;
 import me.markings.bubble.command.bubble.EditCommand;
+import me.markings.bubble.settings.Broadcasts;
 import me.markings.bubble.settings.Localization;
-import me.markings.bubble.util.ConfigUtil;
-import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.conversations.ConversationContext;
 import org.bukkit.conversations.Prompt;
-import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import org.mineacademy.fo.Messenger;
 import org.mineacademy.fo.conversation.SimplePrompt;
 import org.mineacademy.fo.remain.Remain;
+
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class EditMessagePrompt extends SimplePrompt {
@@ -22,30 +27,25 @@ public class EditMessagePrompt extends SimplePrompt {
 
 	@Override
 	protected String getPrompt(final ConversationContext context) {
-		Remain.sendTitle((Player) context.getForWhom(), "&9Edit Message", "Please type your message in the chat.");
+		Remain.sendTitle(getPlayer(context), "&9Edit Message", "Please type your message in the chat.");
 		return Localization.PromptMessages.EDIT_PROMPT_MESSAGE;
+	}
+
+	@Override
+	protected String getCustomPrefix() {
+		return "";
 	}
 
 	@Nullable
 	@Override
 	@SneakyThrows
 	protected Prompt acceptValidatedInput(@NotNull final ConversationContext context, @NotNull final String input) {
-		val config = YamlConfiguration.loadConfiguration(Bubble.settingsFile);
-		val commandArg = EditCommand.getInput();
-		val inputs = input.split("\\|");
-		val newSection = "Notifications.Broadcast.Messages." + commandArg;
+		final List<String> message = new ArrayList<>(Arrays.asList(input.split(",")));
+		final String label = EditCommand.getInput();
 
-		val section = config.getStringList(newSection + ".Message");
+		Broadcasts.getBroadcast(label).setMessage(message);
 
-		section.clear();
-		for (final String message : inputs) {
-			section.add(message);
-			config.set(newSection + ".Message", section);
-		}
-
-		ConfigUtil.saveConfig((Player) context.getForWhom(),
-				"&aSuccessfully replaced message section " + commandArg + " with line '" + input + "&a'!",
-				"Failed to edit message! Error: ", config);
+		Messenger.success(getPlayer(context), "&aSuccessfully edited contents of '" + label + "' to '" + message + "'!");
 
 		return Prompt.END_OF_CONVERSATION;
 	}

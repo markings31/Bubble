@@ -1,75 +1,46 @@
 package me.markings.bubble.command.bubble;
 
-import lombok.val;
-import me.markings.bubble.Bubble;
 import me.markings.bubble.model.Permissions;
-import me.markings.bubble.util.ConfigUtil;
-import org.bukkit.configuration.file.YamlConfiguration;
+import me.markings.bubble.settings.Broadcasts;
 import org.mineacademy.fo.command.SimpleSubCommand;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
 
 public class AddCommand extends SimpleSubCommand {
 
-	public AddCommand() {
-		super("add");
+    public AddCommand() {
+        super("add");
 
-		setMinArguments(2);
-		setDescription("Add a line or section to the given broadcast label.");
-		setUsage("<section/line> <label> [message]");
-		setPermission(Permissions.Command.ADD);
-	}
+        setMinArguments(2);
+        setDescription("Add a line the given broadcast.");
+        setUsage("<broadcast_name> <message>");
+        setPermission(Permissions.Command.ADD);
+    }
 
-	@Override
-	protected void onCommand() {
-		val config = YamlConfiguration.loadConfiguration(Bubble.settingsFile);
-		val newSection = "Messages." + args[1];
-		val messagePathSuffix = ".Message";
-		val message = config.getStringList(newSection + messagePathSuffix);
-		val permissionPath = newSection + ".Permission";
-		val centeredPath = newSection + ".Centered";
-		val worldsPath = newSection + ".Worlds";
+    @Override
+    protected void onCommand() {
+        final String broadcastName = args[0];
+        final String message = !args[1].isEmpty() ? joinArgs(1) : "";
 
-		final Map<List<String>, String> messages = new HashMap<>();
-		final Map<String, String> permissions = new HashMap<>();
-		final Map<String, Boolean> centered = new HashMap<>();
-		final Map<List<String>, String> worlds = new HashMap<>();
-		messages.put(message, newSection);
-		permissions.put(permissionPath, config.getString(permissionPath));
-		centered.put(centeredPath, config.getBoolean(centeredPath));
-		worlds.put(config.getStringList(worldsPath), worldsPath);
+        checkBoolean(Broadcasts.getBroadcast(broadcastName) != null, "&cNo such broadcast " + args[0] + " found!");
 
-		if (args[0].equalsIgnoreCase("section")) {
-			val worldsList = config.getStringList(worldsPath);
-			config.createSection(newSection);
+        final Broadcasts broadcast = Broadcasts.getBroadcast(broadcastName);
+        broadcast.addLineToBroadcast(message);
 
-			message.add("Test Message");
-			worldsList.add("world");
-			config.set(permissionPath, "bubble.vip");
-			config.set(centeredPath, false);
-			config.set(worldsPath, worldsList);
-			config.set(newSection + messagePathSuffix, message);
-		} else if (args[0].equalsIgnoreCase("line")) {
-			val messageLine = joinArgs(2);
-			val section = config.getStringList(newSection + messagePathSuffix);
+        tellSuccess("&aSuccessfully added line to broadcast " + broadcastName + "!");
+    }
 
-			section.add(messageLine);
-			config.set(newSection + messagePathSuffix, section);
-		} else returnInvalidArgs();
+    @Override
+    protected String[] getMultilineUsageMessage() {
+        return new String[]{"/{label} {sublabel} " + getUsage()};
+    }
 
-		ConfigUtil.saveConfig(getPlayer(),
-				"&aSuccessfully added line/section!",
-				"&cFailed to create line/section! Error: ", config);
-	}
+    @Override
+    protected List<String> tabComplete() {
+        if (args.length == 1)
+            return completeLastWord(Broadcasts.getAllBroadcastNames());
 
-	@Override
-	protected List<String> tabComplete() {
-		if (args.length == 1)
-			return completeLastWord("section", "line");
-		if (args.length == 2 && args[0].equalsIgnoreCase("line"))
-			return completeLastWord(Objects.requireNonNull(
-					YamlConfiguration.loadConfiguration(Bubble.settingsFile).getConfigurationSection("Notifications.Broadcast.Messages")).getValues(false).keySet());
-
-		return new ArrayList<>();
-	}
+        return new ArrayList<>();
+    }
 }

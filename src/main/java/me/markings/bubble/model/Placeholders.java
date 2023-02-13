@@ -23,18 +23,18 @@ public final class Placeholders extends SimpleExpansion {
 		assert player != null;
 
 		switch (identifier) {
-			case "broadcasts_enabled":
-				return String.valueOf(PlayerData.getCache(player).isBroadcastStatus());
-			case "broadcast_sound_enabled":
-				return String.valueOf(PlayerData.getCache(player).isBroadcastSoundStatus());
-			case "motd_enabled":
-				return String.valueOf(PlayerData.getCache(player).isMotdStatus());
-			case "mentions_enabled":
-				return String.valueOf(PlayerData.getCache(player).isMentionsStatus());
-			case "mentions_sound_enabled":
-				return String.valueOf(PlayerData.getCache(player).isMentionSoundStatus());
-			case "mentions_toast_enabled":
-				return String.valueOf(PlayerData.getCache(player).isMentionToastStatus());
+			case "bc_status":
+				return String.valueOf(PlayerData.from(player).isBroadcastStatus());
+			case "bc_sound_status":
+				return String.valueOf(PlayerData.from(player).isBroadcastSoundStatus());
+			case "motd_status":
+				return String.valueOf(PlayerData.from(player).isMotdStatus());
+			case "mentions_status":
+				return String.valueOf(PlayerData.from(player).isMentionsStatus());
+			case "mentions_sound_status":
+				return String.valueOf(PlayerData.from(player).isMentionSoundStatus());
+			case "mentions_toast_status":
+				return String.valueOf(PlayerData.from(player).isMentionToastStatus());
 			case "ping":
 				return player.getPing() + "ms";
 			case "tps":

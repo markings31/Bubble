@@ -3,7 +3,6 @@ package me.markings.bubble.mysql;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import lombok.val;
 import me.markings.bubble.PlayerData;
 import org.mineacademy.fo.collection.SerializedMap;
 import org.mineacademy.fo.database.SimpleFlatDatabase;
@@ -16,12 +15,12 @@ public class BubbleDatabase extends SimpleFlatDatabase<PlayerData> {
 
 	@Override
 	protected void onLoad(final SerializedMap serializedMap, final PlayerData playerData) {
-		val broadcastStatus = serializedMap.get("Receive_Broadcasts", Boolean.class);
-		val broadcastSoundStatus = serializedMap.get("Receive_Broadcast_Sound", Boolean.class);
-		val motdStatus = serializedMap.get("Reveive_MOTD", Boolean.class);
-		val mentionsStatus = serializedMap.get("Receive_Mentions", Boolean.class);
-		val mentionSoundStatus = serializedMap.get("Receive_Mention_Sound", Boolean.class);
-		val mentionToastStatus = serializedMap.get("Receive_Mentions_Toast", Boolean.class);
+		final Boolean broadcastStatus = serializedMap.get("Receive_Broadcasts", Boolean.class);
+		final Boolean broadcastSoundStatus = serializedMap.get("Receive_Broadcast_Sound", Boolean.class);
+		final Boolean motdStatus = serializedMap.get("Reveive_MOTD", Boolean.class);
+		final Boolean mentionsStatus = serializedMap.get("Receive_Mentions", Boolean.class);
+		final Boolean mentionSoundStatus = serializedMap.get("Receive_Mention_Sound", Boolean.class);
+		final Boolean mentionToastStatus = serializedMap.get("Receive_Mentions_Toast", Boolean.class);
 
 		if (broadcastStatus != null)
 			playerData.setBroadcastStatus(broadcastStatus);
@@ -44,7 +43,7 @@ public class BubbleDatabase extends SimpleFlatDatabase<PlayerData> {
 
 	@Override
 	protected SerializedMap onSave(final PlayerData playerData) {
-		val map = new SerializedMap();
+		final SerializedMap map = new SerializedMap();
 
 		map.put("Receive_Broadcasts", playerData.isBroadcastStatus());
 		map.put("Receive_Broadcast_Sound", playerData.isBroadcastSoundStatus());

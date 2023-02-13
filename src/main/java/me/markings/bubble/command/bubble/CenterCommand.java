@@ -1,64 +1,49 @@
 package me.markings.bubble.command.bubble;
 
-import lombok.val;
-import me.markings.bubble.Bubble;
 import me.markings.bubble.model.Permissions;
-import me.markings.bubble.util.ConfigUtil;
-import org.bukkit.configuration.file.YamlConfiguration;
+import me.markings.bubble.settings.Broadcasts;
 import org.mineacademy.fo.command.SimpleSubCommand;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
 
 public class CenterCommand extends SimpleSubCommand {
 
-	protected CenterCommand() {
-		super("center");
+    protected CenterCommand() {
+        super("center");
 
-		setMinArguments(1);
-		setDescription("Toggle automatic centering for broadcast messages.");
-		setUsage("<label/all>");
-		setPermission(Permissions.Command.CENTER);
-	}
+        setMinArguments(1);
+        setDescription("Toggle centering for broadcast messages.");
+        setUsage("<broadcast_name/all>");
+        setPermission(Permissions.Command.CENTER);
+    }
 
-	@Override
-	protected void onCommand() {
-		val config = YamlConfiguration.loadConfiguration(Bubble.settingsFile);
-		val centerPath = "Notifications.Broadcast.Messages." + args[0] + ".Centered";
-		val centerAllPath = "Notifications.Broadcast.Center_All";
+    @Override
+    protected void onCommand() {
+        final String broadcast = args[0];
+        final Broadcasts broadcastInstance = Broadcasts.getBroadcast(broadcast);
 
-		if (args[0].equalsIgnoreCase("all")) {
-			config.set(centerAllPath, !config.getBoolean(centerAllPath));
+        if (args[0].equalsIgnoreCase("all"))
+            Broadcasts.toggleCenteredAll();
+        else
+            broadcastInstance.toggleCentered();
 
-			ConfigUtil.saveConfig(getPlayer(),
-					"&aSuccessfully toggled centered status of all messages to "
-							+ (config.getBoolean(centerAllPath) ? "&aENABLED" : "&cDISABLED"),
-					"&cFailed to center message! Error: ", config);
-		} else {
-			checkBoolean(config.contains(centerPath), "No configuration section " + args[0] + " found!");
-			ConfigUtil.toggleCentered(centerPath, getPlayer());
-		}
-	}
+        tellSuccess("Centering for broadcast " + broadcast + " has been " + (broadcastInstance.getCentered() ? "&aenabled" : "&cdisabled") + "&7!");
+    }
 
-	@Override
-	protected String[] getMultilineUsageMessage() {
-		val commandLabel = "&f/bu " + getSublabel();
-		return new String[]{
-				commandLabel + " <label>&7 - Centers the messages contained in the 'label' section.",
-				commandLabel + " all&7 - Centers all messages across different sections.",
-				"&f",
-				"&c&lNOTE:&c 'label' refers to the name of the broadcast section."
-		};
-	}
+    @Override
+    protected String[] getMultilineUsageMessage() {
+        return new String[]{
+                "/{label} {sublabel} <broadcast_name>&7 - Centers the given broadcast message.",
+                "/{label} {sublabel} all&7 - Centers all broadcast messages in the 'broadcasts' folder.",
+        };
+    }
 
-	@Override
-	protected List<String> tabComplete() {
-		if (args.length == 1)
-			return completeLastWord(Objects.requireNonNull(
-					YamlConfiguration.loadConfiguration(Bubble.settingsFile).
-							getConfigurationSection("Notifications.Broadcast.Messages")).getValues(false).keySet(), "all");
+    @Override
+    protected List<String> tabComplete() {
+        if (args.length == 1)
+            return completeLastWord(Broadcasts.getAllBroadcastNames(), "all");
 
-		return new ArrayList<>();
-	}
+        return new ArrayList<>();
+    }
 }

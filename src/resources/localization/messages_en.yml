@@ -96,15 +96,10 @@ Notifications:
 # Prompt Messages
 # -------------------------------------------------------------------------------------------------
 Prompt:
-  Edit_Prompt_Message: "{prefix_info}&ePlease write the desired message in the chat.\n&7&oNote: Use the '|' delimiter to add multiple messages."
+  Edit_Prompt_Message: "{prefix_info}&ePlease write the desired message in the chat.\n&7&oNote: Use commas to add multiple messages."
   Permission_Prompt_Message: "{prefix_info}&eWhat would you like to set the permission to? (write in the chat)\n&7&oNote: Type 'exit' to cancel."
   Label_Prompt_Message: "{prefix_info}&7What message group do you wish to edit?\n&7&oNote: Type 'exit' to cancel."
-  Header_Prompt_Message: "{prefix_info}What would you like to set the header to? (write in the chat)\n&7&oNote: Type 'exit' to cancel."
-  Footer_Prompt_Message: "{prefix_info}What would you like to set the footer to? (write in the chat)\n&7&oNote: Type 'exit' to cancel."
-  Join_Prompt_Message: "{prefix_info}Which would you like to change the join message to?\n&7&oNote: Type 'exit' to cancel."
-  Quit_Prompt_Message: "{prefix_info}Which would you like to change the quit message to?\n&7&oNote: Type 'exit' to cancel."
   Worlds_Prompt_Message: "{prefix_info}Which worlds would you like join messages to be broadcast to? (separate by commas)\n&7&oNote: Type 'exit' to cancel."
-  Color_Prompt_Message: "{prefix_info}What would you like to change the announcements color to?\n&7&oNote: Type 'exit' to cancel."
 
 # -------------------------------------------------------------------------------------------------
 # Prefixes used throughout the plugin. You can utilize by typing {prefix_<type>}

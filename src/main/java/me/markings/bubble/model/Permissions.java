@@ -8,50 +8,51 @@ import org.mineacademy.fo.command.annotation.PermissionGroup;
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class Permissions {
 
-	@NoArgsConstructor(access = AccessLevel.PRIVATE)
-	@PermissionGroup("Main Command")
-	public static final class Command {
+    @Permission("Announce a message to all players on the server.")
+    public static final String ANNOUNCE = "bubble.announce";
 
-		@Permission("Add a line or section for broadcasts within the main settings file.")
-		public static final String ADD = "bubble.command.add";
+    @Permission("Configure your notification preferences via an inventory menu.")
+    public static final String PREFS = "bubble.preferences";
 
-		@Permission("Toggle a broadcast message's alignment status.")
-		public static final String CENTER = "bubble.command.center";
+    @Permission("Toggle the status of your broadcast messages.")
+    public static final String TOGGLE = "bubble.togglebroadcasts";
 
-		@Permission("Edit broadcasts messages in the configuration.")
-		public static final String EDIT = "bubble.command.edit";
+    @NoArgsConstructor(access = AccessLevel.PRIVATE)
+    @PermissionGroup("Main Command")
+    public static final class Command {
 
-		@Permission("Access the GUI menu for Bubble.")
-		public static final String GUI = "bubble.command.gui";
+        @Permission("Add a line or section for broadcasts within the main settings file.")
+        public static final String ADD = "bubble.command.add";
 
-		@Permission("View a specific broadcast message and its settings content.")
-		public static final String SHOW = "bubble.command.show";
+        @Permission("Toggle a broadcast message's alignment status.")
+        public static final String CENTER = "bubble.command.center";
 
-		@Permission("Notify a player/the server via a command.")
-		public static final String NOTIFY = "bubble.command.notify";
+        @Permission("View a specific broadcast message and its settings content.")
+        public static final String SHOW = "bubble.command.show";
 
-		@Permission("Remove a broadcast section or specific lines from the main settings file.")
-		public static final String REMOVE = "bubble.command.remove";
+        @Permission("Notify a player/the server via a command.")
+        public static final String NOTIFY = "bubble.command.notify";
 
-		@Permission("Set the delay between each broadcast message.")
-		public static final String DELAY = "bubble.command.setdelay";
+        @Permission("Force the next broadcast message to be displayed in the sequence.")
+        public static final String FORCE_COMMAND = "bubble.command.force";
+    }
 
-		@Permission("Announce a message to all players on the server.")
-		public static final String ANNOUNCE = "bubble.command.announce";
+    @NoArgsConstructor(access = AccessLevel.PRIVATE)
+    @PermissionGroup("Broadcast Editor")
+    public static final class BroadcastEditing {
+        @Permission("Edit broadcasts with /bu edit. This overrides any subpermissions.")
+        public static final String EDIT = "bubble.edit";
 
-		@Permission("Configure your notification preferences via an inventory menu.")
-		public static final String PREFS = "bubble.command.prefs";
+        @Permission("Set the permission required to view the broadcast message.")
+        public static final String PERMISSION = "bubble.edit.permission";
 
-		@Permission("Toggle the status of your broadcast messages.")
-		public static final String TOGGLE = "bubble.command.togglebroadcasts";
+        @Permission("Set the header that will be used in broadcast messages.")
+        public static final String HEADER = "bubble.edit.header";
 
-		@Permission("Set the header that will be used in broadcast messages.")
-		public static final String HEADER = "bubble.command.setheader";
+        @Permission("Set the footer that will be used in broadcast messages.")
+        public static final String FOOTER = "bubble.edit.footer";
 
-		@Permission("Set the footer that will be used in broadcast messages.")
-		public static final String FOOTER = "bubble.command.setfooter";
-
-		@Permission("Force the next broadcast message to be displayed in the sequence.")
-		public static final String FORCE_COMMAND = "bubble.command.force";
-	}
+        @Permission("Set the worlds that the broadcast will be sent to.")
+        public static final String WORLDS = "bubble.edit.worlds";
+    }
 }

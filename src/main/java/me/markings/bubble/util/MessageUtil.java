@@ -1,19 +1,19 @@
 package me.markings.bubble.util;
 
 import lombok.AccessLevel;
-import lombok.Getter;
 import lombok.NoArgsConstructor;
-import lombok.val;
+import me.markings.bubble.model.EffectPlaceholders;
+import me.markings.bubble.settings.Broadcasts;
+import me.markings.bubble.settings.Settings;
 import org.bukkit.entity.Player;
 import org.mineacademy.fo.ChatUtil;
 import org.mineacademy.fo.Common;
+import org.mineacademy.fo.RandomUtil;
 import org.mineacademy.fo.Valid;
-import org.mineacademy.fo.model.HookManager;
-import org.mineacademy.fo.model.Variables;
 import org.mineacademy.fo.remain.CompChatColor;
 
-import java.awt.*;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
@@ -21,66 +21,46 @@ import java.util.stream.IntStream;
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class MessageUtil {
 
+    //private static final String scrollingGradientPlaceholder = "{g:";
 
-	@Getter
-	static final String gradientPlaceholder = "<gradient:";
-	@Getter
-	static final String gradientEndPlaceholder = "</gradient>";
+    private static final String gradientEndPlaceholder = "</>";
 
-	@Getter
-	private static final String commandPlaceholder = "<command>";
+    private static final String gradientPattern = "^([A-Fa-f\\d]{6}|[A-Fa-f\\d]{3}):([A-Fa-f\\d]{6}|[A-Fa-f\\d]{3})$";
 
-	@Getter
-	private static final String messageArg = "message";
+    public static String format(final Broadcasts broadcast, String message) {
+        message = format(message);
+        if (broadcast.getCentered() || Settings.NotificationSettings.CENTER_ALL)
+            return ChatUtil.center(message);
 
-	@Getter
-	private static final String titleArg = "title";
+        return message;
+    }
 
-	@Getter
-	private static final String bossbarArg = "bossbar";
+    public static String format(final String message) {
+        final String fancyLinePlaceholder = "{fancy_line}";
+        if (message.contains(fancyLinePlaceholder))
+            return message.replace(fancyLinePlaceholder, "-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-");
 
-	@Getter
-	private static final String actionbarArg = "actionbar";
 
-	@Getter
-	private static final String toastArg = "toast";
+        return message;
+    }
 
-	private static final String titlePlaceholder = "<title>";
-	private static final String actionbarPlaceholder = "<actionbar>";
-	private static final String bossbarPlaceholder = "<bossbar>";
-	private static final String toastPlaceholder = "<toast>";
-	private static final String animatePlaceholder = "{animate:";
-	private static final String scrollPlaceholder = "{scroll:";
-	private static final String flashPlaceholder = "{flash:";
-	//private static final String scrollingGradientPlaceholder = "{g:";
+    public static List<String> getTitleFrames(final String message) {
+        final char[] msgArray = message.toCharArray();
+        final ArrayList<String> frames;
+        final ArrayList<Integer> indices;
+        final boolean hasPeriod = getPeriod(message) != -1;
+        indices = IntStream
+                .range(0, msgArray.length).filter(i -> msgArray[i] == ':' && msgArray[i - 1] != 't')
+                .boxed()
+                .collect(Collectors.toCollection(ArrayList::new));
 
-	private static final String gradientPattern = "^#(([0-9a-fA-F]{2}){3}|([0-9a-fA-F]){3})$:^#(([0-9a-fA-F]{2}){3}|([0-9a-fA-F]){3})$";
+        frames = IntStream
+                .range(0, (hasPeriod ? indices.size() - 1 : indices.size())).
+                mapToObj(i -> message.substring(indices.get(i) + 1, i == indices.size() - 1 ? message.indexOf('}') : indices.get(i + 1)))
+                .collect(Collectors.toCollection(ArrayList::new));
 
-	public static String format(final String message) {
-		val fancyLinePlaceholder = "%fancy_line%";
-		if (message.contains(fancyLinePlaceholder))
-			return message.replace(fancyLinePlaceholder, "-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-");
-
-		return message;
-	}
-
-	public static List<String> getTitleFrames(final String message) {
-		final char[] msgArray = message.toCharArray();
-		final ArrayList<String> frames;
-		final ArrayList<Integer> indicies;
-		val hasPeriod = getPeriod(message) != -1;
-		indicies = IntStream
-				.range(0, msgArray.length).filter(i -> msgArray[i] == ':' && msgArray[i - 1] != 't')
-				.boxed()
-				.collect(Collectors.toCollection(ArrayList::new));
-
-		frames = IntStream
-				.range(0, (hasPeriod ? indicies.size() - 1 : indicies.size())).
-				mapToObj(i -> message.substring(indicies.get(i) + 1, i == indicies.size() - 1 ? message.indexOf('}') : indicies.get(i + 1)))
-				.collect(Collectors.toCollection(ArrayList::new));
-
-		return frames;
-	}
+        return frames;
+    }
 
 	/*public static List<String> getGradientFrames(final String message, final CompChatColor firstColor, final CompChatColor lastColor) {
 		final char[] msgArray = ChatUtil.generateGradient(message, firstColor, lastColor).toCharArray();
@@ -91,81 +71,92 @@ public class MessageUtil {
 		return frames;
 	}*/
 
-	public static int getPeriod(final String message) {
-		val msgArray = message.toCharArray();
-		for (int i = message.length() - 1; i > 0; i--)
-			if (msgArray[i] == ':') {
-				val period = message.substring(i + 1, message.indexOf('}'));
-				return Valid.isInteger(period) ? Integer.parseInt(period) : -1;
-			}
-
-		return 10;
-	}
-
-	public static List<CompChatColor> getColors(final String message) {
-		final ArrayList<CompChatColor> colors = new ArrayList<>();
-		val colonIndex = message.indexOf(':');
-
-		colors.add(CompChatColor.of(message.substring(colonIndex - 7, colonIndex - 1)));
-		colors.add(CompChatColor.of(message.substring(colonIndex + 1, colonIndex + 7)));
-
-		Common.broadcast("test");
-
-		return colors;
-	}
-
-	public static String getLastMessage(final String message) {
-		val msgArray = message.toCharArray();
-		final List<Integer> indicies = new ArrayList<>();
-		for (int i = message.length() - 1; i > 0; i--)
-			if (msgArray[i] == ':')
-				indicies.add(i);
-
-		return message.substring(indicies.get(1) + 1, indicies.get(0));
-	}
-
-	public static String translateGradient(final String message) {
-		val newMessage = stripPlaceholders(message.replace("§", "&"));
-
-		if (newMessage.contains(gradientPlaceholder) && newMessage.contains(gradientEndPlaceholder)) {
-			val firstColor = newMessage.substring(newMessage.indexOf(":") + 1, newMessage.indexOf("|"));
-			val secondColor = newMessage.substring(newMessage.indexOf("|") + 1, newMessage.indexOf(">"));
-			val fullGradientPrefix = gradientPlaceholder + firstColor + "|" + secondColor + ">";
-			return getPlaceholder(message) + ChatUtil.generateGradient(newMessage.replace(fullGradientPrefix, "")
-					.replace(gradientEndPlaceholder, ""), CompChatColor.of(firstColor), CompChatColor.of(secondColor)) + "&r";
+	/*// TODO: Move string permission to 'Permissions' class.
+	public static void blockAndNotify(final Player player, final String warningMessage, final String blockedMessage, final boolean notifyStaff) {
+		Common.tellNoPrefix(player, warningMessage);
+		if (notifyStaff) {
+			Remain.getOnlinePlayers().forEach(onlinePlayer -> {
+				if (onlinePlayer.hasPermission(Permissions.Chat.NOTIFY)) {
+					Common.tell(onlinePlayer, "&7Player &d" + player.getName() + " &7attempted to bypass the chat filter. &8[&c'" + blockedMessage + "'&8]");
+				}
+			});
 		}
-		
-		return message;
-	}
+	}*/
 
-	public static Color getColor(final String color) {
-		try {
-			val field = Class.forName("java.awt.Color").getField(color);
-			return (Color) field.get(null);
-		} catch (final Exception e) {
-			return null;
-		}
-	}
+    public static int getPeriod(final String message) {
+        final char[] msgArray = message.toCharArray();
+        for (int i = message.length() - 1; i > 0; i--)
+            if (msgArray[i] == ':') {
+                final String period = message.substring(i + 1, message.indexOf('}'));
+                return Valid.isInteger(period) ? Integer.parseInt(period) : -1;
+            }
 
-	public static void executePlaceholders(final String message, final Player player) {
-		List<CompChatColor> colors = new ArrayList<>();
-		int period = 0;
-		CompChatColor[] colorArr = new CompChatColor[3];
+        return 10;
+    }
 
-		if (message.startsWith(animatePlaceholder) || message.startsWith(scrollPlaceholder) || message.startsWith(flashPlaceholder)) {
-			colors = getColors(message);
-			period = getPeriod(message) != -1 ? getPeriod(message) : 10;
-			colorArr = colors.toArray(colorArr);
-		}
+    public static List<CompChatColor> getColors(final String message) {
+        final ArrayList<CompChatColor> colors = new ArrayList<>();
+        final int colonIndex = message.indexOf(':');
 
-		if (message.startsWith(animatePlaceholder))
-			AnimationUtil.animateTitle(player, getTitleFrames(message), null, period);
+        colors.add(CompChatColor.of(message.substring(colonIndex - 7, colonIndex - 1)));
+        colors.add(CompChatColor.of(message.substring(colonIndex + 1, colonIndex + 7)));
 
-		if (message.startsWith(scrollPlaceholder))
-			AnimationUtil.animateTitle(player, AnimationUtil.leftToRightFull(getLastMessage(message), colors.get(0), colors.get(1), colors.get(2)), null, period);
+        return colors;
+    }
 
-		if (message.startsWith(flashPlaceholder))
-			AnimationUtil.animateTitle(player, AnimationUtil.flicker(getLastMessage(message), period, 2, colorArr), null, period);
+    public static String getLastMessage(final String message) {
+        final char[] msgArray = message.toCharArray();
+        final List<Integer> indices = new ArrayList<>();
+        for (int i = message.length() - 1; i > 0; i--)
+            if (msgArray[i] == ':')
+                indices.add(i);
+
+        return message.substring(indices.get(1) + 1, indices.get(0));
+    }
+
+    public static String translateGradient(final String message) {
+        final String newMessage = stripPlaceholders(Common.revertColorizing(message));
+
+        if (containsGradient(newMessage)) {
+            final String firstColor = "#" + newMessage.substring(newMessage.indexOf(":") - 6, newMessage.indexOf(":"));
+            final String secondColor = "#" + newMessage.substring(newMessage.indexOf(":") + 1, newMessage.indexOf(":") + 7);
+            final String previousMessage = newMessage.substring(0, newMessage.indexOf(":") - 7);
+            final String translatedMessage = newMessage.substring(newMessage.indexOf(":") + 7,
+                    newMessage.contains(gradientEndPlaceholder) ? newMessage.indexOf(gradientEndPlaceholder) : newMessage.length()).replace(">", "");
+            final String followingMessage = Common.lastColor(message)
+                    + newMessage.substring(newMessage.contains(gradientEndPlaceholder)
+                    ? newMessage.indexOf(gradientEndPlaceholder) + 3
+                    : newMessage.length());
+
+            return getPlaceholder(message) + previousMessage + ChatUtil.generateGradient(translatedMessage,
+                    CompChatColor.of(firstColor), CompChatColor.of(secondColor)) + "&r" + followingMessage;
+        }
+
+        return message;
+    }
+
+    public static void executePlaceholders(final String message, final Player player) {
+        if (!isExecutable(message))
+            return;
+
+        List<CompChatColor> colors = new ArrayList<>();
+        int period = 0;
+        CompChatColor[] colorArr = new CompChatColor[3];
+
+        if (message.startsWith(EffectPlaceholders.ANIMATE.getPrefix()) || message.startsWith(EffectPlaceholders.SCROLL.getPrefix()) || message.startsWith(EffectPlaceholders.FLASH.getPrefix())) {
+            colors = getColors(message);
+            period = getPeriod(message) != -1 ? getPeriod(message) : 10;
+            colorArr = colors.toArray(colorArr);
+        }
+
+        if (message.startsWith(EffectPlaceholders.ANIMATE.getPrefix()))
+            AnimationUtil.animateTitle(player, getTitleFrames(message), null, period);
+
+        if (message.startsWith(EffectPlaceholders.SCROLL.getPrefix()))
+            AnimationUtil.animateTitle(player, AnimationUtil.leftToRightFull(getLastMessage(message), colors.get(0), colors.get(1), colors.get(2)), null, period);
+
+        if (message.startsWith(EffectPlaceholders.FLASH.getPrefix()))
+            AnimationUtil.animateTitle(player, AnimationUtil.flicker(getLastMessage(message), period, 2, colorArr), null, period);
 
 		/*if (message.startsWith(scrollingGradientPlaceholder))
 			AnimationUtil.animateTitle(player, getGradientFrames(getLastMessage(message),
@@ -173,69 +164,77 @@ public class MessageUtil {
 							CompChatColor.of(String.valueOf(colors.get(1)).replace("§", "&"))),
 					null, period);*/
 
-		if (message.startsWith(commandPlaceholder))
-			Common.dispatchCommand(player, message.replace(commandPlaceholder, ""));
+        if (message.startsWith(EffectPlaceholders.COMMAND.getPrefix()))
+            Common.dispatchCommand(player, message.replace(EffectPlaceholders.COMMAND.getPrefix(), ""));
 
-		if (message.startsWith(titlePlaceholder))
-			Common.dispatchCommand(player, "bu notify " + player.getName() + " title " + message.replace(titlePlaceholder, ""));
+        if (message.startsWith(EffectPlaceholders.TITLE.getPrefix()))
+            Common.dispatchCommand(player, "bu notify " + player.getName() + " title " + message.replace(EffectPlaceholders.TITLE.getPrefix(), ""));
 
-		if (message.startsWith(actionbarPlaceholder))
-			Common.dispatchCommand(player, "bu notify " + player.getName() + " actionbar " + message.replace(actionbarPlaceholder, ""));
+        if (message.startsWith(EffectPlaceholders.ACTIONBAR.getPrefix()))
+            Common.dispatchCommand(player, "bu notify " + player.getName() + " actionbar " + message.replace(EffectPlaceholders.ACTIONBAR.getPrefix(), ""));
 
-		if (message.startsWith(bossbarPlaceholder))
-			Common.dispatchCommand(player, "bu notify " + player.getName() + " bossbar " + message.replace(bossbarPlaceholder, ""));
+        if (message.startsWith(EffectPlaceholders.BOSSBAR.getPrefix()))
+            Common.dispatchCommand(player, "bu notify " + player.getName() + " bossbar " + message.replace(EffectPlaceholders.BOSSBAR.getPrefix(), ""));
 
-		if (message.startsWith(toastPlaceholder))
-			Common.dispatchCommand(player, "bu notify " + player.getName() + " toast " + message.replace(toastPlaceholder, ""));
-	}
+        if (message.startsWith(EffectPlaceholders.TOAST.getPrefix()))
+            Common.dispatchCommand(player, "bu notify " + player.getName() + " toast " + message.replace(EffectPlaceholders.TOAST.getPrefix(), ""));
+    }
 
-	public static boolean isExecutable(final String message) {
-		return message.startsWith(titlePlaceholder)
-				|| message.startsWith(actionbarPlaceholder)
-				|| message.startsWith(bossbarPlaceholder)
-				|| message.startsWith(toastPlaceholder)
-				|| message.startsWith(commandPlaceholder)
-				|| message.startsWith(animatePlaceholder)
-				|| message.startsWith(scrollPlaceholder)
-				|| message.startsWith(flashPlaceholder);
-	}
+    public static boolean isExecutable(final String message) {
+        return message.startsWith(EffectPlaceholders.TITLE.getPrefix())
+                || message.startsWith(EffectPlaceholders.ACTIONBAR.getPrefix())
+                || message.startsWith(EffectPlaceholders.BOSSBAR.getPrefix())
+                || message.startsWith(EffectPlaceholders.TOAST.getPrefix())
+                || message.startsWith(EffectPlaceholders.COMMAND.getPrefix())
+                || message.startsWith(EffectPlaceholders.ANIMATE.getPrefix())
+                || message.startsWith(EffectPlaceholders.SCROLL.getPrefix())
+                || message.startsWith(EffectPlaceholders.FLASH.getPrefix());
+    }
 
-	public static String getPlaceholder(final String message) {
-		if (message.contains(titlePlaceholder))
-			return titlePlaceholder;
-		if (message.contains(actionbarPlaceholder))
-			return actionbarPlaceholder;
-		if (message.contains(bossbarPlaceholder))
-			return bossbarPlaceholder;
-		if (message.contains(toastPlaceholder))
-			return toastPlaceholder;
+    public static String getPlaceholder(final String message) {
+        if (message.contains(EffectPlaceholders.TITLE.getPrefix()))
+            return EffectPlaceholders.TITLE.getPrefix();
+        if (message.contains(EffectPlaceholders.ACTIONBAR.getPrefix()))
+            return EffectPlaceholders.ACTIONBAR.getPrefix();
+        if (message.contains(EffectPlaceholders.BOSSBAR.getPrefix()))
+            return EffectPlaceholders.BOSSBAR.getPrefix();
+        if (message.contains(EffectPlaceholders.TOAST.getPrefix()))
+            return EffectPlaceholders.TOAST.getPrefix();
 
-		return "";
-	}
+        return "";
+    }
 
-	public static String stripPlaceholders(final String message) {
-		if (message.contains(titlePlaceholder))
-			return message.replace(titlePlaceholder, "");
-		if (message.contains(actionbarPlaceholder))
-			return message.replace(actionbarPlaceholder, "");
-		if (message.contains(bossbarPlaceholder))
-			return message.replace(bossbarPlaceholder, "");
-		if (message.contains(toastPlaceholder))
-			return message.replace(toastPlaceholder, "");
+    public static String stripPlaceholders(final String message) {
+        if (message.contains(EffectPlaceholders.TITLE.getPrefix()))
+            return message.replace(EffectPlaceholders.TITLE.getPrefix(), "");
+        if (message.contains(EffectPlaceholders.ACTIONBAR.getPrefix()))
+            return message.replace(EffectPlaceholders.ACTIONBAR.getPrefix(), "");
+        if (message.contains(EffectPlaceholders.BOSSBAR.getPrefix()))
+            return message.replace(EffectPlaceholders.BOSSBAR.getPrefix(), "");
+        if (message.contains(EffectPlaceholders.TOAST.getPrefix()))
+            return message.replace(EffectPlaceholders.TOAST.getPrefix(), "");
 
-		return message;
-	}
+        return message;
+    }
 
-	public static boolean containsGradient(final String message) {
-		return message.contains(gradientPlaceholder) && message.contains(gradientEndPlaceholder);
-	}
+    public static boolean containsGradient(final String message) {
+        final String gradientPrefix;
+        if (message.contains(":") && message.contains(gradientEndPlaceholder)) {
+            gradientPrefix = message.substring(message.indexOf(":") - 6, message.indexOf(":") + 7);
 
-	public static String replaceVarsAndGradient(final String message, final Player player) {
-		val translatedSegment = containsGradient(message) ? message.substring(message.indexOf("<"), message.lastIndexOf('>') + 1) : message;
-		val strippedMessage = containsGradient(message)
-				? message.substring(message.indexOf('<') + 1, message.indexOf(getGradientEndPlaceholder()))
-				: message;
-		val replacedMessage = HookManager.replacePlaceholders(player, Variables.replace(format(strippedMessage), player));
-		return message.replace(translatedSegment, translateGradient(translatedSegment.replace(strippedMessage, replacedMessage)));
-	}
+            return gradientPrefix.matches(gradientPattern);
+        }
+
+        return false;
+    }
+
+    public static CompChatColor getRandomColor() {
+        return RandomUtil.nextItem(Arrays.stream(CompChatColor.values()).filter((color) ->
+                !color.equals(CompChatColor.UNDERLINE)
+                        && !color.equals(CompChatColor.BOLD)
+                        && !color.equals(CompChatColor.ITALIC)
+                        && !color.equals(CompChatColor.MAGIC)
+                        && !color.equals(CompChatColor.STRIKETHROUGH)
+                        && !color.equals(CompChatColor.BLACK)).collect(Collectors.toList()));
+    }
 }

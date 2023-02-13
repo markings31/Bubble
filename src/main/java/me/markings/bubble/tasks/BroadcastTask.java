@@ -1,6 +1,5 @@
 package me.markings.bubble.tasks;
 
-import lombok.val;
 import me.markings.bubble.PlayerData;
 import me.markings.bubble.settings.Broadcasts;
 import me.markings.bubble.settings.Settings;
@@ -12,6 +11,7 @@ import org.mineacademy.fo.Common;
 import org.mineacademy.fo.RandomUtil;
 import org.mineacademy.fo.debug.Debugger;
 import org.mineacademy.fo.model.SimpleSound;
+import org.mineacademy.fo.model.Variables;
 import org.mineacademy.fo.remain.Remain;
 
 import java.util.List;
@@ -19,87 +19,86 @@ import java.util.Objects;
 
 public class BroadcastTask extends BukkitRunnable {
 
-	private static List<List<String>> messageList;
-	private static List<String> worlds;
+    private static List<List<String>> messageList;
+    private static List<String> worlds;
 
-	private static int index;
+    private static int index;
 
-	@Override
-	public void run() {
-		nextCycle();
-	}
+    private static Broadcasts currentBroadcast;
 
-	public static void nextCycle() {
-		messageList = Broadcasts.getAllMessages();
-		val broadcastPerm = Broadcasts.getAllPermissions();
-		worlds = Broadcasts.getAllWorlds();
+    @Override
+    public void run() {
+        nextCycle();
+    }
 
-		Debugger.debug("broadcasts",
-				"Messages: " + messageList +
-						" Worlds: " + worlds +
-						" Permissions: " + broadcastPerm +
-						" Sound: " + Settings.BroadcastSettings.BROADCAST_SOUND);
+    public static void nextCycle() {
+        messageList = Broadcasts.getAllMessages();
 
-		if (Settings.BroadcastSettings.ENABLE_BROADCASTS.equals(Boolean.TRUE) && !Remain.getOnlinePlayers().isEmpty()) {
+        final List<String> broadcastPerm = Broadcasts.getAllPermissions();
 
-			executeTasks();
+        worlds = Broadcasts.getAllWorlds();
 
-			updateIndex();
-		}
-	}
+        Debugger.debug("broadcasts",
+                "Messages: " + messageList +
+                        " Worlds: " + worlds +
+                        " Permissions: " + broadcastPerm);
 
-	public static void executeTasks() {
-		val messages = Settings.BroadcastSettings.RANDOM_MESSAGE.equals(Boolean.TRUE) ?
-				RandomUtil.nextItem(messageList) : messageList.get(index);
-		val broadcastSound = Settings.BroadcastSettings.BROADCAST_SOUND;
+        if (Settings.NotificationSettings.ENABLE_BROADCASTS && !Remain.getOnlinePlayers().isEmpty()) {
+            executeTasks();
+            updateIndex();
+        }
+    }
 
-		worlds.forEach(world -> Remain.getOnlinePlayers().forEach(player -> {
-			val cache = PlayerData.getCache(player);
-			if (cache.isBroadcastStatus()) {
+    public static void executeTasks() {
+        final List<String> messages = Settings.NotificationSettings.RANDOM_MESSAGE ?
+                RandomUtil.nextItem(messageList) : messageList.get(index);
+        currentBroadcast = Broadcasts.getBroadcastFromMessage(messages);
+        final SimpleSound broadcastSound = Objects.requireNonNull(currentBroadcast).getSound();
 
-				playerChecks(player, world);
+        worlds.forEach(world -> Remain.getOnlinePlayers().forEach(player -> {
+            final PlayerData cache = PlayerData.from(player);
+            if (cache.isBroadcastStatus() && player.getWorld().getName().equals(world)) {
 
-				sendMessages(messages, player);
+                playerChecks(player);
 
-				if (cache.isBroadcastSoundStatus())
-					new SimpleSound(broadcastSound.getSound(), broadcastSound.getVolume(), broadcastSound.getPitch()).play(player);
-			}
-		}));
-	}
+                sendMessages(messages, player);
 
-	// path --> broadcastName
-	private static void playerChecks(final Player player, final String world) {
-		if (player.getWorld().getName().equals(world)) {
-			val currentMessages = Settings.BroadcastSettings.RANDOM_MESSAGE.equals(Boolean.TRUE) ?
-					RandomUtil.nextItem(messageList) : messageList.get(index);
+                if (cache.isBroadcastSoundStatus())
+                    new SimpleSound(broadcastSound.getSound(), broadcastSound.getVolume(), broadcastSound.getPitch()).play(player);
+            }
+        }));
+    }
 
-			if (!player.hasPermission(Objects.requireNonNull(Broadcasts.getPermissionFromMessage(currentMessages))))
-				updateIndex();
-		}
-	}
+    private static void playerChecks(final Player player) {
+        final List<String> currentMessages = Settings.NotificationSettings.RANDOM_MESSAGE ?
+                RandomUtil.nextItem(messageList) : messageList.get(index);
 
-	private static void sendMessages(final List<String> messages, final Player player) {
-		val header = Settings.BroadcastSettings.HEADER;
-		val footer = Settings.BroadcastSettings.FOOTER;
-		Common.tellNoPrefix(player, MessageUtil.replaceVarsAndGradient(header, player), "&f");
-		messages.forEach(message -> {
+        if (!player.hasPermission(Objects.requireNonNull(Broadcasts.getPermissionFromMessage(currentMessages))))
+            updateIndex();
+    }
 
-			if (MessageUtil.isExecutable(message)) {
-				MessageUtil.executePlaceholders(message, player);
-				return;
-			}
+    private static void sendMessages(final List<String> messages, final Player player) {
+        final String header = Variables.replace(currentBroadcast.getBroadcastHeader(), null);
+        final String footer = Variables.replace(currentBroadcast.getBroadcastFooter(), null);
+        Common.tellNoPrefix(player, MessageUtil.translateGradient(header));
+        messages.forEach(message -> {
+            if (MessageUtil.isExecutable(message)) {
+                MessageUtil.executePlaceholders(message, player);
+                return;
+            }
 
-			message = Boolean.TRUE.equals(Settings.BroadcastSettings.CENTER_ALL) ? ChatUtil.center(message) : message;
+            if (Boolean.TRUE.equals(Broadcasts.getCenteredFromMessage(messages)) || Boolean.TRUE.equals(Settings.NotificationSettings.CENTER_ALL))
+                message = ChatUtil.center(MessageUtil.translateGradient(message));
 
-			if (Boolean.TRUE.equals(Broadcasts.getCenteredFromMessage(messages)))
-				message = ChatUtil.center(message);
+            message = Variables.replace(message, player);
 
-			Common.tellNoPrefix(player, MessageUtil.replaceVarsAndGradient(message, player));
-		});
-		Common.tellNoPrefix(player, "&f", MessageUtil.replaceVarsAndGradient(footer, player));
-	}
+            Common.tellNoPrefix(player, message);
+        });
 
-	private static void updateIndex() {
-		index = ++index == BroadcastTask.messageList.size() ? 0 : index;
-	}
+        Common.tellNoPrefix(player, MessageUtil.translateGradient(footer));
+    }
+
+    private static void updateIndex() {
+        index = ++index == BroadcastTask.messageList.size() ? 0 : index;
+    }
 }
