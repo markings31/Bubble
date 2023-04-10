@@ -1,16 +1,15 @@
 package me.markings.bubble.command;
 
+import me.markings.bubble.model.Notification;
 import me.markings.bubble.model.NotificationTypes;
 import me.markings.bubble.model.Permissions;
-import org.mineacademy.fo.Common;
 import org.mineacademy.fo.annotation.AutoRegister;
 import org.mineacademy.fo.command.SimpleCommand;
+import org.mineacademy.fo.model.Tuple;
 import org.mineacademy.fo.remain.CompMaterial;
 
 import java.util.ArrayList;
 import java.util.List;
-
-import static org.mineacademy.fo.Common.joinRange;
 
 @AutoRegister
 public final class AnnounceCommand extends SimpleCommand {
@@ -20,18 +19,17 @@ public final class AnnounceCommand extends SimpleCommand {
 
         setMinArguments(2);
         setDescription("Announce the given message to the server.");
-        setUsage("<message/title/bossbar/actionbar/toast> [material] <input|...>");
+        setUsage("<chat/title/bossbar/actionbar/toast> [material] <input|...>");
         setPermission(Permissions.ANNOUNCE);
     }
 
     @Override
     protected void onCommand() {
-        final String messageType = args[0];
-        final String input = joinRange((messageType.equals(NotificationTypes.TOAST.getLabel()) ? 2 : 1), args);
-        if (messageType.equals(NotificationTypes.TOAST.getLabel()))
-            Common.dispatchCommandAsPlayer(getPlayer(), "bu notify all " + messageType + " " + args[1] + " " + input);
-        else
-            Common.dispatchCommandAsPlayer(getPlayer(), "bu notify all " + messageType + " " + input);
+        final String type = args[0];
+        final String material = args.length == 3 ? args[1] : null;
+        final String message = joinArgs(type.equalsIgnoreCase(NotificationTypes.TOAST.getLabel()) ? 2 : 1);
+
+        Notification.send(new Tuple<>(getPlayer(), null), type, message, material);
     }
 
     @Override

@@ -12,11 +12,6 @@ import java.util.List;
 @SuppressWarnings("unused")
 public final class Settings extends SimpleSettings {
 
-    @Override
-    protected int getConfigVersion() {
-        return 1;
-    }
-
     @NoArgsConstructor(access = AccessLevel.PRIVATE)
     public final static class NotificationSettings {
 

@@ -15,7 +15,6 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
-import java.util.stream.Stream;
 
 public class ShowCommand extends SimpleSubCommand {
 
@@ -59,11 +58,14 @@ public class ShowCommand extends SimpleSubCommand {
             final Broadcasts broadcast = Broadcasts.getBroadcast(currentLabel);
             final List<String> messageList = broadcast.getMessage();
 
-            Stream.of(
+            for (final String s : Arrays.asList(
                     "&7- &bLabel: &f" + currentLabel,
                     "&7- &bPermission: &f" + broadcast.getPermission(),
                     "&7- &bCentered: &f" + (Settings.NotificationSettings.CENTER_ALL || broadcast.getCentered()),
-                    "&f").map(SimpleComponent::of).forEach(messages::add);
+                    "&f")) {
+                final SimpleComponent of = SimpleComponent.of(s);
+                messages.add(of);
+            }
 
             messages.add(SimpleComponent.of(broadcast.getBroadcastHeader()));
             messageList.forEach(message -> {

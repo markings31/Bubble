@@ -4,7 +4,6 @@ import lombok.Getter;
 import me.markings.bubble.listeners.PlayerChatListener;
 import me.markings.bubble.listeners.PlayerJoinListener;
 import me.markings.bubble.model.Placeholders;
-import me.markings.bubble.mysql.BubbleDatabase;
 import me.markings.bubble.settings.Broadcasts;
 import me.markings.bubble.settings.DatabaseFile;
 import me.markings.bubble.settings.MenuData;
@@ -23,8 +22,6 @@ import java.io.File;
 public final class Bubble extends SimplePlugin {
 
     public static final File settingsFile = new File("plugins/Bubble", FoConstants.File.SETTINGS);
-
-    private final BubbleDatabase database = BubbleDatabase.getInstance();
 
     @Override
     protected void onPluginStart() {

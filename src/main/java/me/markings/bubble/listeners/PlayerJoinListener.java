@@ -1,9 +1,11 @@
 package me.markings.bubble.listeners;
 
-import lombok.*;
+import lombok.AccessLevel;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.SneakyThrows;
 import me.markings.bubble.Bubble;
 import me.markings.bubble.PlayerData;
-import me.markings.bubble.mysql.BubbleDatabase;
 import me.markings.bubble.settings.Settings;
 import me.markings.bubble.util.MessageUtil;
 import org.bukkit.entity.Player;
@@ -16,7 +18,11 @@ import org.mineacademy.fo.Common;
 import org.mineacademy.fo.Messenger;
 import org.mineacademy.fo.debug.Debugger;
 import org.mineacademy.fo.model.SimpleSound;
+import org.mineacademy.fo.model.SimpleTime;
 import org.mineacademy.fo.model.Variables;
+
+import java.util.List;
+import java.util.UUID;
 
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class PlayerJoinListener implements Listener {
@@ -27,13 +33,13 @@ public class PlayerJoinListener implements Listener {
     @EventHandler
     @SneakyThrows
     public void onJoin(final @NotNull PlayerJoinEvent event) {
-        val player = event.getPlayer();
-        val cache = PlayerData.from(player);
+        final Player player = event.getPlayer();
+        final PlayerData cache = PlayerData.from(player);
 
-        val messages = Settings.WelcomeSettings.JOIN_MOTD;
+        final List<String> messages = Settings.WelcomeSettings.JOIN_MOTD;
 
-        val motdSound = Settings.WelcomeSettings.MOTD_SOUND;
-        val motdDelay = Settings.WelcomeSettings.MOTD_DELAY;
+        final SimpleSound motdSound = Settings.WelcomeSettings.MOTD_SOUND;
+        final SimpleTime motdDelay = Settings.WelcomeSettings.MOTD_DELAY;
 
         Debugger.debug("join",
                 "Player: " + player +
@@ -44,7 +50,7 @@ public class PlayerJoinListener implements Listener {
         //if (Settings.DatabaseSettings.ENABLE_MYSQL)
         //	BubbleDatabase.getInstance().load(player.getUniqueId(), PlayerData.from(player));
 
-        if (player.getName().equals("Markings"))
+        if (player.getUniqueId().equals(UUID.fromString("a44f7a78-796d-4fc1-ae6b-97cd3d959a5e")))
             Common.runLaterAsync(40, () -> Messenger.info(player, "This server is running &b&lBubble v" + Bubble.getVersion()));
 
         if (Settings.WelcomeSettings.ENABLE_JOIN_MOTD.equals(Boolean.TRUE) && cache.isMotdStatus())
@@ -61,7 +67,6 @@ public class PlayerJoinListener implements Listener {
     @EventHandler
     public void onQuit(final PlayerQuitEvent event) {
         final Player player = event.getPlayer();
-        BubbleDatabase.getInstance().save(player.getName(), player.getUniqueId(), PlayerData.from(player));
         PlayerData.remove(player);
     }
 }

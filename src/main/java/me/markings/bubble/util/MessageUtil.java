@@ -3,6 +3,8 @@ package me.markings.bubble.util;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
 import me.markings.bubble.model.EffectPlaceholders;
+import me.markings.bubble.model.Notification;
+import me.markings.bubble.model.NotificationTypes;
 import me.markings.bubble.settings.Broadcasts;
 import me.markings.bubble.settings.Settings;
 import org.bukkit.entity.Player;
@@ -10,6 +12,7 @@ import org.mineacademy.fo.ChatUtil;
 import org.mineacademy.fo.Common;
 import org.mineacademy.fo.RandomUtil;
 import org.mineacademy.fo.Valid;
+import org.mineacademy.fo.model.Tuple;
 import org.mineacademy.fo.remain.CompChatColor;
 
 import java.util.ArrayList;
@@ -62,26 +65,26 @@ public class MessageUtil {
         return frames;
     }
 
-	/*public static List<String> getGradientFrames(final String message, final CompChatColor firstColor, final CompChatColor lastColor) {
-		final char[] msgArray = ChatUtil.generateGradient(message, firstColor, lastColor).toCharArray();
-		final ArrayList<String> frames = new ArrayList<>();
-		for (int i = 0; i < msgArray.length; i++)
-			frames.add(String.valueOf(msgArray[i]));
+    /*public static List<String> getGradientFrames(final String message, final CompChatColor firstColor, final CompChatColor lastColor) {
+        final char[] msgArray = ChatUtil.generateGradient(message, firstColor, lastColor).toCharArray();
+        final ArrayList<String> frames = new ArrayList<>();
+        for (int i = 0; i < msgArray.length; i++)
+            frames.add(String.valueOf(msgArray[i]));
 
-		return frames;
-	}*/
+        return frames;
+    }*/
 
-	/*// TODO: Move string permission to 'Permissions' class.
-	public static void blockAndNotify(final Player player, final String warningMessage, final String blockedMessage, final boolean notifyStaff) {
-		Common.tellNoPrefix(player, warningMessage);
-		if (notifyStaff) {
-			Remain.getOnlinePlayers().forEach(onlinePlayer -> {
-				if (onlinePlayer.hasPermission(Permissions.Chat.NOTIFY)) {
-					Common.tell(onlinePlayer, "&7Player &d" + player.getName() + " &7attempted to bypass the chat filter. &8[&c'" + blockedMessage + "'&8]");
-				}
-			});
-		}
-	}*/
+    /*// TODO: Move string permission to 'Permissions' class.
+    public static void blockAndNotify(final Player player, final String warningMessage, final String blockedMessage, final boolean notifyStaff) {
+        Common.tellNoPrefix(player, warningMessage);
+        if (notifyStaff) {
+            Remain.getOnlinePlayers().forEach(onlinePlayer -> {
+                if (onlinePlayer.hasPermission(Permissions.Chat.NOTIFY)) {
+                    Common.tell(onlinePlayer, "&7Player &d" + player.getName() + " &7attempted to bypass the chat filter. &8[&c'" + blockedMessage + "'&8]");
+                }
+            });
+        }
+    }*/
 
     public static int getPeriod(final String message) {
         final char[] msgArray = message.toCharArray();
@@ -136,6 +139,8 @@ public class MessageUtil {
     }
 
     public static void executePlaceholders(final String message, final Player player) {
+        final String[] titleSegments = message.replace(EffectPlaceholders.TITLE.getPrefix(), "").split("\\|");
+
         if (!isExecutable(message))
             return;
 
@@ -158,26 +163,26 @@ public class MessageUtil {
         if (message.startsWith(EffectPlaceholders.FLASH.getPrefix()))
             AnimationUtil.animateTitle(player, AnimationUtil.flicker(getLastMessage(message), period, 2, colorArr), null, period);
 
-		/*if (message.startsWith(scrollingGradientPlaceholder))
-			AnimationUtil.animateTitle(player, getGradientFrames(getLastMessage(message),
-							CompChatColor.of(String.valueOf(colors.get(0)).replace("§", "&")),
-							CompChatColor.of(String.valueOf(colors.get(1)).replace("§", "&"))),
-					null, period);*/
+        /*if (message.startsWith(scrollingGradientPlaceholder))
+            AnimationUtil.animateTitle(player, getGradientFrames(getLastMessage(message),
+                            CompChatColor.of(String.valueOf(colors.get(0)).replace("§", "&")),
+                            CompChatColor.of(String.valueOf(colors.get(1)).replace("§", "&"))),
+                    null, period);*/
 
         if (message.startsWith(EffectPlaceholders.COMMAND.getPrefix()))
             Common.dispatchCommand(player, message.replace(EffectPlaceholders.COMMAND.getPrefix(), ""));
 
         if (message.startsWith(EffectPlaceholders.TITLE.getPrefix()))
-            Common.dispatchCommand(player, "bu notify " + player.getName() + " title " + message.replace(EffectPlaceholders.TITLE.getPrefix(), ""));
+            Notification.send(new Tuple<>(null, player), NotificationTypes.TITLE.getLabel(), titleSegments[0], titleSegments[1]);
 
         if (message.startsWith(EffectPlaceholders.ACTIONBAR.getPrefix()))
-            Common.dispatchCommand(player, "bu notify " + player.getName() + " actionbar " + message.replace(EffectPlaceholders.ACTIONBAR.getPrefix(), ""));
+            Notification.send(new Tuple<>(null, player), NotificationTypes.ACTIONBAR.getLabel(), message.replace(EffectPlaceholders.ACTIONBAR.getPrefix(), ""));
 
         if (message.startsWith(EffectPlaceholders.BOSSBAR.getPrefix()))
-            Common.dispatchCommand(player, "bu notify " + player.getName() + " bossbar " + message.replace(EffectPlaceholders.BOSSBAR.getPrefix(), ""));
+            Notification.send(new Tuple<>(null, player), NotificationTypes.BOSSBAR.getLabel(), message.replace(EffectPlaceholders.BOSSBAR.getPrefix(), ""));
 
         if (message.startsWith(EffectPlaceholders.TOAST.getPrefix()))
-            Common.dispatchCommand(player, "bu notify " + player.getName() + " toast " + message.replace(EffectPlaceholders.TOAST.getPrefix(), ""));
+            Notification.send(new Tuple<>(null, player), NotificationTypes.TOAST.getLabel(), message.replace(EffectPlaceholders.TOAST.getPrefix(), ""));
     }
 
     public static boolean isExecutable(final String message) {
