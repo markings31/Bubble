@@ -70,38 +70,6 @@ public final class Settings extends SimpleSettings {
     }
 
     @NoArgsConstructor(access = AccessLevel.PRIVATE)
-    public final static class ChatSettings {
-
-        /**
-         * Mention Settings
-         */
-        public static Boolean ENABLE_MENTIONS;
-
-        public static String MENTION_COLOR;
-        public static String MENTION_IGNORE_PERMISSION;
-
-        public static SimpleSound MENTION_SOUND;
-
-        private static void init() {
-            setPathPrefix("Chat.Mentions");
-            ENABLE_MENTIONS = getBoolean("Enable");
-            MENTION_IGNORE_PERMISSION = getString("Ignore_Permission");
-            MENTION_COLOR = getString("Color");
-            MENTION_SOUND = getSound("Sound");
-        }
-    }
-
-    public final static class DatabaseSettings {
-
-        /**
-         * MySQL Settings
-         */
-
-        private static void init() {
-        }
-    }
-
-    @NoArgsConstructor(access = AccessLevel.PRIVATE)
     public final static class HookSettings {
 
         public static Boolean VAULT;

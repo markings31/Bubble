@@ -25,10 +25,6 @@ public final class PlayerData extends YamlConfig {
 
     private boolean motdStatus;
 
-    private boolean mentionsStatus;
-    private boolean mentionSoundStatus;
-    private boolean mentionToastStatus;
-
     private PlayerData(final String playerName, final UUID uuid) {
         this.playerName = playerName;
         this.uuid = uuid;
@@ -43,10 +39,6 @@ public final class PlayerData extends YamlConfig {
         broadcastSoundStatus = getBoolean("Receive_Broadcast_Sound", true);
 
         motdStatus = getBoolean("Receive_MOTD", true);
-
-        mentionsStatus = getBoolean("Receive_Mentions", true);
-        mentionSoundStatus = getBoolean("Receive_Mention_Sound", true);
-        mentionToastStatus = getBoolean("Receive_Mentions_Toast", true);
     }
 
     @Override
@@ -61,9 +53,6 @@ public final class PlayerData extends YamlConfig {
         map.putIfExist("Receive_Broadcasts", this.broadcastStatus);
         map.putIfExist("Receive_Broadcast_Sound", this.broadcastSoundStatus);
         map.putIfExist("Receive_MOTD", this.motdStatus);
-        map.putIfExist("Receive_Mentions", this.mentionsStatus);
-        map.putIfExist("Receive_Mention_Sound", this.mentionSoundStatus);
-        map.putIfExist("Receive_Mentions_Toast", this.mentionToastStatus);
 
         return map;
     }
@@ -86,24 +75,6 @@ public final class PlayerData extends YamlConfig {
         save();
     }
 
-    public void setMentionsStatus(final boolean mentionsStatus) {
-        this.mentionsStatus = mentionsStatus;
-
-        save();
-    }
-
-    public void setMentionSoundStatus(final boolean mentionSoundStatus) {
-        this.mentionSoundStatus = mentionSoundStatus;
-
-        save();
-    }
-
-    public void setMentionToastStatus(final boolean mentionToastStatus) {
-        this.mentionToastStatus = mentionToastStatus;
-
-        save();
-    }
-
     @Override
     public int hashCode() {
         return this.uuid.hashCode();
@@ -115,8 +86,8 @@ public final class PlayerData extends YamlConfig {
     }
 
     /* ------------------------------------------------------------------------------- */
-	/* Misc methods
-	/* ------------------------------------------------------------------------------- */
+    /* Misc methods
+    /* ------------------------------------------------------------------------------- */
 
     @Nullable
     public Player toPlayer() {

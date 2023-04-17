@@ -1,13 +1,14 @@
 package me.markings.bubble.tasks;
 
 import me.markings.bubble.PlayerData;
-import me.markings.bubble.settings.Broadcasts;
+import me.markings.bubble.settings.Broadcast;
 import me.markings.bubble.settings.Settings;
 import me.markings.bubble.util.MessageUtil;
 import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitRunnable;
 import org.mineacademy.fo.ChatUtil;
 import org.mineacademy.fo.Common;
+import org.mineacademy.fo.PlayerUtil;
 import org.mineacademy.fo.RandomUtil;
 import org.mineacademy.fo.debug.Debugger;
 import org.mineacademy.fo.model.SimpleSound;
@@ -24,7 +25,7 @@ public class BroadcastTask extends BukkitRunnable {
 
     private static int index;
 
-    private static Broadcasts currentBroadcast;
+    private static Broadcast currentBroadcast;
 
     @Override
     public void run() {
@@ -32,11 +33,11 @@ public class BroadcastTask extends BukkitRunnable {
     }
 
     public static void nextCycle() {
-        messageList = Broadcasts.getAllMessages();
+        messageList = Broadcast.getAllMessages();
 
-        final List<String> broadcastPerm = Broadcasts.getAllPermissions();
+        final List<String> broadcastPerm = Broadcast.getAllPermissions();
 
-        worlds = Broadcasts.getAllWorlds();
+        worlds = Broadcast.getAllWorlds();
 
         Debugger.debug("broadcasts",
                 "Messages: " + messageList +
@@ -52,7 +53,7 @@ public class BroadcastTask extends BukkitRunnable {
     public static void executeTasks() {
         final List<String> messages = Settings.NotificationSettings.RANDOM_MESSAGE ?
                 RandomUtil.nextItem(messageList) : messageList.get(index);
-        currentBroadcast = Broadcasts.getBroadcastFromMessage(messages);
+        currentBroadcast = Broadcast.getBroadcastFromMessage(messages);
         final SimpleSound broadcastSound = Objects.requireNonNull(currentBroadcast).getSound();
 
         worlds.forEach(world -> Remain.getOnlinePlayers().forEach(player -> {
@@ -72,8 +73,9 @@ public class BroadcastTask extends BukkitRunnable {
     private static void playerChecks(final Player player) {
         final List<String> currentMessages = Settings.NotificationSettings.RANDOM_MESSAGE ?
                 RandomUtil.nextItem(messageList) : messageList.get(index);
+        final String permission = Broadcast.getPermissionFromMessage(currentMessages);
 
-        if (!player.hasPermission(Objects.requireNonNull(Broadcasts.getPermissionFromMessage(currentMessages))))
+        if (!PlayerUtil.hasPerm(player, permission) || permission.isEmpty())
             updateIndex();
     }
 
@@ -87,7 +89,7 @@ public class BroadcastTask extends BukkitRunnable {
                 return;
             }
 
-            if (Boolean.TRUE.equals(Broadcasts.getCenteredFromMessage(messages)) || Boolean.TRUE.equals(Settings.NotificationSettings.CENTER_ALL))
+            if (Boolean.TRUE.equals(Broadcast.getCenteredFromMessage(messages)) || Boolean.TRUE.equals(Settings.NotificationSettings.CENTER_ALL))
                 message = ChatUtil.center(MessageUtil.translateGradient(message));
 
             message = Variables.replace(message, player);

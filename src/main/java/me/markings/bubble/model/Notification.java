@@ -2,6 +2,7 @@ package me.markings.bubble.model;
 
 import lombok.SneakyThrows;
 import org.bukkit.command.CommandSender;
+import org.bukkit.command.ConsoleCommandSender;
 import org.bukkit.entity.Player;
 import org.mineacademy.fo.*;
 import org.mineacademy.fo.debug.Debugger;
@@ -59,8 +60,9 @@ public class Notification {
             Notification.chatImage(recipient, message, imagePath, Integer.parseInt(args[1]));
         }
 
-        Messenger.success(sender, "&7Sent &f" + notificationType + " &7notification to &f"
-                + (recipient != null ? recipient.getName() : "everyone") + "&7.");
+        if (!(sender instanceof ConsoleCommandSender))
+            Messenger.success(sender, "&7Sent &f" + notificationType + " &7notification to &f"
+                    + (recipient != null ? recipient.getName() : "everyone") + "&7.");
     }
 
     private static void checkIfValid(final CommandSender sender, final String notificationType) {

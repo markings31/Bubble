@@ -4,7 +4,6 @@ import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import me.markings.bubble.model.Permissions;
-import me.markings.bubble.settings.Settings;
 import org.jetbrains.annotations.NotNull;
 import org.mineacademy.fo.annotation.AutoRegister;
 import org.mineacademy.fo.command.DebugCommand;
@@ -23,14 +22,12 @@ public final class BubbleGroup extends SimpleCommandGroup {
     protected void registerSubcommands() {
         registerSubcommand(new NotifyCommand());
         registerSubcommand(new ReloadCommand());
-        registerSubcommand(new AddCommand());
         registerSubcommand(new EditCommand());
         registerSubcommand(new ShowCommand());
         registerSubcommand(new CenterCommand());
         registerSubcommand(new DebugCommand());
-
-        if (Settings.NotificationSettings.ENABLE_BROADCASTS)
-            registerSubcommand(new ForceCommand());
+        registerSubcommand(new CreateCommand());
+        registerSubcommand(new ForceCommand());
 
         registerSubcommand(new PushoverCommand());
         registerSubcommand(new PermsCommand(Permissions.class, "bubble.command.permissions"));
@@ -39,7 +36,7 @@ public final class BubbleGroup extends SimpleCommandGroup {
     @Override
     protected @NotNull
     String getCredits() {
-        return "&7Visit &f&nhttps://markings.me/&r &7for more information.";
+        return "&7Visit &fhttps://github.com/markings31&r &7for more information.";
     }
 
     @Override

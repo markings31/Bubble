@@ -28,17 +28,6 @@ Preferences:
         Animate: "MOTD {motd_status}!"
         Toggle_MOTD: true
 
-    Mentions_Settings:
-      Title: "&eMentions Settings"
-      Material: SUNFLOWER
-      Slot: "9 + 6"
-      Lore:
-        - ""
-        - "Click here to access the mentions"
-        - "settings menu."
-      Click:
-        Menu: Mentions_Settings
-
 Chat_Settings:
   Title: "&e&lChat Settings"
   Size: "9 * 3"
@@ -68,34 +57,3 @@ Chat_Settings:
       Click:
         Animate: "Broadcast sound {bc_sound_status}!"
         Toggle_Broadcast_Sound: true
-
-Mentions_Settings:
-  Title: "&2&lMentions Settings"
-  Size: "9 * 3"
-  Empty_Slot_Material: GRAY_STAINED_GLASS_PANE
-  Buttons:
-    Toggle_Mention_Sound:
-      Title: "&cToggle Mention Sound"
-      Material: NOTE_BLOCK
-      Slot: "9 + 2"
-      Lore:
-        - ""
-        - "&eClick this item to toggle on/off"
-        - "&ethe sound played to you when your"
-        - "&ename is mentioned in the chat."
-      Click:
-        Animate: "Mention sound {mention_sound_status}!"
-        Toggle_Mention_Sound: true
-
-    Toggle_Mention_Toast:
-      Title: "&bToggle Mention Toast"
-      Material: BREAD
-      Slot: "9 + 6"
-      Lore:
-        - ""
-        - "&eClick this item to toggle on/off"
-        - "&ethe sound played to you when your"
-        - "&ename is mentioned in the chat."
-      Click:
-        Animate: "Mention toast {mention_toast_status}!"
-        Toggle_Mention_Toast: true

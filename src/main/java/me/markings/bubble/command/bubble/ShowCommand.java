@@ -1,7 +1,7 @@
 package me.markings.bubble.command.bubble;
 
 import me.markings.bubble.model.Permissions;
-import me.markings.bubble.settings.Broadcasts;
+import me.markings.bubble.settings.Broadcast;
 import me.markings.bubble.settings.Settings;
 import me.markings.bubble.util.MessageUtil;
 import org.bukkit.ChatColor;
@@ -37,11 +37,11 @@ public class ShowCommand extends SimpleSubCommand {
     }
 
     private int maximumLength() {
-        final Collection<String> labels = Broadcasts.getAllBroadcastNames();
+        final Collection<String> labels = Broadcast.getAllBroadcastNames();
 
         for (int i = 0; i < labels.size(); i++) {
             final String currentLabel = (String) labels.toArray()[i];
-            final Collection<String> messageList = Broadcasts.getBroadcast(currentLabel).getMessage();
+            final Collection<String> messageList = Broadcast.getBroadcast(currentLabel).getMessage();
             if (messageList.size() > messagesLength)
                 messagesLength = messageList.size();
         }
@@ -51,11 +51,11 @@ public class ShowCommand extends SimpleSubCommand {
 
     private List<SimpleComponent> list() {
         final List<SimpleComponent> messages = new ArrayList<>();
-        final Collection<String> labels = Broadcasts.getAllBroadcastNames();
+        final Collection<String> labels = Broadcast.getAllBroadcastNames();
 
         for (int i = 0; i < labels.size(); i++) {
             final String currentLabel = (String) labels.toArray()[i];
-            final Broadcasts broadcast = Broadcasts.getBroadcast(currentLabel);
+            final Broadcast broadcast = Broadcast.getBroadcast(currentLabel);
             final List<String> messageList = broadcast.getMessage();
 
             for (final String s : Arrays.asList(

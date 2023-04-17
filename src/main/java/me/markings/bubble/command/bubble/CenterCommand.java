@@ -1,7 +1,7 @@
 package me.markings.bubble.command.bubble;
 
 import me.markings.bubble.model.Permissions;
-import me.markings.bubble.settings.Broadcasts;
+import me.markings.bubble.settings.Broadcast;
 import org.mineacademy.fo.command.SimpleSubCommand;
 
 import java.util.ArrayList;
@@ -21,10 +21,10 @@ public class CenterCommand extends SimpleSubCommand {
     @Override
     protected void onCommand() {
         final String broadcast = args[0];
-        final Broadcasts broadcastInstance = Broadcasts.getBroadcast(broadcast);
+        final Broadcast broadcastInstance = Broadcast.getBroadcast(broadcast);
 
         if (args[0].equalsIgnoreCase("all"))
-            Broadcasts.toggleCenteredAll();
+            Broadcast.toggleCenteredAll();
         else
             broadcastInstance.toggleCentered();
 
@@ -42,7 +42,7 @@ public class CenterCommand extends SimpleSubCommand {
     @Override
     protected List<String> tabComplete() {
         if (args.length == 1)
-            return completeLastWord(Broadcasts.getAllBroadcastNames(), "all");
+            return completeLastWord(Broadcast.getAllBroadcastNames(), "all");
 
         return new ArrayList<>();
     }

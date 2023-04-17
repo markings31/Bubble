@@ -1,10 +1,7 @@
 package me.markings.bubble.menus;
 
-import me.markings.bubble.conversation.EditMessagePrompt;
-import me.markings.bubble.conversation.SetFooterPrompt;
-import me.markings.bubble.conversation.SetHeaderPrompt;
-import me.markings.bubble.conversation.SetPermissionPrompt;
-import me.markings.bubble.settings.Broadcasts;
+import me.markings.bubble.conversation.CreateConverstation;
+import me.markings.bubble.settings.Broadcast;
 import me.markings.bubble.util.MessageUtil;
 import org.bukkit.Bukkit;
 import org.bukkit.World;
@@ -21,21 +18,21 @@ import org.mineacademy.fo.menu.model.ItemCreator;
 import org.mineacademy.fo.remain.CompMaterial;
 import org.mineacademy.fo.remain.CompSound;
 
-public class BroadcastSelectionMenu extends MenuPagged<Broadcasts> {
+public class BroadcastSelectionMenu extends MenuPagged<Broadcast> {
 
     public BroadcastSelectionMenu(final Player player) {
-        super(Broadcasts.getAllBroadcasts());
+        super(Broadcast.getAllBroadcasts());
         this.setViewer(player);
         this.setTitle("Select Broadcast");
     }
 
     @Override
-    protected ItemStack convertToItemStack(final Broadcasts item) {
+    protected ItemStack convertToItemStack(final Broadcast item) {
         return ItemCreator.of(CompMaterial.PAPER, MessageUtil.getRandomColor() + item.getBroadcastName()).make();
     }
 
     @Override
-    protected void onPageClick(final Player player, final Broadcasts item, final ClickType click) {
+    protected void onPageClick(final Player player, final Broadcast item, final ClickType click) {
         new EditMenu(this.getViewer(), item.getBroadcastName()).displayTo(this.getViewer());
     }
 
@@ -83,7 +80,7 @@ public class BroadcastSelectionMenu extends MenuPagged<Broadcasts> {
                 @Override
                 public void onClickedInMenu(final Player player, final Menu menu, final ClickType click) {
                     player.closeInventory();
-                    EditMessagePrompt.getInstance().show(player);
+                    new CreateConverstation.MessageContentPrompt(Broadcast.getBroadcast(broadcastLabel)).show(player);
                 }
 
                 @Override
@@ -96,8 +93,8 @@ public class BroadcastSelectionMenu extends MenuPagged<Broadcasts> {
             setCenteredButton = new Button() {
                 @Override
                 public void onClickedInMenu(final Player player, final Menu menu, final ClickType click) {
-                    Broadcasts.getBroadcast(broadcastLabel).toggleCentered();
-                    animateTitle(((Boolean.TRUE.equals(Broadcasts.getBroadcast(broadcastLabel).getCentered()) ? "&aEnabled" : "&cDisabled") + " centering!"));
+                    Broadcast.getBroadcast(broadcastLabel).toggleCentered();
+                    animateTitle(((Boolean.TRUE.equals(Broadcast.getBroadcast(broadcastLabel).getCentered()) ? "&aEnabled" : "&cDisabled") + " centering!"));
                 }
 
                 @Override
@@ -111,7 +108,7 @@ public class BroadcastSelectionMenu extends MenuPagged<Broadcasts> {
                 @Override
                 public void onClickedInMenu(final Player player, final Menu menu, final ClickType click) {
                     player.closeInventory();
-                    SetPermissionPrompt.getInstance().show(player);
+                    new CreateConverstation.PermissionPrompt(Broadcast.getBroadcast(broadcastLabel)).show(player);
                 }
 
                 @Override
@@ -127,7 +124,7 @@ public class BroadcastSelectionMenu extends MenuPagged<Broadcasts> {
                 @Override
                 public void onClickedInMenu(final Player player, final Menu menu, final ClickType click) {
                     player.closeInventory();
-                    new SetHeaderPrompt(broadcastLabel).show(getViewer());
+                    new CreateConverstation.HeaderPrompt(Broadcast.getBroadcast(broadcastLabel)).show(getViewer());
                 }
 
                 @Override
@@ -142,7 +139,7 @@ public class BroadcastSelectionMenu extends MenuPagged<Broadcasts> {
                 @Override
                 public void onClickedInMenu(final Player player, final Menu menu, final ClickType click) {
                     player.closeInventory();
-                    new SetFooterPrompt(broadcastLabel).show(getViewer());
+                    new CreateConverstation.FooterPrompt(Broadcast.getBroadcast(broadcastLabel)).show(getViewer());
                 }
 
                 @Override
@@ -200,12 +197,12 @@ public class BroadcastSelectionMenu extends MenuPagged<Broadcasts> {
             protected ItemStack convertToItemStack(final CompSound item) {
                 return ItemCreator.of(CompMaterial.MUSIC_DISC_13,
                                 MessageUtil.getRandomColor() + ItemUtil.bountifyCapitalized(item.name()))
-                        .glow(Broadcasts.getBroadcast(broadcastLabel).getSound().getSound().equals(item.getSound())).make();
+                        .glow(Broadcast.getBroadcast(broadcastLabel).getSound().getSound().equals(item.getSound())).make();
             }
 
             @Override
             protected void onPageClick(final Player player, final CompSound item, final ClickType click) {
-                final Broadcasts broadcastInstance = Broadcasts.getBroadcast(broadcastLabel);
+                final Broadcast broadcastInstance = Broadcast.getBroadcast(broadcastLabel);
                 if (!broadcastInstance.getSound().getSound().equals(item.getSound())) {
                     item.play(this.getViewer());
                     broadcastInstance.setSound(item);
@@ -229,13 +226,13 @@ public class BroadcastSelectionMenu extends MenuPagged<Broadcasts> {
             @Override
             protected ItemStack convertToItemStack(final World item) {
                 return ItemCreator.of(CompMaterial.GRASS_BLOCK, MessageUtil.getRandomColor() + item.getName())
-                        .glow(Broadcasts.getBroadcast(broadcastLabel).getWorlds().contains(item.getName()))
+                        .glow(Broadcast.getBroadcast(broadcastLabel).getWorlds().contains(item.getName()))
                         .make();
             }
 
             @Override
             protected void onPageClick(final Player player, final World item, final ClickType click) {
-                final Broadcasts broadcastInstance = Broadcasts.getBroadcast(broadcastLabel);
+                final Broadcast broadcastInstance = Broadcast.getBroadcast(broadcastLabel);
                 final String worldName = item.getName();
                 if (!broadcastInstance.getWorlds().contains(worldName)) {
                     broadcastInstance.addWorld(worldName);

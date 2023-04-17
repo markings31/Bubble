@@ -2,10 +2,11 @@ package me.markings.bubble.util;
 
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
+import me.markings.bubble.Bubble;
 import me.markings.bubble.model.EffectPlaceholders;
 import me.markings.bubble.model.Notification;
 import me.markings.bubble.model.NotificationTypes;
-import me.markings.bubble.settings.Broadcasts;
+import me.markings.bubble.settings.Broadcast;
 import me.markings.bubble.settings.Settings;
 import org.bukkit.entity.Player;
 import org.mineacademy.fo.ChatUtil;
@@ -30,7 +31,7 @@ public class MessageUtil {
 
     private static final String gradientPattern = "^([A-Fa-f\\d]{6}|[A-Fa-f\\d]{3}):([A-Fa-f\\d]{6}|[A-Fa-f\\d]{3})$";
 
-    public static String format(final Broadcasts broadcast, String message) {
+    public static String format(final Broadcast broadcast, String message) {
         message = format(message);
         if (broadcast.getCentered() || Settings.NotificationSettings.CENTER_ALL)
             return ChatUtil.center(message);
@@ -173,16 +174,16 @@ public class MessageUtil {
             Common.dispatchCommand(player, message.replace(EffectPlaceholders.COMMAND.getPrefix(), ""));
 
         if (message.startsWith(EffectPlaceholders.TITLE.getPrefix()))
-            Notification.send(new Tuple<>(null, player), NotificationTypes.TITLE.getLabel(), titleSegments[0], titleSegments[1]);
+            Notification.send(new Tuple<>(Bubble.getInstance().getServer().getConsoleSender(), player), NotificationTypes.TITLE.getLabel(), titleSegments[0], titleSegments[1]);
 
         if (message.startsWith(EffectPlaceholders.ACTIONBAR.getPrefix()))
-            Notification.send(new Tuple<>(null, player), NotificationTypes.ACTIONBAR.getLabel(), message.replace(EffectPlaceholders.ACTIONBAR.getPrefix(), ""));
+            Notification.send(new Tuple<>(Bubble.getInstance().getServer().getConsoleSender(), player), NotificationTypes.ACTIONBAR.getLabel(), message.replace(EffectPlaceholders.ACTIONBAR.getPrefix(), ""));
 
         if (message.startsWith(EffectPlaceholders.BOSSBAR.getPrefix()))
-            Notification.send(new Tuple<>(null, player), NotificationTypes.BOSSBAR.getLabel(), message.replace(EffectPlaceholders.BOSSBAR.getPrefix(), ""));
+            Notification.send(new Tuple<>(Bubble.getInstance().getServer().getConsoleSender(), player), NotificationTypes.BOSSBAR.getLabel(), message.replace(EffectPlaceholders.BOSSBAR.getPrefix(), ""));
 
         if (message.startsWith(EffectPlaceholders.TOAST.getPrefix()))
-            Notification.send(new Tuple<>(null, player), NotificationTypes.TOAST.getLabel(), message.replace(EffectPlaceholders.TOAST.getPrefix(), ""));
+            Notification.send(new Tuple<>(Bubble.getInstance().getServer().getConsoleSender(), player), NotificationTypes.TOAST.getLabel(), message.replace(EffectPlaceholders.TOAST.getPrefix(), ""));
     }
 
     public static boolean isExecutable(final String message) {
