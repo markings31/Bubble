@@ -1,10 +1,7 @@
 package me.markings.bubble.model;
 
 import lombok.SneakyThrows;
-<<<<<<< Updated upstream
-=======
 import me.markings.bubble.hook.DiscordSRVHook;
->>>>>>> Stashed changes
 import me.markings.bubble.settings.Settings;
 import org.bukkit.command.CommandSender;
 import org.bukkit.command.ConsoleCommandSender;
@@ -72,15 +69,12 @@ public class Notification {
             Notification.chatImage(recipient, message, imagePath, Integer.parseInt(args[1]));
         } else if (notificationType.equalsIgnoreCase(NotificationTypes.PUSHOVER.getLabel())) {
             pushover(message, recipient);
-<<<<<<< Updated upstream
-=======
         } else if (notificationType.equalsIgnoreCase(NotificationTypes.DISCORD.getLabel())) {
             Valid.checkNotNull(args);
             Valid.checkNotNull(sender);
             final Color color = args[0].matches(String.valueOf(Common.HEX_COLOR_REGEX)) ? getColorFromHex(args[0]) : getColorFromString(args[0]);
 
             DiscordSRVHook.getInstance().discordAnnouncement((Player) sender, messageSplit[0], messageSplit[1], color, args[1]);
->>>>>>> Stashed changes
         }
 
         if (!(sender instanceof ConsoleCommandSender))
@@ -152,11 +146,7 @@ public class Notification {
         });
     }
 
-<<<<<<< Updated upstream
     public static void pushover(final String message, final Player player) throws Exception {
-=======
-    private static void pushover(final String message, final Player player) throws Exception {
->>>>>>> Stashed changes
         final URL url = new URL("https://api.pushover.net/1/messages.json");
         final HttpURLConnection con = (HttpURLConnection) url.openConnection();
         con.setRequestMethod("POST");
@@ -180,8 +170,6 @@ public class Notification {
             Common.logFramed("ERROR with Pushover notification request: " + responseMessage);
         else Messenger.success(player, "&aPushover notification has been sent to your devices!");
     }
-<<<<<<< Updated upstream
-=======
 
     private static Color getColorFromString(final String colorName) {
         switch (colorName.toLowerCase()) {
@@ -239,5 +227,4 @@ public class Notification {
 
         return new Color(r, g, b);
     }
->>>>>>> Stashed changes
 }
