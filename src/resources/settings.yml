@@ -101,8 +101,13 @@ Notifications:
     # The ID for the channel that will receive Minecraft chat messages.
     Minecraft_Channel_ID: "000000000000000000"
 
+<<<<<<< Updated upstream
     Author: "Admin"
     Thumbnail: "https://minotar.net/avatar/%player%.png"
+=======
+    Author: "{player}"
+    Thumbnail: "https://minotar.net/avatar/{player}.png"
+>>>>>>> Stashed changes
     Default_Image: "https://i.ibb.co/3SLSCRR/Smaller-Banner.png"
 
 # -------------------------------------------------------------------------------------------------

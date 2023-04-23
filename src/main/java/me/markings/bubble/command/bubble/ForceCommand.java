@@ -6,15 +6,15 @@ import org.mineacademy.fo.command.SimpleSubCommand;
 
 public class ForceCommand extends SimpleSubCommand {
 
-	protected ForceCommand() {
-		super("force");
+    protected ForceCommand() {
+        super("force");
 
-		setDescription("Force the next broadcast message to be displayed in the sequence.");
-		setPermission(Permissions.Command.FORCE_COMMAND);
-	}
+        setDescription("Force the next broadcast message to be displayed in the sequence.");
+        setPermission(Permissions.Command.FORCE);
+    }
 
-	@Override
-	protected void onCommand() {
-		BroadcastTask.nextCycle();
-	}
+    @Override
+    protected void onCommand() {
+        BroadcastTask.nextCycle();
+    }
 }

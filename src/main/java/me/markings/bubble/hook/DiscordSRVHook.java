@@ -7,7 +7,10 @@ import github.scarsz.discordsrv.dependencies.jda.api.entities.Member;
 import github.scarsz.discordsrv.dependencies.jda.api.entities.Message;
 import github.scarsz.discordsrv.dependencies.jda.api.entities.TextChannel;
 import github.scarsz.discordsrv.util.DiscordUtil;
+<<<<<<< Updated upstream
 import github.scarsz.discordsrv.util.WebhookUtil;
+=======
+>>>>>>> Stashed changes
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -21,6 +24,10 @@ import org.mineacademy.fo.Common;
 import org.mineacademy.fo.collection.SerializedMap;
 import org.mineacademy.fo.model.DiscordListener;
 import org.mineacademy.fo.model.Replacer;
+<<<<<<< Updated upstream
+=======
+import org.mineacademy.fo.model.Variables;
+>>>>>>> Stashed changes
 
 import java.awt.*;
 
@@ -61,12 +68,17 @@ public final class DiscordSRVHook extends DiscordListener {
         }
     }
 
+<<<<<<< Updated upstream
     // TODO: Move to Notification.java class.
     public void sendAnnouncement(final Player player, final String title, final String description, final Color color, final String imageUrl) {
+=======
+    public void discordAnnouncement(final Player player, final String title, final String description, final Color color, final String thumbnailURL) {
+>>>>>>> Stashed changes
         final Member member = DiscordUtil.getMemberById(DiscordSRV.getPlugin().getAccountLinkManager().getDiscordId(player.getUniqueId()));
         final String profileImg = member == null ? DiscordSRV.getAvatarUrl(player) : member.getUser().getAvatarUrl();
         findChannel(Long.parseLong(Settings.DiscordSettings.ANNOUNCEMENTSID))
                 .sendMessageEmbeds(new EmbedBuilder()
+<<<<<<< Updated upstream
                         .setAuthor(Settings.DiscordSettings.AUTHOR, "https://www.namemc.com/profile/" + player.getName(),
                                 profileImg).setTitle(title)
                         .setDescription(description).setColor(color).setThumbnail(imageUrl == null
@@ -77,5 +89,20 @@ public final class DiscordSRVHook extends DiscordListener {
 
     public void sendWebhookMessage(final Player player, final String message) {
         WebhookUtil.deliverMessage(findChannel(Long.parseLong(Settings.DiscordSettings.ANNOUNCEMENTSID)), player, message);
+=======
+                        .setAuthor(Variables.replace(Settings.DiscordSettings.AUTHOR, player), "https://www.namemc.com/profile/" + player.getName(),
+                                profileImg)
+                        .setTitle(title)
+                        .setDescription(description)
+                        .setColor(color)
+                        .setThumbnail(thumbnailURL == null
+                                ? Variables.replace(Settings.DiscordSettings.THUMBNAIL, player)
+                                : thumbnailURL)
+                        .setImage(Settings.DiscordSettings.DEFAULT_IMAGE).build()).queue();
+    }
+
+    public void minecraftAnnouncement() {
+        
+>>>>>>> Stashed changes
     }
 }

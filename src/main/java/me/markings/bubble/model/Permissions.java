@@ -21,9 +21,6 @@ public class Permissions {
     @PermissionGroup("Main Command")
     public static final class Command {
 
-        @Permission("Add a line or section for broadcasts within the main settings file.")
-        public static final String ADD = "bubble.command.add";
-
         @Permission("Toggle a broadcast message's alignment status.")
         public static final String CENTER = "bubble.command.center";
 
@@ -34,7 +31,10 @@ public class Permissions {
         public static final String NOTIFY = "bubble.command.notify";
 
         @Permission("Force the next broadcast message to be displayed in the sequence.")
-        public static final String FORCE_COMMAND = "bubble.command.force";
+        public static final String FORCE = "bubble.command.force";
+
+        @Permission("Send an announcement to the connected Discord channel.")
+        public static final String DISCORD = "bubble.command.discord";
     }
 
     @NoArgsConstructor(access = AccessLevel.PRIVATE)
@@ -42,17 +42,5 @@ public class Permissions {
     public static final class BroadcastEditing {
         @Permission("Edit broadcasts with /bu edit. This overrides any subpermissions.")
         public static final String EDIT = "bubble.edit";
-
-        @Permission("Set the permission required to view the broadcast message.")
-        public static final String PERMISSION = "bubble.edit.permission";
-
-        @Permission("Set the header that will be used in broadcast messages.")
-        public static final String HEADER = "bubble.edit.header";
-
-        @Permission("Set the footer that will be used in broadcast messages.")
-        public static final String FOOTER = "bubble.edit.footer";
-
-        @Permission("Set the worlds that the broadcast will be sent to.")
-        public static final String WORLDS = "bubble.edit.worlds";
     }
 }
