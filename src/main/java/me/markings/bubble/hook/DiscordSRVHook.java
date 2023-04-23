@@ -68,7 +68,6 @@ public final class DiscordSRVHook extends DiscordListener {
                 .sendMessageEmbeds(new EmbedBuilder()
                         .setAuthor(Settings.DiscordSettings.AUTHOR, "https://www.namemc.com/profile/" + player.getName(),
                                 profileImg).setTitle(title)
-                        .setDescription(description).setColor(color).setThumbnail(imageUrl == null
                         .setDescription(description).setColor(color).setThumbnail(thumbnailURL == null
                                 ? Settings.DiscordSettings.THUMBNAIL.replace("%player%", player.getName())
                                 : thumbnailURL)
