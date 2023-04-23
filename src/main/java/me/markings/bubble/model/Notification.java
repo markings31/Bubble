@@ -1,6 +1,7 @@
 package me.markings.bubble.model;
 
 import lombok.SneakyThrows;
+import me.markings.bubble.settings.Settings;
 import org.bukkit.command.CommandSender;
 import org.bukkit.command.ConsoleCommandSender;
 import org.bukkit.entity.Player;
@@ -14,11 +15,16 @@ import org.mineacademy.fo.remain.Remain;
 
 import javax.annotation.Nullable;
 import java.io.IOException;
+import java.io.OutputStream;
+import java.net.HttpURLConnection;
+import java.net.URL;
+import java.net.URLEncoder;
 import java.util.Arrays;
 
 public class Notification {
 
     // NOTE: Ensure that the 'message' param is joined by spaces.
+    @SneakyThrows
     public static void send(@Nullable final Tuple<CommandSender, Player> senderRecipient, final String notificationType, final String message, @Nullable final String... args) {
         final CommandSender sender = senderRecipient != null ? senderRecipient.getKey() : null;
         final Player recipient = senderRecipient != null ? senderRecipient.getValue() : null;
@@ -58,6 +64,8 @@ public class Notification {
             Valid.checkBoolean(Valid.isNumber(args[1]),
                     "Please provide the height of the image you want to be displayed! (/bu notify <player> image <image>.png <height> [message])");
             Notification.chatImage(recipient, message, imagePath, Integer.parseInt(args[1]));
+        } else if (notificationType.equalsIgnoreCase(NotificationTypes.PUSHOVER.getLabel())) {
+            pushover(message, recipient);
         }
 
         if (!(sender instanceof ConsoleCommandSender))
@@ -127,5 +135,30 @@ public class Notification {
                 throw new RuntimeException(e);
             }
         });
+    }
+
+    public static void pushover(final String message, final Player player) throws Exception {
+        final URL url = new URL("https://api.pushover.net/1/messages.json");
+        final HttpURLConnection con = (HttpURLConnection) url.openConnection();
+        con.setRequestMethod("POST");
+        con.setDoOutput(true);
+
+        final String body =
+                "token=" + Settings.NotificationSettings.APPLICATION_TOKEN +
+                        "&user=" + Settings.NotificationSettings.USER_KEY +
+                        "&message=" + URLEncoder.encode(message, "UTF-8");
+        final OutputStream os = con.getOutputStream();
+        os.write(body.getBytes());
+        os.flush();
+        os.close();
+
+        con.connect();
+
+        final int responseCode = con.getResponseCode();
+        final String responseMessage = con.getResponseMessage();
+
+        if (responseCode != 200)
+            Common.logFramed("ERROR with Pushover notification request: " + responseMessage);
+        else Messenger.success(player, "&aPushover notification has been sent to your devices!");
     }
 }

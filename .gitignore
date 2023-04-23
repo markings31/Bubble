@@ -14,10 +14,6 @@ local.properties
 .loadpath
 .recommenders
 
-build.xml
-pom.xml
-proguard
-
 # External tool builders
 .externalToolBuilders/
 

@@ -70,17 +70,56 @@ public final class Settings extends SimpleSettings {
     }
 
     @NoArgsConstructor(access = AccessLevel.PRIVATE)
+    public final static class DiscordSettings {
+
+        public static Boolean DISCORDMINECRAFT;
+        public static String CHATFORMAT;
+
+        public static Boolean MINECRAFTDISCORD;
+        public static Boolean USEWEBHOOK;
+        public static Boolean SYNCANNOUNCEMENTS;
+
+        public static String ANNOUNCEMENTSID;
+        public static String MINECRAFTID;
+
+        public static String AUTHOR;
+        public static String THUMBNAIL;
+        public static String DEFAULT_IMAGE;
+
+        private static void init() {
+            setPathPrefix("Notifications.Discord.Discord_To_Minecraft");
+            DISCORDMINECRAFT = getBoolean("Enable");
+            CHATFORMAT = getString("Chat_Format");
+
+            setPathPrefix("Notifications.Discord.Minecraft_To_Discord");
+            MINECRAFTDISCORD = getBoolean("Enable");
+            USEWEBHOOK = getBoolean("Use_Webhook");
+            SYNCANNOUNCEMENTS = getBoolean("Sync_Announcements");
+
+            setPathPrefix("Notifications.Discord");
+            ANNOUNCEMENTSID = getString("Announcements_Channel_ID");
+            MINECRAFTID = getString("Minecraft_Channel_ID");
+            AUTHOR = getString("Author");
+            THUMBNAIL = getString("Thumbnail");
+            DEFAULT_IMAGE = getString("Default_Image");
+        }
+    }
+
+    @NoArgsConstructor(access = AccessLevel.PRIVATE)
     public final static class HookSettings {
 
         public static Boolean VAULT;
         public static Boolean PAPI;
         public static Boolean BSTATS;
 
+        public static Boolean DISCORDSRV;
+
         private static void init() {
             setPathPrefix("Hooks");
             VAULT = getBoolean("Vault");
             PAPI = getBoolean("PlaceholderAPI");
             BSTATS = getBoolean("BStats");
+            DISCORDSRV = getBoolean("DiscordSRV");
         }
     }
 }

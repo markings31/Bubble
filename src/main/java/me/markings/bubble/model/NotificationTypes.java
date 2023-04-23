@@ -13,7 +13,8 @@ public enum NotificationTypes {
     ACTIONBAR("actionbar"),
     BOSSBAR("bossbar"),
     TOAST("toast"),
-    IMAGE("image");
+    IMAGE("image"),
+    PUSHOVER("pushover");
 
     @Getter
     private final String label;
