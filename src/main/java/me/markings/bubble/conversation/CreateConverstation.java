@@ -61,7 +61,7 @@ public class CreateConverstation extends SimpleConversation {
 
         @Override
         protected String getPrompt(final ConversationContext context) {
-            Notification.send(new Tuple<>(Bubble.getInstance().getServer().getConsoleSender(), getPlayer(context)),
+            Notification.send(new Tuple<>(Bubble.getInstance().getConsole(), getPlayer(context)),
                     NotificationTypes.TITLE.getLabel(),
                     "&bMessage|&7Enter the content of the broadcast message (type 'exit' to cancel)");
             CompSound.ENTITY_EXPERIENCE_ORB_PICKUP.play(getPlayer(context));
@@ -101,7 +101,7 @@ public class CreateConverstation extends SimpleConversation {
 
         @Override
         protected String getPrompt(final ConversationContext context) {
-            Notification.send(new Tuple<>(Bubble.getInstance().getServer().getConsoleSender(), getPlayer(context)),
+            Notification.send(new Tuple<>(Bubble.getInstance().getConsole(), getPlayer(context)),
                     NotificationTypes.TITLE.getLabel(),
                     "&bPermission|&7Enter the permission to view the broadcast (type 'exit' to cancel)");
             return "&7Enter the permission to view the broadcast (type 'exit' to cancel).";
@@ -128,7 +128,7 @@ public class CreateConverstation extends SimpleConversation {
 
         @Override
         protected String getPrompt(final ConversationContext context) {
-            Notification.send(new Tuple<>(Bubble.getInstance().getServer().getConsoleSender(), getPlayer(context)),
+            Notification.send(new Tuple<>(Bubble.getInstance().getConsole(), getPlayer(context)),
                     NotificationTypes.TITLE.getLabel(),
                     "&bWorlds|&7Enter the worlds where the broadcast will be displayed (type 'exit' to cancel)");
             return "&7Enter the worlds where the broadcast will be displayed (type 'exit' to cancel)."
@@ -183,7 +183,7 @@ public class CreateConverstation extends SimpleConversation {
 
         @Override
         protected String getPrompt(final ConversationContext context) {
-            Notification.send(new Tuple<>(Bubble.getInstance().getServer().getConsoleSender(), getPlayer(context)),
+            Notification.send(new Tuple<>(Bubble.getInstance().getConsole(), getPlayer(context)),
                     NotificationTypes.TITLE.getLabel(),
                     "&bHeader|&7Enter the header of the broadcast message (type 'exit' to cancel)");
             return "&7Enter the header of the broadcast message (type 'exit' to cancel).";
@@ -228,7 +228,7 @@ public class CreateConverstation extends SimpleConversation {
 
         @Override
         protected String getPrompt(final ConversationContext context) {
-            Notification.send(new Tuple<>(Bubble.getInstance().getServer().getConsoleSender(), getPlayer(context)),
+            Notification.send(new Tuple<>(Bubble.getInstance().getConsole(), getPlayer(context)),
                     NotificationTypes.TITLE.getLabel(),
                     "&bFooter|&7Enter the footer of the broadcast message (type 'exit' to cancel)");
             return "&7Enter the footer of the broadcast message (type 'exit' to cancel).";
@@ -261,7 +261,7 @@ public class CreateConverstation extends SimpleConversation {
 
         @Override
         protected String getPrompt(final ConversationContext context) {
-            Notification.send(new Tuple<>(Bubble.getInstance().getServer().getConsoleSender(), getPlayer(context)),
+            Notification.send(new Tuple<>(Bubble.getInstance().getConsole(), getPlayer(context)),
                     NotificationTypes.TITLE.getLabel(),
                     "&bCentered Status|&7Should the broadcast be vertically centered? (Y/N; type 'exit' to cancel)");
             return "&7Should the broadcast be vertically centered (Y/N; type 'exit' to cancel)?";

@@ -1,6 +1,11 @@
 package me.markings.bubble.model;
 
 import lombok.SneakyThrows;
+<<<<<<< Updated upstream
+=======
+import me.markings.bubble.hook.DiscordSRVHook;
+>>>>>>> Stashed changes
+import me.markings.bubble.settings.Settings;
 import org.bukkit.command.CommandSender;
 import org.bukkit.command.ConsoleCommandSender;
 import org.bukkit.entity.Player;
@@ -13,12 +18,19 @@ import org.mineacademy.fo.remain.CompMaterial;
 import org.mineacademy.fo.remain.Remain;
 
 import javax.annotation.Nullable;
+import java.awt.*;
 import java.io.IOException;
+import java.io.OutputStream;
+import java.net.HttpURLConnection;
+import java.net.URL;
+import java.net.URLEncoder;
 import java.util.Arrays;
+import java.util.List;
 
 public class Notification {
 
     // NOTE: Ensure that the 'message' param is joined by spaces.
+    @SneakyThrows
     public static void send(@Nullable final Tuple<CommandSender, Player> senderRecipient, final String notificationType, final String message, @Nullable final String... args) {
         final CommandSender sender = senderRecipient != null ? senderRecipient.getKey() : null;
         final Player recipient = senderRecipient != null ? senderRecipient.getValue() : null;
@@ -58,6 +70,17 @@ public class Notification {
             Valid.checkBoolean(Valid.isNumber(args[1]),
                     "Please provide the height of the image you want to be displayed! (/bu notify <player> image <image>.png <height> [message])");
             Notification.chatImage(recipient, message, imagePath, Integer.parseInt(args[1]));
+        } else if (notificationType.equalsIgnoreCase(NotificationTypes.PUSHOVER.getLabel())) {
+            pushover(message, recipient);
+<<<<<<< Updated upstream
+=======
+        } else if (notificationType.equalsIgnoreCase(NotificationTypes.DISCORD.getLabel())) {
+            Valid.checkNotNull(args);
+            Valid.checkNotNull(sender);
+            final Color color = args[0].matches(String.valueOf(Common.HEX_COLOR_REGEX)) ? getColorFromHex(args[0]) : getColorFromString(args[0]);
+
+            DiscordSRVHook.getInstance().discordAnnouncement((Player) sender, messageSplit[0], messageSplit[1], color, args[1]);
+>>>>>>> Stashed changes
         }
 
         if (!(sender instanceof ConsoleCommandSender))
@@ -128,4 +151,93 @@ public class Notification {
             }
         });
     }
+
+<<<<<<< Updated upstream
+    public static void pushover(final String message, final Player player) throws Exception {
+=======
+    private static void pushover(final String message, final Player player) throws Exception {
+>>>>>>> Stashed changes
+        final URL url = new URL("https://api.pushover.net/1/messages.json");
+        final HttpURLConnection con = (HttpURLConnection) url.openConnection();
+        con.setRequestMethod("POST");
+        con.setDoOutput(true);
+
+        final String body =
+                "token=" + Settings.NotificationSettings.APPLICATION_TOKEN +
+                        "&user=" + Settings.NotificationSettings.USER_KEY +
+                        "&message=" + URLEncoder.encode(message, "UTF-8");
+        final OutputStream os = con.getOutputStream();
+        os.write(body.getBytes());
+        os.flush();
+        os.close();
+
+        con.connect();
+
+        final int responseCode = con.getResponseCode();
+        final String responseMessage = con.getResponseMessage();
+
+        if (responseCode != 200)
+            Common.logFramed("ERROR with Pushover notification request: " + responseMessage);
+        else Messenger.success(player, "&aPushover notification has been sent to your devices!");
+    }
+<<<<<<< Updated upstream
+=======
+
+    private static Color getColorFromString(final String colorName) {
+        switch (colorName.toLowerCase()) {
+            case "black":
+                return Color.BLACK;
+            case "blue":
+                return Color.BLUE;
+            case "cyan":
+                return Color.CYAN;
+            case "dark_gray":
+                return Color.DARK_GRAY;
+            case "gray":
+                return Color.GRAY;
+            case "light_gray":
+                return Color.LIGHT_GRAY;
+            case "magenta":
+                return Color.MAGENTA;
+            case "orange":
+                return Color.ORANGE;
+            case "pink":
+                return Color.PINK;
+            case "red":
+                return Color.RED;
+            case "white":
+                return Color.WHITE;
+            case "yellow":
+                return Color.YELLOW;
+            default:
+                return Color.GREEN;
+        }
+    }
+
+    public static List<String> getValidColors() {
+        return Arrays.asList(
+                "black", "blue", "cyan", "dark_gray", "gray", "green", "light_gray", "magenta", "orange", "pink", "red", "white", "yellow"
+        );
+    }
+
+    public static Color getColorFromHex(String hexColor) {
+        // Remove the '#' from the beginning of the string, if present
+        if (hexColor.charAt(0) == '#') {
+            hexColor = hexColor.substring(1);
+        }
+
+        final int r;
+        final int g;
+        final int b;
+        try {
+            r = Integer.parseInt(hexColor.substring(0, 2), 16);
+            g = Integer.parseInt(hexColor.substring(2, 4), 16);
+            b = Integer.parseInt(hexColor.substring(4, 6), 16);
+        } catch (final NumberFormatException e) {
+            throw new IllegalArgumentException("Invalid hex color: " + hexColor, e);
+        }
+
+        return new Color(r, g, b);
+    }
+>>>>>>> Stashed changes
 }

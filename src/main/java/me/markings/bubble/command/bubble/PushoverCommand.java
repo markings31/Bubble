@@ -1,10 +1,13 @@
 package me.markings.bubble.command.bubble;
 
+import me.markings.bubble.Bubble;
+import me.markings.bubble.model.Notification;
+import me.markings.bubble.model.NotificationTypes;
 import me.markings.bubble.settings.Settings;
-import me.markings.bubble.util.PushoverUtil;
 import org.mineacademy.fo.Common;
 import org.mineacademy.fo.Messenger;
 import org.mineacademy.fo.command.SimpleSubCommand;
+import org.mineacademy.fo.model.Tuple;
 
 public class PushoverCommand extends SimpleSubCommand {
 
@@ -24,7 +27,7 @@ public class PushoverCommand extends SimpleSubCommand {
 
         Common.runLaterAsync(() -> {
             try {
-                PushoverUtil.pushoverNotification(message, getPlayer());
+                Notification.send(new Tuple<>(Bubble.getInstance().getConsole(), getPlayer()), NotificationTypes.PUSHOVER.getLabel(), message);
             } catch (final Exception e) {
                 Messenger.error(getPlayer(), "Message could not be sent! Check the console for details.");
                 throw new RuntimeException(e);

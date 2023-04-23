@@ -140,8 +140,6 @@ public class MessageUtil {
     }
 
     public static void executePlaceholders(final String message, final Player player) {
-        final String[] titleSegments = message.replace(EffectPlaceholders.TITLE.getPrefix(), "").split("\\|");
-
         if (!isExecutable(message))
             return;
 
@@ -174,16 +172,16 @@ public class MessageUtil {
             Common.dispatchCommand(player, message.replace(EffectPlaceholders.COMMAND.getPrefix(), ""));
 
         if (message.startsWith(EffectPlaceholders.TITLE.getPrefix()))
-            Notification.send(new Tuple<>(Bubble.getInstance().getServer().getConsoleSender(), player), NotificationTypes.TITLE.getLabel(), titleSegments[0], titleSegments[1]);
+            Notification.send(new Tuple<>(Bubble.getInstance().getConsole(), player), NotificationTypes.TITLE.getLabel(), message.replace(EffectPlaceholders.TITLE.getPrefix(), ""));
 
         if (message.startsWith(EffectPlaceholders.ACTIONBAR.getPrefix()))
-            Notification.send(new Tuple<>(Bubble.getInstance().getServer().getConsoleSender(), player), NotificationTypes.ACTIONBAR.getLabel(), message.replace(EffectPlaceholders.ACTIONBAR.getPrefix(), ""));
+            Notification.send(new Tuple<>(Bubble.getInstance().getConsole(), player), NotificationTypes.ACTIONBAR.getLabel(), message.replace(EffectPlaceholders.ACTIONBAR.getPrefix(), ""));
 
         if (message.startsWith(EffectPlaceholders.BOSSBAR.getPrefix()))
-            Notification.send(new Tuple<>(Bubble.getInstance().getServer().getConsoleSender(), player), NotificationTypes.BOSSBAR.getLabel(), message.replace(EffectPlaceholders.BOSSBAR.getPrefix(), ""));
+            Notification.send(new Tuple<>(Bubble.getInstance().getConsole(), player), NotificationTypes.BOSSBAR.getLabel(), message.replace(EffectPlaceholders.BOSSBAR.getPrefix(), ""));
 
         if (message.startsWith(EffectPlaceholders.TOAST.getPrefix()))
-            Notification.send(new Tuple<>(Bubble.getInstance().getServer().getConsoleSender(), player), NotificationTypes.TOAST.getLabel(), message.replace(EffectPlaceholders.TOAST.getPrefix(), ""));
+            Notification.send(new Tuple<>(Bubble.getInstance().getConsole(), player), NotificationTypes.TOAST.getLabel(), message.replace(EffectPlaceholders.TOAST.getPrefix(), ""));
     }
 
     public static boolean isExecutable(final String message) {

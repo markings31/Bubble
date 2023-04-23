@@ -13,7 +13,13 @@ public enum NotificationTypes {
     ACTIONBAR("actionbar"),
     BOSSBAR("bossbar"),
     TOAST("toast"),
-    IMAGE("image");
+    IMAGE("image"),
+<<<<<<< Updated upstream
+    PUSHOVER("pushover");
+=======
+    PUSHOVER("pushover"),
+    DISCORD("discord");
+>>>>>>> Stashed changes
 
     @Getter
     private final String label;

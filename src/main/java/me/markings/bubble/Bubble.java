@@ -8,6 +8,7 @@ import me.markings.bubble.settings.DatabaseFile;
 import me.markings.bubble.settings.MenuData;
 import me.markings.bubble.settings.Settings;
 import me.markings.bubble.tasks.BroadcastTask;
+import org.bukkit.command.CommandSender;
 import org.mineacademy.fo.Common;
 import org.mineacademy.fo.constants.FoConstants;
 import org.mineacademy.fo.model.HookManager;
@@ -22,12 +23,16 @@ public final class Bubble extends SimplePlugin {
 
     public static final File settingsFile = new File("plugins/Bubble", FoConstants.File.SETTINGS);
 
+    @Getter
+    private final CommandSender console = getServer().getConsoleSender();
+
     @Override
     protected void onPluginStart() {
     }
 
     @Override
     protected void onPluginPreReload() {
+        // Check back on if this is needed
         Settings.WelcomeSettings.JOIN_MOTD.clear();
     }
 
@@ -72,7 +77,7 @@ public final class Bubble extends SimplePlugin {
 
     @Override
     public int getFoundedYear() {
-        return 2021;
+        return 2023;
     }
 
     public static Bubble getInstance() {
